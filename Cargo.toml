@@ -1,0 +1,5 @@
+[package]
+
+name = "glium-practice"
+version = "0.0.1"
+authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
