@@ -4,6 +4,8 @@ extern crate glutin;
 #[macro_use] extern crate glium;
 #[plugin] extern crate glium_macros;
 
+mod math;
+
 use glium::Surface;
 
 fn main() {
@@ -19,14 +21,14 @@ fn main() {
         #[vertex_format]
         #[derive(Copy)]
         struct Vertex {
-            position: [f32; 2],
+            position: [f32; 3],
             color: [f32; 3],
         }
 
         glium::VertexBuffer::new(&display, vec![
-            Vertex { position: [-0.5, -0.5], color: [0.0, 1.0, 0.0] },
-            Vertex { position: [ 0.0,  0.5], color: [0.0, 0.0, 1.0] },
-            Vertex { position: [ 0.5, -0.5], color: [1.0, 0.0, 0.0] },
+            Vertex { position: [-1.0, 0.0, 0.0], color: [1.0, 0.0, 0.0] },
+            Vertex { position: [ 1.0, 0.0, 0.0], color: [0.0, 1.0, 0.0] },
+            Vertex { position: [ 0.0, 1.7320508075688772, 0.0], color: [0.0, 0.0, 1.0] },
         ])
     };
 
@@ -38,13 +40,13 @@ fn main() {
 
             uniform mat4 matrix;
 
-            attribute vec2 position;
+            attribute vec3 position;
             attribute vec3 color;
 
             varying vec3 v_color;
 
             void main() {
-                gl_Position = vec4(position, 0.0, 1.0) * matrix;
+                gl_Position = vec4(position, 1.0) * matrix;
                 v_color = color;
             }
         ",
@@ -62,20 +64,15 @@ fn main() {
         None
     ).unwrap();
 
-    let uniforms = uniform! {
-        matrix: [
-            [ 1.0, 0.0, 0.0, 0.0 ],
-            [ 0.0, 1.0, 0.0, 0.0 ],
-            [ 0.0, 0.0, 1.0, 0.0 ],
-            [ 0.0, 0.0, 0.0, 1.0 ]
-        ]
-    };
-
     // the main loop
     // each cycle will draw once
     'main: loop {
         use std::old_io::timer;
         use std::time::Duration;
+
+        let uniforms = uniform! {
+            matrix: math::looking((0., 0., 0.), (0., 0., 0.))
+        };
 
         // drawing a frame
         let mut target = display.draw();
