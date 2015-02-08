@@ -10,3 +10,6 @@ git = "https://github.com/tomaka/glium"
 
 [dependencies.glutin]
 git = "https://github.com/tomaka/glutin"
+
+[dependencies.nalgebra]
+git = "https://github.com/sebcrozet/nalgebra"

@@ -3,13 +3,10 @@
 extern crate glutin;
 #[macro_use] extern crate glium;
 #[plugin] extern crate glium_macros;
-
-mod math;
-
-use glium::Surface;
+extern crate "nalgebra" as na;
 
 fn main() {
-    use glium::DisplayBuild;
+    use glium::{Surface, DisplayBuild};
 
     // building the display, ie. the main object
     let display = glutin::WindowBuilder::new()
@@ -69,9 +66,10 @@ fn main() {
     'main: loop {
         use std::old_io::timer;
         use std::time::Duration;
+        use na::*;
 
         let uniforms = uniform! {
-            matrix: math::looking((0., 0., 0.), (0., 0., 0.))
+            matrix: one::<Mat4<f32>>()
         };
 
         // drawing a frame
