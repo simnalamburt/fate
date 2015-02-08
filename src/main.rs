@@ -1,4 +1,4 @@
-#![feature(io, std_misc, plugin)]
+#![feature(core, io, std_misc, plugin)]
 
 extern crate glutin;
 #[macro_use] extern crate glium;
