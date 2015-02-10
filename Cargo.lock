@@ -31,7 +31,7 @@ dependencies = [
 [[package]]
 name = "cocoa"
 version = "0.1.1"
-source = "git+https://github.com/servo/rust-cocoa#c77d7b5edbf30334a73e7acffb15f3f42c92fb6a"
+source = "git+https://github.com/servo/rust-cocoa#acbc5ca1d874ec8c3d7609dd172274c6dda13b6d"
 dependencies = [
  "bitflags 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -82,7 +82,7 @@ dependencies = [
 [[package]]
 name = "glium"
 version = "0.0.2"
-source = "git+https://github.com/tomaka/glium#4c5c043774b369530e82ec4de74d39f410e8d21c"
+source = "git+https://github.com/tomaka/glium#415cf9ebc92c1ffefb9402c87b66b6c49cce65a1"
 dependencies = [
  "cgmath 0.0.3 (git+https://github.com/bjz/cgmath-rs)",
  "gl_common 0.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -97,12 +97,12 @@ dependencies = [
 [[package]]
 name = "glium_macros"
 version = "0.0.1"
-source = "git+https://github.com/tomaka/glium#4c5c043774b369530e82ec4de74d39f410e8d21c"
+source = "git+https://github.com/tomaka/glium#415cf9ebc92c1ffefb9402c87b66b6c49cce65a1"
 
 [[package]]
 name = "glutin"
 version = "0.0.4-pre"
-source = "git+https://github.com/tomaka/glutin#98345b701f41464941038e5d35d2d006bdf86ba5"
+source = "git+https://github.com/tomaka/glutin#605bd37554655436841e4cd2c4fbb3d046de2330"
 dependencies = [
  "android_glue 0.0.1 (git+https://github.com/tomaka/android-rs-glue)",
  "cocoa 0.1.1 (git+https://github.com/servo/rust-cocoa)",
