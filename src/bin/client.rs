@@ -24,12 +24,12 @@ fn main() {
         }
 
         glium::VertexBuffer::new(&display, vec![
-            Vertex { position: [ -0.9,  0.8, -1.0 ], color: [ 1.00, 0.71, 0.00 ] },
-            Vertex { position: [ -0.8, -0.8,  1.0 ], color: [ 1.00, 0.85, 0.78 ] },
-            Vertex { position: [  0.5,  0.0,  0.0 ], color: [ 1.00, 1.00, 1.00 ] },
-            Vertex { position: [  0.9, -0.8,  0.0 ], color: [ 0.00, 0.51, 1.00 ] },
-            Vertex { position: [  0.8,  0.8,  0.0 ], color: [ 0.47, 0.74, 1.00 ] },
-            Vertex { position: [ -0.5,  0.0,  0.0 ], color: [ 1.00, 1.00, 1.00 ] },
+            Vertex { position: [ -0.9,  0.8, 0.0 ], color: [ 1.00, 0.71, 0.00 ] },
+            Vertex { position: [ -0.8, -0.8, 1.0 ], color: [ 1.00, 0.85, 0.78 ] },
+            Vertex { position: [  0.5,  0.0, 0.5 ], color: [ 1.00, 1.00, 1.00 ] },
+            Vertex { position: [  0.9, -0.8, 0.5 ], color: [ 0.00, 0.51, 1.00 ] },
+            Vertex { position: [  0.8,  0.8, 0.5 ], color: [ 0.47, 0.74, 1.00 ] },
+            Vertex { position: [ -0.5,  0.0, 0.5 ], color: [ 1.00, 1.00, 1.00 ] },
         ])
     };
 
@@ -68,23 +68,25 @@ fn main() {
         None
     ).unwrap();
 
+    let uniforms = uniform! {
+        matrix: na::one::<na::Mat4<f32>>()
+    };
+
+    let params = glium::DrawParameters {
+        depth_function: glium::DepthFunction::IfMore,
+        .. std::default::Default::default()
+    };
+
     // the main loop
     // each cycle will draw once
     'main: loop {
         use std::old_io::timer;
         use std::time::Duration;
-        use na::*;
-
-        let matrix: Mat4<f32> = one();
-
-        let uniforms = uniform! {
-            matrix: matrix
-        };
 
         // drawing a frame
         let mut target = display.draw();
-        target.clear_color(0.0, 0.0, 0.0, 0.0);
-        target.draw(&vertex_buffer, &index_buffer, &program, &uniforms, &std::default::Default::default()).unwrap();
+        target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 0.0);
+        target.draw(&vertex_buffer, &index_buffer, &program, &uniforms, &params).unwrap();
         target.finish();
 
         // sleeping for some time in order not to use up too much CPU
