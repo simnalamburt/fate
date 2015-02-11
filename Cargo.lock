@@ -1,5 +1,5 @@
 [root]
-name = "glium-practice"
+name = "glium_practice"
 version = "0.0.1"
 dependencies = [
  "glium 0.0.2 (git+https://github.com/tomaka/glium)",
