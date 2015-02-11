@@ -1,9 +1,13 @@
 My [Glium][] Practice
 ========
 
-```
+```sh
+# client
 cargo run --bin glium-practice
+
+# server
 cargo run --bin server
+nc -u 127.0.0.1 4567
 ```
 
 ### Requirements
