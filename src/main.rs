@@ -1,8 +1,9 @@
-#![feature(core, io, std_misc, plugin)]
+#![feature(io, std_misc, plugin)]
+#![plugin(glium_macros)]
 
 extern crate glutin;
 #[macro_use] extern crate glium;
-#[plugin] extern crate glium_macros;
+extern crate glium_macros;
 extern crate "nalgebra" as na;
 
 fn main() {

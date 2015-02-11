@@ -4,11 +4,11 @@ version = "0.0.1"
 authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
 
 [dependencies.glium]
-git = "https://github.com/tomaka/glium"
+git = "https://github.com/simnalamburt/glium"
 [dependencies.glutin]
 git = "https://github.com/tomaka/glutin"
 [dependencies.glium_macros]
-git = "https://github.com/tomaka/glium"
+git = "https://github.com/simnalamburt/glium"
 
 [dependencies.nalgebra]
 git = "https://github.com/sebcrozet/nalgebra"
