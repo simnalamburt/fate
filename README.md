@@ -3,7 +3,7 @@ My [Glium][] Practice [![travis-i][]][travis-a]
 
 ```sh
 # client
-cargo run --bin glium-practice
+cargo run --bin client
 
 # server
 cargo run --bin server
