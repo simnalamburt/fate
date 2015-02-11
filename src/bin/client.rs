@@ -24,13 +24,19 @@ fn main() {
         }
 
         glium::VertexBuffer::new(&display, vec![
-            Vertex { position: [-1.0, 0.0, 0.0], color: [1.0, 0.0, 0.0] },
-            Vertex { position: [ 1.0, 0.0, 0.0], color: [0.0, 1.0, 0.0] },
-            Vertex { position: [ 0.0, 1.7320508075688772, 0.0], color: [0.0, 0.0, 1.0] },
+            Vertex { position: [ -0.9,  0.8, -1.0 ], color: [ 1.00, 0.71, 0.00 ] },
+            Vertex { position: [ -0.8, -0.8,  1.0 ], color: [ 1.00, 0.85, 0.78 ] },
+            Vertex { position: [  0.5,  0.0,  0.0 ], color: [ 1.00, 1.00, 1.00 ] },
+            Vertex { position: [  0.9, -0.8,  0.0 ], color: [ 0.00, 0.51, 1.00 ] },
+            Vertex { position: [  0.8,  0.8,  0.0 ], color: [ 0.47, 0.74, 1.00 ] },
+            Vertex { position: [ -0.5,  0.0,  0.0 ], color: [ 1.00, 1.00, 1.00 ] },
         ])
     };
 
-    let index_buffer = glium::IndexBuffer::new(&display, glium::index::TrianglesList(vec![0u16, 1, 2]));
+    let index_buffer = glium::IndexBuffer::new(&display, glium::index::TrianglesList(vec![
+        0, 1, 2,
+        3, 4, 5 as u16
+    ]));
 
     let program = glium::Program::from_source(&display,
         // vertex shader
@@ -69,8 +75,10 @@ fn main() {
         use std::time::Duration;
         use na::*;
 
+        let matrix: Mat4<f32> = one();
+
         let uniforms = uniform! {
-            matrix: one::<Mat4<f32>>()
+            matrix: matrix
         };
 
         // drawing a frame
