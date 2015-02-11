@@ -4,7 +4,6 @@
 extern crate glutin;
 #[macro_use] extern crate glium;
 extern crate glium_macros;
-extern crate "nalgebra" as na;
 
 fn main() {
     use glium::{Surface, DisplayBuild};
@@ -50,7 +49,7 @@ fn main() {
             varying vec3 v_color;
 
             void main() {
-                gl_Position = vec4(position, 1.0) * matrix;
+                gl_Position = matrix * vec4(position, 1.0);
                 v_color = color;
             }
         ",
@@ -69,7 +68,12 @@ fn main() {
     ).unwrap();
 
     let uniforms = uniform! {
-        matrix: na::one::<na::Mat4<f32>>()
+        matrix: [
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ]
     };
 
     let params = glium::DrawParameters {

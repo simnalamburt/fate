@@ -9,6 +9,3 @@ git = "https://github.com/tomaka/glium"
 git = "https://github.com/tomaka/glutin"
 [dependencies.glium_macros]
 git = "https://github.com/tomaka/glium"
-
-[dependencies.nalgebra]
-git = "https://github.com/sebcrozet/nalgebra"
