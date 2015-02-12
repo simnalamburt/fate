@@ -1,4 +1,4 @@
-#![feature(io, std_misc, plugin)]
+#![feature(core, io, std_misc, plugin)]
 #![plugin(glium_macros)]
 
 extern crate glutin;
@@ -6,10 +6,10 @@ extern crate glutin;
 extern crate glium_macros;
 extern crate glium_practice;
 
-use glium_practice::Matrix;
+use glium::{Surface, DisplayBuild};
+use glium_practice::math::Matrix;
 
 fn main() {
-    use glium::{Surface, DisplayBuild};
 
     // building the display, ie. the main object
     let display = glutin::WindowBuilder::new()
@@ -26,12 +26,12 @@ fn main() {
         }
 
         glium::VertexBuffer::new(&display, vec![
-            Vertex { position: [ -0.9,  0.8, 0.0 ], color: [ 1.00, 0.71, 0.00 ] },
-            Vertex { position: [ -0.8, -0.8, 1.0 ], color: [ 1.00, 0.85, 0.78 ] },
-            Vertex { position: [  0.5,  0.0, 0.5 ], color: [ 1.00, 1.00, 1.00 ] },
-            Vertex { position: [  0.9, -0.8, 0.5 ], color: [ 0.00, 0.51, 1.00 ] },
-            Vertex { position: [  0.8,  0.8, 0.5 ], color: [ 0.47, 0.74, 1.00 ] },
-            Vertex { position: [ -0.5,  0.0, 0.5 ], color: [ 1.00, 1.00, 1.00 ] },
+            Vertex { position: [ -0.5,  0.0, -10.0 ], color: [ 1.00, 0.71, 0.00 ] },
+            Vertex { position: [ -0.5,  0.5, -10.0 ], color: [ 1.00, 0.85, 0.78 ] },
+            Vertex { position: [  0.5,  0.5, -10.0 ], color: [ 1.00, 1.00, 1.00 ] },
+            Vertex { position: [  0.9,  0.0, -10.0 ], color: [ 0.00, 0.51, 1.00 ] },
+            Vertex { position: [  0.8,  1.0, -10.0 ], color: [ 0.47, 0.74, 1.00 ] },
+            Vertex { position: [ -0.5,  0.5, -10.0 ], color: [ 1.00, 1.00, 1.00 ] },
         ])
     };
 
@@ -70,8 +70,12 @@ fn main() {
         None
     ).unwrap();
 
+    // drawing a frame
     let uniforms = uniform! {
-        matrix: Matrix::one()
+        matrix: {
+            let (width, height) = display.get_framebuffer_dimensions();
+            Matrix::perspective_fov(std::f32::consts::FRAC_PI_4, height as f32/width as f32, 0.001, 1000.0)
+        }
     };
 
     let params = glium::DrawParameters {
@@ -85,7 +89,6 @@ fn main() {
         use std::old_io::timer;
         use std::time::Duration;
 
-        // drawing a frame
         let mut target = display.draw();
         target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 0.0);
         target.draw(&vertex_buffer, &index_buffer, &program, &uniforms, &params).unwrap();
