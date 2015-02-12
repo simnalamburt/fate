@@ -10,7 +10,7 @@ dependencies = [
 [[package]]
 name = "android_glue"
 version = "0.0.1"
-source = "git+https://github.com/tomaka/android-rs-glue#d2fc41212d2a8c073c614380c7aa8c68f5c117b3"
+source = "git+https://github.com/tomaka/android-rs-glue#25daf337cd57794f69c4094b5cb0cc4b6fce50ef"
 
 [[package]]
 name = "bitflags"
@@ -19,8 +19,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "cgmath"
-version = "0.0.3"
-source = "git+https://github.com/bjz/cgmath-rs#6da058ae601a5da2fd246bbe480075d0d1367143"
+version = "0.0.4"
+source = "git+https://github.com/bjz/cgmath-rs#1c3e2f032229576c2e4bda3bb4307a5ae4c0ea9c"
 dependencies = [
  "rand 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand_macros 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -81,9 +81,9 @@ dependencies = [
 [[package]]
 name = "glium"
 version = "0.0.2"
-source = "git+https://github.com/tomaka/glium#0a6541e264186925aa6d49c2e81285f973c4e965"
+source = "git+https://github.com/tomaka/glium#8d9da6ab2543c30410ea6b5ffab5999b5d489aa2"
 dependencies = [
- "cgmath 0.0.3 (git+https://github.com/bjz/cgmath-rs)",
+ "cgmath 0.0.4 (git+https://github.com/bjz/cgmath-rs)",
  "gl_common 0.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "gl_generator 0.0.17 (registry+https://github.com/rust-lang/crates.io-index)",
  "glutin 0.0.4-pre (git+https://github.com/tomaka/glutin)",
@@ -96,12 +96,12 @@ dependencies = [
 [[package]]
 name = "glium_macros"
 version = "0.0.1"
-source = "git+https://github.com/tomaka/glium#0a6541e264186925aa6d49c2e81285f973c4e965"
+source = "git+https://github.com/tomaka/glium#8d9da6ab2543c30410ea6b5ffab5999b5d489aa2"
 
 [[package]]
 name = "glutin"
 version = "0.0.4-pre"
-source = "git+https://github.com/tomaka/glutin#de56a569e8e920cfec62df78b6d2ab852740e22a"
+source = "git+https://github.com/tomaka/glutin#713f269ce8c95d8bd4c55c1f41553c35ab510a27"
 dependencies = [
  "android_glue 0.0.1 (git+https://github.com/tomaka/android-rs-glue)",
  "cocoa 0.1.1 (git+https://github.com/servo/rust-cocoa)",
@@ -120,7 +120,7 @@ dependencies = [
 [[package]]
 name = "image"
 version = "0.2.0-alpha.9"
-source = "git+https://github.com/PistonDevelopers/image#22d6ff19129fb4a2c44d6388e4efa7eb20f26545"
+source = "git+https://github.com/PistonDevelopers/image#530b03aec8e5ad8fccea66605f4dceb0f91db833"
 dependencies = [
  "num 0.1.12 (git+https://github.com/rust-lang/num)",
 ]
