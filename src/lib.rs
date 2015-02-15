@@ -8,17 +8,17 @@ pub mod math {
     pub type Dir = (f32, f32, f32);
 
     pub struct Matrix {
-        m: [f32; 16]
+        m: [[f32; 4]; 4]
     }
 
     impl Matrix {
         pub fn one() -> Self {
             Matrix {
                 m: [
-                    1.0, 0.0, 0.0, 0.0,
-                    0.0, 1.0, 0.0, 0.0,
-                    0.0, 0.0, 1.0, 0.0,
-                    0.0, 0.0, 0.0, 1.0,
+                    [1.0, 0.0, 0.0, 0.0],
+                    [0.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 0.0],
+                    [0.0, 0.0, 0.0, 1.0],
                 ]
             }
         }
@@ -28,10 +28,10 @@ pub mod math {
             let sin = Float::sin(rad);
             Matrix {
                 m: [
-                    1.0, 0.0,  0.0, 0.0,
-                    0.0, cos, -sin, 0.0,
-                    0.0, sin,  cos, 0.0,
-                    0.0, 0.0,  0.0, 1.0,
+                    [1.0, 0.0,  0.0, 0.0],
+                    [0.0, cos, -sin, 0.0],
+                    [0.0, sin,  cos, 0.0],
+                    [0.0, 0.0,  0.0, 1.0],
                 ]
             }
         }
@@ -41,10 +41,10 @@ pub mod math {
             let sin = Float::sin(rad);
             Matrix {
                 m: [
-                     cos, 0.0, sin, 0.0,
-                     0.0, 1.0, 0.0, 0.0,
-                    -sin, 0.0, cos, 0.0,
-                     0.0, 0.0, 0.0, 1.0,
+                    [ cos, 0.0, sin, 0.0],
+                    [ 0.0, 1.0, 0.0, 0.0],
+                    [-sin, 0.0, cos, 0.0],
+                    [ 0.0, 0.0, 0.0, 1.0],
                 ]
             }
         }
@@ -54,10 +54,10 @@ pub mod math {
             let sin = Float::sin(rad);
             Matrix {
                 m: [
-                    cos, -sin, 0.0, 0.0,
-                    sin,  cos, 0.0, 0.0,
-                    0.0,  0.0, 1.0, 0.0,
-                    0.0,  0.0, 0.0, 1.0,
+                    [cos, -sin, 0.0, 0.0],
+                    [sin,  cos, 0.0, 0.0],
+                    [0.0,  0.0, 1.0, 0.0],
+                    [0.0,  0.0, 0.0, 1.0],
                 ]
             }
         }
@@ -68,10 +68,10 @@ pub mod math {
 
             Matrix {
                 m: [
-                    two_near_z/width, 0.0, 0.0, 0.0,
-                    0.0, two_near_z/height, 0.0, 0.0,
-                    0.0, 0.0, range, range*near_z,
-                    0.0, 0.0, -1.0, 0.0,
+                    [two_near_z/width, 0.0, 0.0, 0.0],
+                    [0.0, two_near_z/height, 0.0, 0.0],
+                    [0.0, 0.0, range, range*near_z],
+                    [0.0, 0.0, -1.0, 0.0],
                 ]
             }
         }
@@ -85,10 +85,10 @@ pub mod math {
 
             Matrix {
                 m: [
-                    width, 0.0, 0.0, 0.0,
-                    0.0, height, 0.0, 0.0,
-                    0.0, 0.0, range, range*near_z,
-                    0.0, 0.0, -1.0, 0.0,
+                    [width, 0.0, 0.0, 0.0],
+                    [0.0, height, 0.0, 0.0],
+                    [0.0, 0.0, range, range*near_z],
+                    [0.0, 0.0, -1.0, 0.0],
                 ]
             }
         }
@@ -96,12 +96,7 @@ pub mod math {
 
     impl IntoUniformValue<'static> for Matrix {
         fn into_uniform_value(self) -> UniformValue<'static> {
-            UniformValue::Mat4([
-                [self.m[00], self.m[04], self.m[08], self.m[12]],
-                [self.m[01], self.m[05], self.m[09], self.m[13]],
-                [self.m[02], self.m[06], self.m[10], self.m[14]],
-                [self.m[03], self.m[07], self.m[11], self.m[15]],
-            ])
+            UniformValue::Mat4(self.m, true)
         }
     }
 }
