@@ -1,7 +1,5 @@
-extern crate glium;
-
 use std::num::Float;
-use self::glium::uniforms::*;
+use glium::uniforms::*;
 
 pub type Pos = (f32, f32, f32);
 pub type Dir = (f32, f32, f32);
