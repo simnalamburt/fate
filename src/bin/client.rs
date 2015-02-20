@@ -17,11 +17,11 @@ fn main() {
         .with_title(format!("Hello world"))
         .build_glium().unwrap();
 
-    let (vb, ib) = model::load();
+    let (vb, ib) = model::load().unwrap();
     let vertex_buffer = glium::VertexBuffer::new(&display, vb);
     let index_buffer = glium::IndexBuffer::new(&display, glium::index::TrianglesList(ib));
 
-    let (vs, fs) = shader::load();
+    let (vs, fs) = shader::load().unwrap();
     let program = glium::Program::from_source(&display, &vs, &fs, None).unwrap();
 
     // drawing a frame
@@ -61,8 +61,23 @@ fn main() {
     }
 }
 
+pub mod resources {
+    use std::old_path::BytesContainer;
+    use std::fs::File;
+    use std::io::Result;
+    use std::env::current_exe;
+
+    pub fn load<T: BytesContainer>(name: T) -> Result<File> {
+        let res = current_exe().unwrap().dir_path().join("..").join("res");
+
+        File::open(&res.join(name))
+    }
+}
+
 pub mod model {
-    pub fn load() -> (Vec<Vertex>, Vec<u16>) {
+    use std::io::Result;
+
+    pub fn load() -> Result<(Vec<Vertex>, Vec<u16>)> {
         let vb = vec![
             Vertex::new(-0.5, 0.0, -10.0),
             Vertex::new(-0.5, 0.5, -10.0),
@@ -77,7 +92,7 @@ pub mod model {
             3, 4, 5 as u16
         ];
 
-        (vb, ib)
+        Ok((vb, ib))
     }
 
     #[vertex_format]
@@ -94,18 +109,17 @@ pub mod model {
 }
 
 pub mod shader {
-    pub fn load() -> (String, String) {
-        use std::env::current_exe;
-        use std::fs::File;
-        use std::io::prelude::*;
+    use std::io::Result;
+    use std::io::prelude::*;
+    use resources;
 
-        let res = current_exe().unwrap().dir_path().join("..").join("res");
+    pub fn load() -> Result<(String, String)> {
         let mut vs = String::new();
         let mut fs = String::new();
 
-        File::open(&res.join("vertex.glsl")).unwrap().read_to_string(&mut vs).unwrap();
-        File::open(&res.join("fragment.glsl")).unwrap().read_to_string(&mut fs).unwrap();
+        try!(resources::load("vertex.glsl")).read_to_string(&mut vs).unwrap();
+        try!(resources::load("fragment.glsl")).read_to_string(&mut fs).unwrap();
 
-        (vs, fs)
+        Ok((vs, fs))
     }
 }
