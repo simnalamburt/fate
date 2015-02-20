@@ -43,27 +43,25 @@ fn main() {
 
     let program = glium::Program::from_source(&display,
         // vertex shader
-        "   #version 110
+        "   #version 410
 
             uniform mat4 matrix;
 
-            attribute vec3 position;
-            attribute vec3 color;
-
-            varying vec3 v_color;
+            in vec3 position;
+            in vec3 color;
 
             void main() {
                 gl_Position = matrix * vec4(position, 1.0);
-                v_color = color;
             }
         ",
 
         // fragment shader
-        "   #version 110
-            varying vec3 v_color;
+        "   #version 410
+
+            out vec4 color;
 
             void main() {
-                gl_FragColor = vec4(v_color, 1.0);
+                color = vec4(1, 0.93, 0.56, 1);
             }
         ",
 
