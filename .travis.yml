@@ -1,6 +1,11 @@
 language: rust
 install:
   - sudo apt-get install libXxf86vm-dev
+env:
+  - SUBDIR=common
+  - SUBDIR=server
+  - SUBDIR=client
+script: cd $SUBDIR && cargo build && cargo test
 notifications:
   irc:
     nick: glium-practice

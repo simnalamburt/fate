@@ -1,5 +1,7 @@
 #![feature(net)]
 
+extern crate common;
+
 use std::net::UdpSocket;
 
 fn main() {
@@ -8,7 +10,11 @@ fn main() {
         Ok(s) => s,
         Err(e) => panic!("couldn't bind socket: {}", e),
     };
-    println!("Listening on \x1b[33m{}:{}\x1b[0m", addr.0, addr.1);
+
+    println!("");
+    println!("Running \x1b[36m{}\x1b[0m server", common::PROJECT_NAME);
+    println!("Start listening on \x1b[33m{}:{}\x1b[0m ...", addr.0, addr.1);
+    println!("");
 
     let mut buf = [0u8; 1024];
     loop {

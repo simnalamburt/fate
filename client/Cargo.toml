@@ -1,7 +1,11 @@
 [package]
-name = "glium_practice"
+
+name = "client"
 version = "0.0.1"
 authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
+
+[dependencies.common]
+path = "../common"
 
 [dependencies.glium]
 git = "https://github.com/tomaka/glium"

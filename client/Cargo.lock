@@ -1,7 +1,8 @@
 [root]
-name = "glium_practice"
+name = "client"
 version = "0.0.1"
 dependencies = [
+ "common 0.0.1",
  "glium 0.0.3 (git+https://github.com/tomaka/glium)",
  "glium_macros 0.0.1 (git+https://github.com/tomaka/glium)",
  "glutin 0.0.4 (git+https://github.com/tomaka/glutin)",
@@ -35,6 +36,10 @@ dependencies = [
  "bitflags 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "common"
+version = "0.0.1"
 
 [[package]]
 name = "core_foundation"
@@ -81,7 +86,7 @@ dependencies = [
 [[package]]
 name = "glium"
 version = "0.0.3"
-source = "git+https://github.com/tomaka/glium#231f90e423f67521ff4b4e159caabc1cfa090937"
+source = "git+https://github.com/tomaka/glium#cd8919cc06284480b9001a5a5557a11291739624"
 dependencies = [
  "cgmath 0.0.5 (git+https://github.com/bjz/cgmath-rs)",
  "gl_common 0.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -96,7 +101,7 @@ dependencies = [
 [[package]]
 name = "glium_macros"
 version = "0.0.1"
-source = "git+https://github.com/tomaka/glium#231f90e423f67521ff4b4e159caabc1cfa090937"
+source = "git+https://github.com/tomaka/glium#cd8919cc06284480b9001a5a5557a11291739624"
 
 [[package]]
 name = "glutin"
@@ -120,7 +125,7 @@ dependencies = [
 [[package]]
 name = "image"
 version = "0.2.0-alpha.10"
-source = "git+https://github.com/PistonDevelopers/image#5b589d98e53da920a28dbed8b3ea83452280cdd2"
+source = "git+https://github.com/PistonDevelopers/image#29348a8acf4a0cf4ec88491b059f74b1d3494aa5"
 dependencies = [
  "num 0.1.13 (git+https://github.com/rust-lang/num)",
 ]
