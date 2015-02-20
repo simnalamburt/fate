@@ -1,7 +1,7 @@
-#![feature(core, std_misc, plugin)]
+#![feature(core, env, fs, io, std_misc, plugin)]
 #![plugin(glium_macros)]
 
-#![feature(old_io)]
+#![feature(old_io, old_path)]
 
 extern crate glutin;
 #[macro_use] extern crate glium;
@@ -11,7 +11,6 @@ use glium::{Surface, DisplayBuild};
 use glium_practice::math::Matrix;
 
 fn main() {
-
     // building the display, ie. the main object
     let display = glutin::WindowBuilder::new()
         .with_dimensions(1024, 768)
@@ -41,33 +40,18 @@ fn main() {
         3, 4, 5 as u16
     ]));
 
-    let program = glium::Program::from_source(&display,
-        // vertex shader
-        "   #version 410
+    let program = {
+        use std::fs::File;
+        use std::io::prelude::*;
 
-            uniform mat4 matrix;
+        let mut vs = String::new();
+        let mut fs = String::new();
+        let res = std::env::current_exe().unwrap().dir_path().join("..").join("res");
+        File::open(&res.join("vertex.glsl")).unwrap().read_to_string(&mut vs).unwrap();
+        File::open(&res.join("fragment.glsl")).unwrap().read_to_string(&mut fs).unwrap();
 
-            in vec3 position;
-            in vec3 color;
-
-            void main() {
-                gl_Position = matrix * vec4(position, 1.0);
-            }
-        ",
-
-        // fragment shader
-        "   #version 410
-
-            out vec4 color;
-
-            void main() {
-                color = vec4(1, 0.93, 0.56, 1);
-            }
-        ",
-
-        // optional geometry shader
-        None
-    ).unwrap();
+        glium::Program::from_source(&display, &vs, &fs, None).unwrap()
+    };
 
     // drawing a frame
     let uniforms = uniform! {
