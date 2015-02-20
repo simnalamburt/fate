@@ -17,41 +17,12 @@ fn main() {
         .with_title(format!("Hello world"))
         .build_glium().unwrap();
 
-    let vertex_buffer = {
-        #[vertex_format]
-        #[derive(Copy)]
-        struct Vertex {
-            position: [f32; 3],
-            color: [f32; 3],
-        }
+    let (vb, ib) = model::load();
+    let vertex_buffer = glium::VertexBuffer::new(&display, vb);
+    let index_buffer = glium::IndexBuffer::new(&display, glium::index::TrianglesList(ib));
 
-        glium::VertexBuffer::new(&display, vec![
-            Vertex { position: [ -0.5,  0.0, -10.0 ], color: [ 1.00, 0.71, 0.00 ] },
-            Vertex { position: [ -0.5,  0.5, -10.0 ], color: [ 1.00, 0.85, 0.78 ] },
-            Vertex { position: [  0.5,  0.5, -10.0 ], color: [ 1.00, 1.00, 1.00 ] },
-            Vertex { position: [  0.9,  0.0, -10.0 ], color: [ 0.00, 0.51, 1.00 ] },
-            Vertex { position: [  0.8,  1.0, -10.0 ], color: [ 0.47, 0.74, 1.00 ] },
-            Vertex { position: [ -0.5,  0.5, -10.0 ], color: [ 1.00, 1.00, 1.00 ] },
-        ])
-    };
-
-    let index_buffer = glium::IndexBuffer::new(&display, glium::index::TrianglesList(vec![
-        0, 1, 2,
-        3, 4, 5 as u16
-    ]));
-
-    let program = {
-        use std::fs::File;
-        use std::io::prelude::*;
-
-        let mut vs = String::new();
-        let mut fs = String::new();
-        let res = std::env::current_exe().unwrap().dir_path().join("..").join("res");
-        File::open(&res.join("vertex.glsl")).unwrap().read_to_string(&mut vs).unwrap();
-        File::open(&res.join("fragment.glsl")).unwrap().read_to_string(&mut fs).unwrap();
-
-        glium::Program::from_source(&display, &vs, &fs, None).unwrap()
-    };
+    let (vs, fs) = shader::load();
+    let program = glium::Program::from_source(&display, &vs, &fs, None).unwrap();
 
     // drawing a frame
     let uniforms = uniform! {
@@ -87,5 +58,54 @@ fn main() {
                 _ => ()
             }
         }
+    }
+}
+
+pub mod model {
+    pub fn load() -> (Vec<Vertex>, Vec<u16>) {
+        let vb = vec![
+            Vertex::new(-0.5, 0.0, -10.0),
+            Vertex::new(-0.5, 0.5, -10.0),
+            Vertex::new( 0.5, 0.5, -10.0),
+            Vertex::new( 0.9, 0.0, -10.0),
+            Vertex::new( 0.8, 1.0, -10.0),
+            Vertex::new(-0.5, 0.5, -10.0),
+        ];
+
+        let ib = vec![
+            0, 1, 2,
+            3, 4, 5 as u16
+        ];
+
+        (vb, ib)
+    }
+
+    #[vertex_format]
+    #[derive(Copy)]
+    pub struct Vertex {
+        position: [f32; 3],
+    }
+
+    impl Vertex {
+        fn new(x: f32, y: f32, z: f32) -> Self {
+            Vertex { position: [x, y, z] }
+        }
+    }
+}
+
+pub mod shader {
+    pub fn load() -> (String, String) {
+        use std::env::current_exe;
+        use std::fs::File;
+        use std::io::prelude::*;
+
+        let res = current_exe().unwrap().dir_path().join("..").join("res");
+        let mut vs = String::new();
+        let mut fs = String::new();
+
+        File::open(&res.join("vertex.glsl")).unwrap().read_to_string(&mut vs).unwrap();
+        File::open(&res.join("fragment.glsl")).unwrap().read_to_string(&mut fs).unwrap();
+
+        (vs, fs)
     }
 }
