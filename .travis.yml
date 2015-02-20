@@ -8,7 +8,7 @@ env:
 script: cd $SUBDIR && cargo build && cargo test
 notifications:
   irc:
-    nick: glium-practice
+    nick: fate
     channels:
       - irc.uriirc.org:16667#hyeon
     template:

@@ -16,5 +16,5 @@ nc -u 127.0.0.1 4567
 * *(Linux only)* libXxf86vm-dev
 
 [Rust]: http://rust-lang.org
-[travis-i]: https://travis-ci.org/simnalamburt/glium-practice.svg?branch=master
-[travis-a]: https://travis-ci.org/simnalamburt/glium-practice
+[travis-i]: https://travis-ci.org/simnalamburt/fate.svg?branch=master
+[travis-a]: https://travis-ci.org/simnalamburt/fate
