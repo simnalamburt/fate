@@ -3,13 +3,12 @@
 use std::net::UdpSocket;
 
 fn main() {
-    let port = 4567;
-    let address = "127.0.0.1";
-    let socket = match UdpSocket::bind(&(address, port)) {
+    let addr = ("127.0.0.1", 4567);
+    let socket = match UdpSocket::bind(&addr) {
         Ok(s) => s,
         Err(e) => panic!("couldn't bind socket: {}", e),
     };
-    println!("Listening on \x1b[33m{}:{}\x1b[0m", address, port);
+    println!("Listening on \x1b[33m{}:{}\x1b[0m", addr.0, addr.1);
 
     let mut buf = [0u8; 1024];
     loop {

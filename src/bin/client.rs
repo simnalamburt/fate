@@ -1,9 +1,10 @@
-#![feature(core, io, std_misc, plugin)]
+#![feature(core, std_misc, plugin)]
 #![plugin(glium_macros)]
+
+#![feature(old_io)]
 
 extern crate glutin;
 #[macro_use] extern crate glium;
-extern crate glium_macros;
 extern crate glium_practice;
 
 use glium::{Surface, DisplayBuild};
