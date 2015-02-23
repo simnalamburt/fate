@@ -25,7 +25,7 @@ fn main() {
                 let _ = socket.send_to(buf, &src);
 
                 let msg = String::from_utf8_lossy(buf);
-                let msg = msg[].trim_right();
+                let msg = msg[..].trim_right();
                 println!("Received: \x1b[33m\"{}\"\x1b[0m", msg);
             }
             Err(e) => println!("couldn't receive a datagram: {}", e)
