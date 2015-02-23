@@ -77,7 +77,7 @@ dependencies = [
 [[package]]
 name = "glium"
 version = "0.0.3"
-source = "git+https://github.com/tomaka/glium#3c768ea054466861df9922035d5be27bba7b00c3"
+source = "git+https://github.com/tomaka/glium#2301b1033d7272347ca739bd0f6e08a6cd395655"
 dependencies = [
  "gl_common 0.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "gl_generator 0.0.18 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -89,7 +89,7 @@ dependencies = [
 [[package]]
 name = "glium_macros"
 version = "0.0.1"
-source = "git+https://github.com/tomaka/glium#3c768ea054466861df9922035d5be27bba7b00c3"
+source = "git+https://github.com/tomaka/glium#2301b1033d7272347ca739bd0f6e08a6cd395655"
 
 [[package]]
 name = "glutin"
@@ -136,7 +136,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "obj-rs"
 version = "0.4.2"
-source = "git+https://github.com/simnalamburt/obj-rs#c1fab0e1df97377c134666548ca563173a36a499"
+source = "git+https://github.com/simnalamburt/obj-rs#afccccf26c4bd90009378271f15e6a0b3505c08e"
 dependencies = [
  "glium 0.0.3 (git+https://github.com/tomaka/glium)",
  "glium_macros 0.0.1 (git+https://github.com/tomaka/glium)",
