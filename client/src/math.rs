@@ -1,23 +1,86 @@
 use std::num::Float;
-use std::ops::Mul;
-use std::mem;
+use std::mem::zeroed;
+use std::ops::*;
 use glium::uniforms::*;
 
-pub struct Matrix {
-    m: [[f32; 4]; 4]
+#[simd]
+#[derive(Copy, Debug)]
+pub struct Vector { x: f32, y: f32, z: f32 }
+
+pub fn vec(x: f32, y: f32, z: f32) -> Vector { Vector { x: x, y: y, z: z } }
+
+pub fn dot(lhs: Vector, rhs: Vector) -> f32 {
+    let c = lhs * rhs;
+    c.x + c.y + c.z
 }
 
+pub fn cross(lhs: Vector, rhs: Vector) -> Vector {
+    Vector {
+        x: lhs.y * rhs.z - lhs.z * rhs.y,
+        y: lhs.z * rhs.x - lhs.x * rhs.z,
+        z: lhs.x * rhs.y - lhs.y * rhs.x
+    }
+}
+
+impl Vector {
+    pub fn new() -> Self { unsafe { zeroed() } }
+
+    pub fn length(self) -> f32 { self.length_sq().sqrt() }
+    pub fn length_sq(self) -> f32 { dot(self, self) }
+
+    pub fn normalize(self) -> Self {
+        let mut len = self.length();
+        if len > 0.0 { len = 1.0/len; }
+        self * vec(len, len, len)
+    }
+}
+
+impl Neg for Vector {
+    type Output = Self;
+    fn neg(self) -> Self { Vector::new() - self }
+}
+
+pub struct Matrix { m: [[f32; 4]; 4] }
+
+pub const IDENTITY: Matrix = Matrix {
+    m: [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.0],
+        [0.0, 0.0, 0.0, 1.0],
+    ]
+};
+
 impl Matrix {
-    pub fn new() -> Self {
-        unsafe { mem::zeroed() }
+    pub fn new() -> Self { unsafe { zeroed() } }
+    pub fn identity() -> Self { IDENTITY }
+
+    pub fn look_at(eye: Vector, focus: Vector, up: Vector) -> Self {
+        Matrix::look_to(eye, focus - eye, up)
     }
 
-    pub fn identity() -> Self {
+    pub fn look_to(eye: Vector, dir: Vector, up: Vector) -> Self {
+        // assert!(!XMVector3Equal(EyeDirection, XMVectorZero()));
+        // assert!(!XMVector3IsInfinite(EyeDirection));
+        // assert!(!XMVector3Equal(UpDirection, XMVectorZero()));
+        // assert!(!XMVector3IsInfinite(UpDirection));
+
+        let neg_eye = -eye;
+        let neg_dir = -dir;
+
+        let r2 = neg_dir.normalize();
+        let r0 = cross(up, r2).normalize();
+        let r1 = cross(r2, r0);
+
+        let d0 = dot(r0, neg_eye);
+        let d1 = dot(r1, neg_eye);
+        let d2 = dot(r2, neg_eye);
+
         Matrix {
             m: [
-                [1.0, 0.0, 0.0, 0.0],
-                [0.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 0.0],
+                [r0.x, r0.y, r0.z, d0],
+                [r1.x, r1.y, r1.z, d1],
+                [r2.x, r2.y, r2.z, d2],
                 [0.0, 0.0, 0.0, 1.0],
             ]
         }

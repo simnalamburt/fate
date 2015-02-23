@@ -1,4 +1,4 @@
-#![feature(core, env, fs, io, std_misc, plugin)]
+#![feature(core, env, fs, io, simd, std_misc, plugin)]
 #![plugin(glium_macros)]
 
 #![feature(old_io, old_path)]
@@ -35,10 +35,17 @@ fn main() {
     // drawing a frame
     let uniforms = uniform! {
         matrix: {
-            use math::Matrix;
+            use math::{vec, Matrix};
+
+            let camera = Matrix::look_at(
+                vec(2.0, 1.0, 9.0),
+                vec(0.0, 0.0, 0.0),
+                vec(0.0, 1.0, 0.0));
+
             let (width, height) = display.get_framebuffer_dimensions();
-            Matrix::perspective_fov(consts::FRAC_PI_4, height as f32/width as f32, 0.001, 100.0) *
-                Matrix::translation(0.0, 0.0, -10.0)
+            let view = Matrix::perspective_fov(consts::FRAC_PI_4, height as f32/width as f32, 0.001, 100.0);
+
+            view * camera
         }
     };
 
