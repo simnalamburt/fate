@@ -1,4 +1,6 @@
 use std::num::Float;
+use std::ops::Mul;
+use std::mem;
 use glium::uniforms::*;
 
 pub struct Matrix {
@@ -6,7 +8,11 @@ pub struct Matrix {
 }
 
 impl Matrix {
-    pub fn one() -> Self {
+    pub fn new() -> Self {
+        unsafe { mem::zeroed() }
+    }
+
+    pub fn identity() -> Self {
         Matrix {
             m: [
                 [1.0, 0.0, 0.0, 0.0],
@@ -85,6 +91,43 @@ impl Matrix {
                 [0.0, 0.0, -1.0, 0.0],
             ]
         }
+    }
+
+    pub fn translation(offset_x: f32, offset_y: f32, offset_z: f32) -> Self {
+        Matrix {
+            m: [
+                [1.0, 0.0, 0.0, offset_x],
+                [0.0, 1.0, 0.0, offset_y],
+                [0.0, 0.0, 1.0, offset_z],
+                [0.0, 0.0, 0.0, 1.0],
+            ]
+        }
+    }
+}
+
+impl Mul for Matrix {
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self {
+        let mut result = Matrix::new();
+
+        // Cache the invariants in registers
+        let mut x; let mut y; let mut z; let mut w;
+        macro_rules! row {
+            ($col:expr) => ({
+                x = self.m[$col][0];
+                y = self.m[$col][1];
+                z = self.m[$col][2];
+                w = self.m[$col][3];
+                result.m[$col][0] = (rhs.m[0][0]*x)+(rhs.m[1][0]*y)+(rhs.m[2][0]*z)+(rhs.m[3][0]*w);
+                result.m[$col][1] = (rhs.m[0][1]*x)+(rhs.m[1][1]*y)+(rhs.m[2][1]*z)+(rhs.m[3][1]*w);
+                result.m[$col][2] = (rhs.m[0][2]*x)+(rhs.m[1][2]*y)+(rhs.m[2][2]*z)+(rhs.m[3][2]*w);
+                result.m[$col][3] = (rhs.m[0][3]*x)+(rhs.m[1][3]*y)+(rhs.m[2][3]*z)+(rhs.m[3][3]*w);
+            })
+        }
+        row!(0); row!(1); row!(2); row!(3);
+
+        result
     }
 }
 

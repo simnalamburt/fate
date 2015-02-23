@@ -35,8 +35,10 @@ fn main() {
     // drawing a frame
     let uniforms = uniform! {
         matrix: {
+            use math::Matrix;
             let (width, height) = display.get_framebuffer_dimensions();
-            math::Matrix::perspective_fov(consts::FRAC_PI_4, height as f32/width as f32, 0.001, 1000.0)
+            Matrix::perspective_fov(consts::FRAC_PI_4, height as f32/width as f32, 0.001, 100.0) *
+                Matrix::translation(0.0, 0.0, -10.0)
         }
     };
 
