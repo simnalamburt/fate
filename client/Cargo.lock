@@ -6,6 +6,7 @@ dependencies = [
  "glium 0.0.3 (git+https://github.com/tomaka/glium)",
  "glium_macros 0.0.1 (git+https://github.com/tomaka/glium)",
  "glutin 0.0.5 (git+https://github.com/tomaka/glutin)",
+ "obj-rs 0.4.2 (git+https://github.com/simnalamburt/obj-rs)",
 ]
 
 [[package]]
@@ -131,6 +132,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "log"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "obj-rs"
+version = "0.4.2"
+source = "git+https://github.com/simnalamburt/obj-rs#c1fab0e1df97377c134666548ca563173a36a499"
+dependencies = [
+ "glium 0.0.3 (git+https://github.com/tomaka/glium)",
+ "glium_macros 0.0.1 (git+https://github.com/tomaka/glium)",
+]
 
 [[package]]
 name = "user32-sys"

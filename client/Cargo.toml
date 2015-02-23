@@ -14,3 +14,7 @@ default-features = false
 git = "https://github.com/tomaka/glutin"
 [dependencies.glium_macros]
 git = "https://github.com/tomaka/glium"
+
+[dependencies.obj-rs]
+git = "https://github.com/simnalamburt/obj-rs"
+features = ["glium-support"]

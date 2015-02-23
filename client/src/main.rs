@@ -6,6 +6,7 @@
 extern crate common;
 extern crate glutin;
 #[macro_use] extern crate glium;
+extern crate obj;
 
 pub mod math;
 pub mod resources;
