@@ -3,3 +3,6 @@
 name = "common"
 version = "0.0.1"
 authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
+
+[dependencies]
+rustc-serialize = "*"
