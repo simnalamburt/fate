@@ -7,7 +7,6 @@ cd client; cargo run
 
 # server
 cd server; cargo run
-nc -u 127.0.0.1 4567
 ```
 
 ### Requirements

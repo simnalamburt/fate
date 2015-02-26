@@ -5,7 +5,7 @@ extern crate common;
 use std::net::UdpSocket;
 
 fn main() {
-    let addr = ("127.0.0.1", 4567);
+    let addr = ("0.0.0.0", 4567);
     let socket = match UdpSocket::bind(&addr) {
         Ok(s) => s,
         Err(e) => panic!("couldn't bind socket: {}", e),
@@ -14,6 +14,9 @@ fn main() {
     println!("");
     println!("Running \x1b[36m{}\x1b[0m server", common::PROJECT_NAME);
     println!("Start listening on \x1b[33m{}:{}\x1b[0m ...", addr.0, addr.1);
+    println!("Test it with the command below:");
+    println!("");
+    println!("    $ \x1b[1;37mnc -u 127.0.0.1 {}\x1b[0m", addr.1);
     println!("");
 
     let mut buf = [0u8; 1024];
