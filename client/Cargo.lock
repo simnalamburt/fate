@@ -3,7 +3,7 @@ name = "client"
 version = "0.0.1"
 dependencies = [
  "common 0.0.1",
- "glium 0.0.3 (git+https://github.com/tomaka/glium)",
+ "glium 0.0.3 (git+https://github.com/tomaka/glium?branch=tomaka-patch-1)",
  "glium_macros 0.0.1 (git+https://github.com/tomaka/glium)",
  "glutin 0.0.5 (git+https://github.com/tomaka/glutin)",
  "obj-rs 0.4.2 (git+https://github.com/simnalamburt/obj-rs)",
@@ -22,7 +22,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "cocoa"
 version = "0.1.1"
-source = "git+https://github.com/servo/rust-cocoa#458971cb1199cd25fd31f9c17852e76926622b92"
+source = "git+https://github.com/servo/rust-cocoa#04a0ba54bcf3f06f5166c7dfa638a135714dce77"
 dependencies = [
  "bitflags 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "libc 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -80,7 +80,7 @@ dependencies = [
 [[package]]
 name = "glium"
 version = "0.0.3"
-source = "git+https://github.com/tomaka/glium#bc3af8117cb9f2cda9765178dd0768765ce8e279"
+source = "git+https://github.com/tomaka/glium?branch=tomaka-patch-1#eefd991576551c9552c13b9c8d9583ffcb733cdd"
 dependencies = [
  "gl_common 0.0.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "gl_generator 0.0.19 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -139,9 +139,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "obj-rs"
 version = "0.4.2"
-source = "git+https://github.com/simnalamburt/obj-rs#20fc4e8073dd06b6ad674351a280cc3b1215b588"
+source = "git+https://github.com/simnalamburt/obj-rs#66a82752f61b2ab9cf608cea9b32ae63b0fce53e"
 dependencies = [
- "glium 0.0.3 (git+https://github.com/tomaka/glium)",
+ "glium 0.0.3 (git+https://github.com/tomaka/glium?branch=tomaka-patch-1)",
  "glium_macros 0.0.1 (git+https://github.com/tomaka/glium)",
 ]
 
