@@ -6,3 +6,4 @@ authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
 
 [dependencies]
 rustc-serialize = "*"
+log = "*"

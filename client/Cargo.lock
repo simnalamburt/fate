@@ -32,6 +32,7 @@ dependencies = [
 name = "common"
 version = "0.0.1"
 dependencies = [
+ "log 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
