@@ -3,6 +3,7 @@ name = "server"
 version = "0.0.1"
 dependencies = [
  "common 0.0.1",
+ "log 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

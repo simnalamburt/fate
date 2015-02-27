@@ -1,23 +1,28 @@
 #![feature(net)]
 
 extern crate common;
+#[macro_use]
+extern crate log;
 
+use common::simple_logger;
 use std::net::UdpSocket;
 
 fn main() {
+    let _ = simple_logger::init();
+
     let addr = ("0.0.0.0", 4567);
     let socket = match UdpSocket::bind(&addr) {
         Ok(s) => s,
         Err(e) => panic!("couldn't bind socket: {}", e),
     };
 
-    println!("");
-    println!("Running \x1b[36m{}\x1b[0m server", common::PROJECT_NAME);
-    println!("Start listening on \x1b[33m{}:{}\x1b[0m ...", addr.0, addr.1);
-    println!("Test it with the command below:");
-    println!("");
-    println!("    $ \x1b[1;37mnc -u 127.0.0.1 {}\x1b[0m", addr.1);
-    println!("");
+    info!("");
+    info!("Running \x1b[36m{}\x1b[0m server", common::PROJECT_NAME);
+    info!("Start listening on \x1b[33m{}:{}\x1b[0m ...", addr.0, addr.1);
+    info!("Test it with the command below:");
+    info!("");
+    info!("    $ \x1b[1;37mnc -u 127.0.0.1 {}\x1b[0m", addr.1);
+    info!("");
 
     let mut buf = [0u8; 1024];
     loop {
@@ -29,9 +34,9 @@ fn main() {
 
                 let msg = String::from_utf8_lossy(buf);
                 let msg = msg[..].trim_right();
-                println!("Received: \x1b[33m\"{}\"\x1b[0m", msg);
+                info!("Received: \x1b[33m\"{}\"\x1b[0m", msg);
             }
-            Err(e) => println!("couldn't receive a datagram: {}", e)
+            Err(e) => error!("couldn't receive a datagram: {}", e)
         }
     }
 }
