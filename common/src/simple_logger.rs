@@ -1,9 +1,4 @@
-use log::Log;
-use log::LogLevel;
-use log::LogLevelFilter;
-use log::LogRecord;
-use log::SetLoggerError;
-use log::set_logger;
+use log::*;
 
 pub struct SimpleLogger;
 

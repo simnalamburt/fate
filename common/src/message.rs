@@ -1,8 +1,7 @@
 //! Messages between server and client
 
-use rustc_serialize::json::DecodeResult;
-use rustc_serialize::json::EncoderError;
 use rustc_serialize::json;
+use rustc_serialize::json::{DecodeResult, EncoderError};
 
 #[derive(RustcDecodable, RustcEncodable, PartialEq, Debug)]
 pub enum ServerToClient {

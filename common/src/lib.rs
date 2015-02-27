@@ -8,9 +8,5 @@ extern crate log;
 /// Codename of the project.
 pub const PROJECT_NAME: &'static str = "Project Fate";
 
-#[test]
-fn it_works() {
-}
-
 pub mod message;
 pub mod simple_logger;
