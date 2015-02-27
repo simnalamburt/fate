@@ -9,6 +9,8 @@ cd client; cargo run
 cd server; cargo run
 ```
 
+![](http://simnalamburt.github.io/obj-rs/sample.png)
+
 ### Requirements
 
 * **[Rust][]**
