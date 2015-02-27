@@ -1,7 +1,7 @@
-#![feature(core, env, fs, io, simd, std_misc, plugin)]
+#![feature(core, env, fs, path, io, simd, std_misc, plugin)]
 #![plugin(glium_macros)]
 
-#![feature(old_io, old_path)]
+#![feature(old_io)]
 
 extern crate common;
 extern crate glutin;

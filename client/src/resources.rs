@@ -1,10 +1,16 @@
-use std::old_path::BytesContainer;
-use std::fs::File;
+use std::path::AsPath;
 use std::io::Result;
 use std::env::current_exe;
+use std::fs::File;
 
-pub fn load<T: BytesContainer>(name: T) -> Result<File> {
-    let res = current_exe().unwrap().dir_path().join("..").join("res");
+pub fn load<T: AsPath>(name: T) -> Result<File> {
+    let exe = current_exe().unwrap();
+    let dir = exe.parent().unwrap();
 
-    File::open(&res.join(name))
+    let mut path = dir.to_path_buf();
+    path.push("..");
+    path.push("res");
+    path.push(&name);
+
+    File::open(&*path)
 }
