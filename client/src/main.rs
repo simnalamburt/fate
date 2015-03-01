@@ -37,16 +37,17 @@ fn main() {
         matrix: {
             use math::{vec, Matrix};
 
-            let camera = Matrix::look_at(
+            let view = Matrix::look_at(
                 vec(2.0, 0.0, 9.0),
                 vec(0.0, 4.0, 0.0),
                 vec(0.0, 1.0, 0.0));
 
             let (width, height) = display.get_framebuffer_dimensions();
-            let view = Matrix::perspective_fov(consts::FRAC_PI_4, height as f32/width as f32, 0.001, 100.0);
+            let proj = Matrix::perspective_fov(consts::FRAC_PI_4, height as f32/width as f32, 0.001, 100.0);
 
-            view * camera
-        }
+            proj * view
+        },
+        light: (0.0, -1.0, 0.0)
     };
 
     let params = glium::DrawParameters {
