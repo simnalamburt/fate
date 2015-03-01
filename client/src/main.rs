@@ -44,7 +44,7 @@ fn main() {
                 vec(0.0, 1.0, 0.0));
 
             let (width, height) = display.get_framebuffer_dimensions();
-            let proj = Matrix::perspective_fov(consts::FRAC_PI_4, height as f32/width as f32, 0.001, 100.0);
+            let proj = Matrix::perspective_fov(consts::FRAC_PI_4, height as f32/width as f32, 0.1, 100.0);
 
             proj * view
         },
@@ -52,7 +52,8 @@ fn main() {
     };
 
     let params = glium::DrawParameters {
-        depth_test: glium::DepthTest::IfMore,
+        depth_write: true,
+        depth_test: glium::DepthTest::IfLess,
         .. Default::default()
     };
 
@@ -64,7 +65,7 @@ fn main() {
         use glium::Surface;
 
         let mut target = display.draw();
-        target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 0.0);
+        target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 1.0);
         target.draw(&vertex_buffer, &index_buffer, &program, &uniforms, &params).unwrap();
         target.finish();
 
