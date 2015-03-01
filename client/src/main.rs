@@ -48,7 +48,7 @@ fn main() {
 
             proj * view
         },
-        light: (0.0, -1.0, 0.0)
+        light: (-1.0, -1.0, -1.0)
     };
 
     let params = glium::DrawParameters {
