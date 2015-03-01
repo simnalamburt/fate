@@ -9,7 +9,7 @@ cd client; cargo run
 cd server; cargo run
 ```
 
-![](http://simnalamburt.github.io/obj-rs/sample.png)
+![](http://simnalamburt.github.io/obj-rs/screenshot.png)
 
 ### Requirements
 
