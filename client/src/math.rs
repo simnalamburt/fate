@@ -88,7 +88,7 @@ impl Matrix {
     }
 
     pub fn rotation_x(rad: f32) -> Self {
-        let (sin, cos) = Float::sin_cos(rad);
+        let (sin, cos) = rad.sin_cos();
 
         Matrix {
             m: [
@@ -101,7 +101,7 @@ impl Matrix {
     }
 
     pub fn rotation_y(rad: f32) -> Self {
-        let (sin, cos) = Float::sin_cos(rad);
+        let (sin, cos) = rad.sin_cos();
 
         Matrix {
             m: [
@@ -114,7 +114,7 @@ impl Matrix {
     }
 
     pub fn rotation_z(rad: f32) -> Self {
-        let (sin, cos) = Float::sin_cos(rad);
+        let (sin, cos) = rad.sin_cos();
 
         Matrix {
             m: [
@@ -140,17 +140,16 @@ impl Matrix {
         }
     }
 
-    /// aspect: Height / Width
+    /// aspect: Width / Height
     pub fn perspective_fov(fov: f32, aspect: f32, near_z: f32, far_z: f32) -> Self {
-        let (sin, cos) = Float::sin_cos(0.5 * fov);
-        let height = cos/sin;
-        let width = height/aspect;
+        let (sin, cos) = (0.5 * fov).sin_cos();
+        let f = cos/sin;
         let range = far_z/(near_z - far_z);
 
         Matrix {
             m: [
-                [width, 0.0, 0.0, 0.0],
-                [0.0, height, 0.0, 0.0],
+                [f/aspect, 0.0, 0.0, 0.0],
+                [0.0, f, 0.0, 0.0],
                 [0.0, 0.0, range, range*near_z],
                 [0.0, 0.0, -1.0, 0.0],
             ]

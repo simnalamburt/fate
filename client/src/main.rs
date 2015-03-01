@@ -44,7 +44,7 @@ fn main() {
                 vec(0.0, 1.0, 0.0));
 
             let (width, height) = display.get_framebuffer_dimensions();
-            let proj = Matrix::perspective_fov(consts::FRAC_PI_4, height as f32/width as f32, 0.1, 100.0);
+            let proj = Matrix::perspective_fov(consts::FRAC_PI_4, width as f32/height as f32, 0.1, 100.0);
 
             proj * view
         },
