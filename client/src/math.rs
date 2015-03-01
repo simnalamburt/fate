@@ -40,6 +40,7 @@ impl Neg for Vector {
     fn neg(self) -> Self { Vector::new() - self }
 }
 
+#[derive(PartialEq, Clone, Debug)]
 pub struct Matrix { m: [[f32; 4]; 4] }
 
 pub const IDENTITY: Matrix = Matrix {
@@ -163,6 +164,17 @@ impl Matrix {
                 [0.0, 1.0, 0.0, offset_y],
                 [0.0, 0.0, 1.0, offset_z],
                 [0.0, 0.0, 0.0, 1.0],
+            ]
+        }
+    }
+
+    pub fn transpose(self) -> Self {
+        Matrix {
+            m: [
+                [self.m[0][0], self.m[1][0], self.m[2][0], self.m[3][0]],
+                [self.m[0][1], self.m[1][1], self.m[2][1], self.m[3][1]],
+                [self.m[0][2], self.m[1][2], self.m[2][2], self.m[3][2]],
+                [self.m[0][3], self.m[1][3], self.m[2][3], self.m[3][3]],
             ]
         }
     }
