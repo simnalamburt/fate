@@ -22,6 +22,7 @@ fn main() {
     // building the display, ie. the main object
     let display = glutin::WindowBuilder::new()
         .with_dimensions(1024, 768)
+        .with_depth_buffer(32)
         .with_title(common::PROJECT_NAME.to_string())
         .build_glium().unwrap();
 
