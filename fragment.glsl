@@ -1,7 +1,10 @@
 #version 410
 
-out vec4 color;
+uniform vec3 light;
+
+smooth in vec3 _normal;
+out vec4 result;
 
 void main() {
-  color = vec4(1, 0.93, 0.56, 1);
+  result = vec4(clamp(dot(_normal, -light), 0.0f, 1.0f) * vec3(1.0f, 0.93f, 0.56f), 1.0f);
 }
