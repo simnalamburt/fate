@@ -39,7 +39,7 @@ fn main() {
 
             let view = Matrix::look_at(
                 vec(2.0, 0.0, 9.0),
-                vec(0.0, 4.0, 0.0),
+                vec(0.0, 1.0, 0.0),
                 vec(0.0, 1.0, 0.0));
 
             let (width, height) = display.get_framebuffer_dimensions();
@@ -47,7 +47,7 @@ fn main() {
 
             proj * view
         },
-        light: (0.0, -1.0, 0.0)
+        light: (-1.0, -1.0, -1.0)
     };
 
     let params = glium::DrawParameters {
