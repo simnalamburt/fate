@@ -126,6 +126,22 @@ impl Matrix {
         }
     }
 
+    pub fn orthographic_off_center(view_left: f32, view_right: f32, view_bottom: f32, view_top: f32, near_z: f32, far_z: f32) -> Self {
+        // reciprocal width and height
+        let r_width = 1.0/(view_right - view_left);
+        let r_height = 1.0/(view_top - view_bottom);
+        let range = 1.0/(near_z-far_z);
+
+        Matrix {
+            m: [
+                [r_width + r_width, 0.0, 0.0, -(view_left + view_right)*r_width],
+                [0.0, r_height + r_height, 0.0, -(view_top + view_bottom)*r_height],
+                [0.0, 0.0, range, range*near_z],
+                [0.0, 0.0, 0.0, 1.0],
+            ]
+        }
+    }
+
     pub fn perspective(width: f32, height: f32, near_z: f32, far_z: f32) -> Self {
         let two_near_z = near_z + near_z;
         let range = far_z/(near_z - far_z);
