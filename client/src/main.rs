@@ -26,15 +26,24 @@ fn main() {
         .with_title(common::PROJECT_NAME.to_string())
         .build_glium().unwrap();
 
-    let (vb, ib) = model::load().unwrap();
-    let vertex_buffer = glium::VertexBuffer::new(&display, vb);
-    let index_buffer = glium::IndexBuffer::new(&display, glium::index::TrianglesList(ib));
 
-    let (vs, fs) = shader::load().unwrap();
-    let program = glium::Program::from_source(&display, &vs, &fs, None).unwrap();
+    //
+    // Parameters for world
+    //
+    let (vb_game, ib_game) = {
+        let (vb, ib) = model::load().unwrap();
+        (
+            glium::VertexBuffer::new(&display, vb),
+            glium::IndexBuffer::new(&display, glium::index::TrianglesList(ib))
+        )
+    };
 
-    // drawing a frame
-    let uniforms = uniform! {
+    let program_game = {
+        let (vs, fs) = shader::load().unwrap();
+        glium::Program::from_source(&display, &vs, &fs, None).unwrap()
+    };
+
+    let uniforms_game = uniform! {
         matrix: {
             use math::{vec, Matrix};
 
@@ -53,11 +62,17 @@ fn main() {
         light: (-1.0, -1.0, -1.0)
     };
 
-    let params = glium::DrawParameters {
+    let params_game = glium::DrawParameters {
         depth_write: true,
         depth_test: glium::DepthTest::IfLess,
         .. Default::default()
     };
+
+
+    //
+    // Parameters for UI
+    //
+
 
     // the main loop
     // each cycle will draw once
@@ -68,7 +83,7 @@ fn main() {
 
         let mut target = display.draw();
         target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 1.0);
-        target.draw(&vertex_buffer, &index_buffer, &program, &uniforms, &params).unwrap();
+        target.draw(&vb_game, &ib_game, &program_game, &uniforms_game, &params_game).unwrap();
         target.finish();
 
         // sleeping for some time in order not to use up too much CPU
