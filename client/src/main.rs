@@ -28,6 +28,15 @@ fn main() {
 
 
     //
+    // Basics
+    //
+    let (width, height) = {
+        let dim = display.get_framebuffer_dimensions();
+        (dim.0 as f32, dim.1 as f32)
+    };
+
+
+    //
     // Parameters for world
     //
     let (vb_world, ib_world) = {
@@ -54,8 +63,7 @@ fn main() {
                 vec(0.0, 0.0, 4.0),
                 vec(0.0, 0.0, 1.0));
 
-            let (width, height) = display.get_framebuffer_dimensions();
-            let proj = Matrix::perspective_fov(consts::FRAC_PI_4, width as f32/height as f32, 0.1, 100.0);
+            let proj = Matrix::perspective_fov(consts::FRAC_PI_4, width/height, 0.1, 100.0);
 
             proj * view * world
         },
@@ -75,53 +83,36 @@ fn main() {
     let vb_ui = glium::VertexBuffer::new(&display, {
         #[vertex_format]
         #[derive(Copy)]
-        struct Vertex {
-            position: [f32; 2],
-            color: [f32; 3],
-        }
+        struct Vertex { position: [f32; 2] }
 
         vec![
-            Vertex { position: [ 0.0, -0.5], color: [0.0, 1.0, 0.0] },
-            Vertex { position: [ 0.0,  0.5], color: [0.0, 0.0, 1.0] },
-            Vertex { position: [ 0.5,  0.0], color: [1.0, 0.0, 0.0] },
+            Vertex { position: [   0.0,   0.0] },
+            Vertex { position: [   0.0, 100.0] },
+            Vertex { position: [ 100.0,   0.0] },
+            Vertex { position: [ 100.0, 100.0] },
         ]
     });
-    let ib_ui = glium::IndexBuffer::new(&display, glium::index::TrianglesList({
-        vec![0, 1, 2 as u16]
-    }));
+    let ib_ui = glium::index::NoIndices(glium::index::PrimitiveType::TriangleStrip);
     let program_ui = glium::Program::from_source(&display,
         r#"
             #version 410
-
+            uniform vec2 cursor;
             uniform mat4 matrix;
-
             in vec2 position;
-            in vec3 color;
-
-            out vec3 _color;
 
             void main() {
-                gl_Position = matrix * vec4(position, 0.0, 1.0);
-                _color = color;
+                gl_Position = matrix * vec4(position + cursor, 0.0, 1.0);
             }
         "#, r#"
             #version 410
-
-            in vec3 _color;
             out vec3 color;
 
             void main() {
-                color = _color;
+                color = vec3(1.0, 1.0, 1.0);
             }
         "#, None).unwrap();
-    let uniforms_ui = uniform! {
-        matrix: [
-            [1.0, 0.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0, 0.0],
-            [0.0, 0.0, 1.0, 0.0],
-            [0.0, 0.0, 0.0, 1.0],
-        ]
-    };
+    let mut cursor = (300.0, 300.0);
+    let matrix_ui = math::Matrix::orthographic_off_center(0.0, width, 0.0, height, 0.0, 1.0);
 
 
     // the main loop
@@ -130,6 +121,11 @@ fn main() {
         use std::old_io::timer;
         use std::time::Duration;
         use glium::Surface;
+
+        let uniforms_ui = uniform! {
+            cursor: cursor,
+            matrix: matrix_ui.clone()
+        };
 
         let mut target = display.draw();
         target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 1.0);
@@ -142,8 +138,14 @@ fn main() {
 
         // polling and handling the events received by the window
         for event in display.poll_events() {
+            use glutin::Event::*;
+
             match event {
-                glutin::Event::Closed => break 'main,
+                MouseMoved((x, y)) => {
+                    println!("Moved! : {}, {}", x, y);
+                    cursor = (x as f32, height - y as f32);
+                }
+                Closed => break 'main,
                 _ => ()
             }
         }
