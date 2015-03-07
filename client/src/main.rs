@@ -30,7 +30,7 @@ fn main() {
     //
     // Parameters for world
     //
-    let (vb_game, ib_game) = {
+    let (vb_world, ib_world) = {
         let (vb, ib) = model::load().unwrap();
         (
             glium::VertexBuffer::new(&display, vb),
@@ -38,12 +38,12 @@ fn main() {
         )
     };
 
-    let program_game = {
+    let program_world = {
         let (vs, fs) = shader::load().unwrap();
         glium::Program::from_source(&display, &vs, &fs, None).unwrap()
     };
 
-    let uniforms_game = uniform! {
+    let uniforms_world = uniform! {
         matrix: {
             use math::{vec, Matrix};
 
@@ -62,7 +62,7 @@ fn main() {
         light: (-1.0, -1.0, -1.0)
     };
 
-    let params_game = glium::DrawParameters {
+    let params_world = glium::DrawParameters {
         depth_write: true,
         depth_test: glium::DepthTest::IfLess,
         .. Default::default()
@@ -72,6 +72,56 @@ fn main() {
     //
     // Parameters for UI
     //
+    let vb_ui = glium::VertexBuffer::new(&display, {
+        #[vertex_format]
+        #[derive(Copy)]
+        struct Vertex {
+            position: [f32; 2],
+            color: [f32; 3],
+        }
+
+        vec![
+            Vertex { position: [ 0.0, -0.5], color: [0.0, 1.0, 0.0] },
+            Vertex { position: [ 0.0,  0.5], color: [0.0, 0.0, 1.0] },
+            Vertex { position: [ 0.5,  0.0], color: [1.0, 0.0, 0.0] },
+        ]
+    });
+    let ib_ui = glium::IndexBuffer::new(&display, glium::index::TrianglesList({
+        vec![0, 1, 2 as u16]
+    }));
+    let program_ui = glium::Program::from_source(&display,
+        r#"
+            #version 410
+
+            uniform mat4 matrix;
+
+            in vec2 position;
+            in vec3 color;
+
+            out vec3 _color;
+
+            void main() {
+                gl_Position = matrix * vec4(position, 0.0, 1.0);
+                _color = color;
+            }
+        "#, r#"
+            #version 410
+
+            in vec3 _color;
+            out vec3 color;
+
+            void main() {
+                color = _color;
+            }
+        "#, None).unwrap();
+    let uniforms_ui = uniform! {
+        matrix: [
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ]
+    };
 
 
     // the main loop
@@ -83,7 +133,8 @@ fn main() {
 
         let mut target = display.draw();
         target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 1.0);
-        target.draw(&vb_game, &ib_game, &program_game, &uniforms_game, &params_game).unwrap();
+        target.draw(&vb_world, &ib_world, &program_world, &uniforms_world, &params_world).unwrap();
+        target.draw(&vb_ui, &ib_ui, &program_ui, &uniforms_ui, &Default::default()).unwrap();
         target.finish();
 
         // sleeping for some time in order not to use up too much CPU
