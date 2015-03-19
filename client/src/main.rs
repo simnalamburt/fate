@@ -1,5 +1,4 @@
-#![feature(core, env, fs, path, io, simd, std_misc, plugin)]
-#![plugin(glium_macros)]
+#![feature(core, simd, std_misc, plugin)]
 
 #![feature(old_io)]
 
@@ -81,9 +80,10 @@ fn main() {
     // Parameters for UI
     //
     let vb_ui = glium::VertexBuffer::new(&display, {
-        #[vertex_format]
         #[derive(Copy)]
         struct Vertex { position: [f32; 2] }
+
+        implement_vertex!(Vertex, position);
 
         vec![
             Vertex { position: [   0.0,   0.0] },

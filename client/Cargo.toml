@@ -4,17 +4,8 @@ name = "client"
 version = "0.0.1"
 authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
 
-[dependencies.common]
-path = "../common"
-
-[dependencies.glium]
-git = "https://github.com/tomaka/glium"
-default-features = false
-[dependencies.glutin]
-git = "https://github.com/tomaka/glutin"
-[dependencies.glium_macros]
-git = "https://github.com/tomaka/glium"
-
-[dependencies.obj-rs]
-git = "https://github.com/simnalamburt/obj-rs"
-features = ["glium-support"]
+[dependencies]
+common = { path = "../common" }
+glium = { version = "*", default-features = false }
+glutin = "*"
+obj-rs = { version = "*", features = ["glium-support"] }

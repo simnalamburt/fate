@@ -9,6 +9,7 @@ pub fn load<T: AsPath>(name: T) -> Result<File> {
 
     let mut path = dir.to_path_buf();
     path.push("..");
+    path.push("..");
     path.push("res");
     path.push(&name);
 
