@@ -3,12 +3,12 @@ use log::*;
 pub struct SimpleLogger;
 
 impl Log for SimpleLogger {
-    fn enabled(&self, _level: LogLevel, _module: &str) -> bool {
+    fn enabled(&self, _: &LogMetadata) -> bool {
         true
     }
 
     fn log(&self, record: &LogRecord) {
-        if self.enabled(record.level(), record.location().module_path) {
+        if self.enabled(record.metadata()) {
             println!("{}: {}", record.level(), record.args());
         }
     }
