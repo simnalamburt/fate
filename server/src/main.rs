@@ -1,5 +1,3 @@
-#![feature(net)]
-
 extern crate common;
 #[macro_use]
 extern crate log;

@@ -9,6 +9,4 @@ authors = [
 
 [dependencies]
 log = "*"
-
-[dependencies.common]
-path = "../common"
+common = { path = "../common" }
