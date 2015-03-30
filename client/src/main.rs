@@ -1,4 +1,4 @@
-#![feature(core, simd, std_misc, plugin, convert, thread_sleep)]
+#![feature(core, simd, std_misc, plugin, convert, thread_sleep, slice_patterns)]
 
 extern crate common;
 extern crate glutin;
