@@ -1,9 +1,9 @@
-use std::path::AsPath;
+use std::path::Path;
 use std::io::Result;
 use std::env::current_exe;
 use std::fs::File;
 
-pub fn load<T: AsPath>(name: T) -> Result<File> {
+pub fn load<T: AsRef<Path>>(name: T) -> Result<File> {
     let exe = current_exe().unwrap();
     let dir = exe.parent().unwrap();
 

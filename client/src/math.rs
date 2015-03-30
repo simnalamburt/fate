@@ -79,10 +79,10 @@ impl Matrix {
 
         Matrix {
             m: [
-                [r0.x, r0.y, r0.z, d0],
-                [r1.x, r1.y, r1.z, d1],
-                [r2.x, r2.y, r2.z, d2],
-                [0.0, 0.0, 0.0, 1.0],
+                [r0.x, r1.x, r2.x, 0.0],
+                [r0.y, r1.y, r2.y, 0.0],
+                [r0.z, r1.z, r2.z, 0.0],
+                [d0,   d1,   d2,   1.0],
             ]
         }
     }
@@ -92,10 +92,10 @@ impl Matrix {
 
         Matrix {
             m: [
-                [1.0, 0.0,  0.0, 0.0],
-                [0.0, cos, -sin, 0.0],
-                [0.0, sin,  cos, 0.0],
-                [0.0, 0.0,  0.0, 1.0],
+                [1.0,  0.0, 0.0, 0.0],
+                [0.0,  cos, sin, 0.0],
+                [0.0, -sin, cos, 0.0],
+                [0.0,  0.0, 0.0, 1.0],
             ]
         }
     }
@@ -105,10 +105,10 @@ impl Matrix {
 
         Matrix {
             m: [
-                [ cos, 0.0, sin, 0.0],
-                [ 0.0, 1.0, 0.0, 0.0],
-                [-sin, 0.0, cos, 0.0],
-                [ 0.0, 0.0, 0.0, 1.0],
+                [cos, 0.0, -sin, 0.0],
+                [0.0, 1.0,  0.0, 0.0],
+                [sin, 0.0,  cos, 0.0],
+                [0.0, 0.0,  0.0, 1.0],
             ]
         }
     }
@@ -118,10 +118,10 @@ impl Matrix {
 
         Matrix {
             m: [
-                [cos, -sin, 0.0, 0.0],
-                [sin,  cos, 0.0, 0.0],
-                [0.0,  0.0, 1.0, 0.0],
-                [0.0,  0.0, 0.0, 1.0],
+                [ cos, sin, 0.0, 0.0],
+                [-sin, cos, 0.0, 0.0],
+                [ 0.0, 0.0, 1.0, 0.0],
+                [ 0.0, 0.0, 0.0, 1.0],
             ]
         }
     }
@@ -134,10 +134,10 @@ impl Matrix {
 
         Matrix {
             m: [
-                [r_width + r_width, 0.0, 0.0, -(view_left + view_right)*r_width],
-                [0.0, r_height + r_height, 0.0, -(view_top + view_bottom)*r_height],
-                [0.0, 0.0, range, range*near_z],
-                [0.0, 0.0, 0.0, 1.0],
+                [r_width + r_width, 0.0, 0.0, 0.0],
+                [0.0, r_height + r_height, 0.0, 0.0],
+                [0.0, 0.0, range, 0.0],
+                [-(view_left + view_right)*r_width, -(view_top + view_bottom)*r_height, range*near_z, 1.0],
             ]
         }
     }
@@ -150,8 +150,8 @@ impl Matrix {
             m: [
                 [two_near_z/width, 0.0, 0.0, 0.0],
                 [0.0, two_near_z/height, 0.0, 0.0],
-                [0.0, 0.0, range, range*near_z],
-                [0.0, 0.0, -1.0, 0.0],
+                [0.0, 0.0, range, -1.0],
+                [0.0, 0.0, range*near_z, 0.0],
             ]
         }
     }
@@ -166,19 +166,19 @@ impl Matrix {
             m: [
                 [f/aspect, 0.0, 0.0, 0.0],
                 [0.0, f, 0.0, 0.0],
-                [0.0, 0.0, range, range*near_z],
-                [0.0, 0.0, -1.0, 0.0],
+                [0.0, 0.0, range, -1.0],
+                [0.0, 0.0, range*near_z, 0.0],
             ]
         }
     }
 
-    pub fn translation(offset_x: f32, offset_y: f32, offset_z: f32) -> Self {
+    pub fn translation(ox: f32, oy: f32, oz: f32) -> Self {
         Matrix {
             m: [
-                [1.0, 0.0, 0.0, offset_x],
-                [0.0, 1.0, 0.0, offset_y],
-                [0.0, 0.0, 1.0, offset_z],
-                [0.0, 0.0, 0.0, 1.0],
+                [1.0, 0.0, 0.0, 0.0],
+                [0.0, 1.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0, 0.0],
+                [ox,  oy,  oz,  1.0],
             ]
         }
     }
@@ -209,6 +209,7 @@ impl Mul for Matrix {
                 y = self.m[$col][1];
                 z = self.m[$col][2];
                 w = self.m[$col][3];
+
                 result.m[$col][0] = (rhs.m[0][0]*x)+(rhs.m[1][0]*y)+(rhs.m[2][0]*z)+(rhs.m[3][0]*w);
                 result.m[$col][1] = (rhs.m[0][1]*x)+(rhs.m[1][1]*y)+(rhs.m[2][1]*z)+(rhs.m[3][1]*w);
                 result.m[$col][2] = (rhs.m[0][2]*x)+(rhs.m[1][2]*y)+(rhs.m[2][2]*z)+(rhs.m[3][2]*w);
@@ -223,6 +224,6 @@ impl Mul for Matrix {
 
 impl IntoUniformValue<'static> for Matrix {
     fn into_uniform_value(self) -> UniformValue<'static> {
-        UniformValue::Mat4(self.m, true)
+        UniformValue::Mat4(self.m)
     }
 }

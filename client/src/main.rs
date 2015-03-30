@@ -1,6 +1,4 @@
-#![feature(core, simd, std_misc, plugin)]
-
-#![feature(old_io)]
+#![feature(core, simd, std_misc, plugin, convert, thread_sleep)]
 
 extern crate common;
 extern crate glutin;
@@ -118,7 +116,7 @@ fn main() {
     // the main loop
     // each cycle will draw once
     'main: loop {
-        use std::old_io::timer;
+        use std::thread::sleep;
         use std::time::Duration;
         use glium::Surface;
 
@@ -134,7 +132,7 @@ fn main() {
         target.finish();
 
         // sleeping for some time in order not to use up too much CPU
-        timer::sleep(Duration::milliseconds(17));
+        sleep(Duration::milliseconds(17));
 
         // polling and handling the events received by the window
         for event in display.poll_events() {
