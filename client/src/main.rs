@@ -62,7 +62,7 @@ fn main() {
 
             let proj = Matrix::perspective_fov(consts::FRAC_PI_4, width/height, 0.1, 100.0);
 
-            proj * view * world
+            world * view * proj
         },
         light: (-1.0, -1.0, -1.0)
     };
