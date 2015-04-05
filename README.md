@@ -9,7 +9,7 @@ cd client; cargo run
 cd server; cargo run
 ```
 
-![](http://simnalamburt.github.io/obj-rs/screenshot.png)
+![screenshot][]
 
 ### Requirements
 
@@ -17,5 +17,7 @@ cd server; cargo run
 * *(Linux only)* libXxf86vm-dev
 
 [Rust]: http://rust-lang.org
+[screenshot]: http://simnalamburt.github.io/fate/screenshot.png
+
 [travis-i]: https://travis-ci.org/simnalamburt/fate.svg?branch=master
 [travis-a]: https://travis-ci.org/simnalamburt/fate
