@@ -1,4 +1,4 @@
-#![feature(core, simd, std_misc, plugin, convert, thread_sleep, slice_patterns)]
+#![feature(simd, std_misc, plugin, thread_sleep, slice_patterns)]
 
 extern crate common;
 extern crate glutin;
@@ -78,7 +78,7 @@ fn main() {
     // Parameters for UI
     //
     let vb_ui = glium::VertexBuffer::new(&display, {
-        #[derive(Copy)]
+        #[derive(Clone, Copy)]
         struct Vertex { position: [f32; 2] }
 
         implement_vertex!(Vertex, position);

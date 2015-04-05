@@ -4,7 +4,7 @@ use std::ops::*;
 use glium::uniforms::*;
 
 #[simd]
-#[derive(Copy, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Vector { x: f32, y: f32, z: f32 }
 
 pub fn vec(x: f32, y: f32, z: f32) -> Vector { Vector { x: x, y: y, z: z } }
