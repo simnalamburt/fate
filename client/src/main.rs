@@ -138,10 +138,7 @@ fn main() {
             use glutin::Event::*;
 
             match event {
-                MouseMoved((x, y)) => {
-                    println!("Moved! : {}, {}", x, y);
-                    cursor = (x as f32, height - y as f32);
-                }
+                MouseMoved((x, y)) => cursor = (x as f32, height - y as f32),
                 Closed => break 'main,
                 _ => ()
             }
