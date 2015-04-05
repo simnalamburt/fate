@@ -40,7 +40,7 @@ impl Message for ClientToServer {
 fn test_connect_response() {
     let original = ServerToClient::ConnectResponse(3);
     let encoded = original.stringify().unwrap();
-    let parsed = Message::parse(&encoded).unwrap();
+    let parsed: ServerToClient = Message::parse(&encoded).unwrap();
     assert_eq!(parsed, original);
 }
 
@@ -48,6 +48,6 @@ fn test_connect_response() {
 fn test_connect_request() {
     let original = ClientToServer::ConnectRequest;
     let encoded = original.stringify().unwrap();
-    let parsed = Message::parse(&encoded).unwrap();
+    let parsed: ClientToServer = Message::parse(&encoded).unwrap();
     assert_eq!(parsed, original);
 }
