@@ -1,4 +1,3 @@
-use std::num::Float;
 use std::mem::zeroed;
 use std::ops::*;
 use glium::uniforms::*;

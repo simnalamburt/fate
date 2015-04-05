@@ -1,4 +1,4 @@
-#![feature(simd, std_misc, plugin, thread_sleep, slice_patterns)]
+#![feature(simd, plugin, slice_patterns)]
 
 extern crate common;
 extern crate glutin;
@@ -116,8 +116,7 @@ fn main() {
     // the main loop
     // each cycle will draw once
     'main: loop {
-        use std::thread::sleep;
-        use std::time::Duration;
+        use std::thread::sleep_ms;
         use glium::Surface;
 
         let uniforms_ui = uniform! {
@@ -132,7 +131,7 @@ fn main() {
         target.finish();
 
         // sleeping for some time in order not to use up too much CPU
-        sleep(Duration::milliseconds(17));
+        sleep_ms(17);
 
         // polling and handling the events received by the window
         for event in display.poll_events() {
