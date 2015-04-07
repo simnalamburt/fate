@@ -120,7 +120,6 @@ fn main() {
     // the main loop
     // each cycle will draw once
     'main: loop {
-        use std::thread::sleep_ms;
         use glium::Surface;
 
         let uniforms_ui = uniform! {
@@ -133,9 +132,6 @@ fn main() {
         target.draw(&vb_world, &ib_world, &program_world, &uniforms_world, &params_world).unwrap();
         target.draw(&vb_ui, &ib_ui, &program_ui, &uniforms_ui, &Default::default()).unwrap();
         target.finish();
-
-        // sleeping for some time in order not to use up too much CPU
-        sleep_ms(17);
 
         // polling and handling the events received by the window
         for event in display.poll_events() {
