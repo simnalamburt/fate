@@ -1,6 +1,7 @@
 #![feature(simd, plugin, slice_patterns)]
 
 extern crate common;
+extern crate time;
 extern crate glutin;
 #[macro_use] extern crate glium;
 extern crate obj;
@@ -12,6 +13,7 @@ pub mod shader;
 
 use std::f32::consts;
 use std::default::Default;
+use time::PreciseTime;
 
 fn main() {
     use glium::DisplayBuild;
@@ -113,6 +115,8 @@ fn main() {
     let matrix_ui = math::Matrix::orthographic_off_center(0.0, width, 0.0, height, 0.0, 1.0);
 
 
+    let mut last = PreciseTime::now();
+
     // the main loop
     // each cycle will draw once
     'main: loop {
@@ -143,5 +147,9 @@ fn main() {
                 _ => ()
             }
         }
+
+        let now = PreciseTime::now();
+        print!("FPS: {}\n\x1b[1A", 1.0E+9 / last.to(now).num_nanoseconds().unwrap() as f64);
+        last = now;
     }
 }

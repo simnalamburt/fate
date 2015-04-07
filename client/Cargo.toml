@@ -6,6 +6,7 @@ authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
 
 [dependencies]
 common = { path = "../common" }
+time = "*"
 glium = { version = "*", default-features = false }
 glutin = "*"
 obj-rs = { version = "*", features = ["glium-support"] }
