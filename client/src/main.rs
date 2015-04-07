@@ -84,10 +84,10 @@ fn main() {
         implement_vertex!(Vertex, position);
 
         vec![
-            Vertex { position: [   0.0,   0.0] },
-            Vertex { position: [   0.0, 100.0] },
-            Vertex { position: [ 100.0,   0.0] },
-            Vertex { position: [ 100.0, 100.0] },
+            Vertex { position: [ -2.0, -2.0 ] },
+            Vertex { position: [ -2.0,  3.0 ] },
+            Vertex { position: [  3.0, -2.0 ] },
+            Vertex { position: [  3.0,  3.0 ] },
         ]
     });
     let ib_ui = glium::index::NoIndices(glium::index::PrimitiveType::TriangleStrip);
