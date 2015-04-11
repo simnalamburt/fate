@@ -10,6 +10,7 @@ pub mod math;
 pub mod resources;
 pub mod model;
 pub mod shader;
+pub mod camera;
 
 use std::f32::consts;
 use std::default::Default;
@@ -51,17 +52,17 @@ fn main() {
         glium::Program::from_source(&display, &vs, &fs, None).unwrap()
     };
 
+    let mut camera = {
+        use math::vec;
+        camera::Camera::new(vec(20.0, -20.0, 20.0), vec(0.0, 0.0, 4.0), vec(0.0, 0.0, 1.0))
+    };
+
     let uniforms_world = uniform! {
         matrix: {
-            use math::{vec, Matrix};
+            use math::Matrix;
 
             let world = Matrix::rotation_x(consts::FRAC_PI_2);
-
-            let view = Matrix::look_at(
-                vec(20.0, -20.0, 20.0),
-                vec(0.0, 0.0, 4.0),
-                vec(0.0, 0.0, 1.0));
-
+            let view = camera.matrix();
             let proj = Matrix::perspective_fov(consts::FRAC_PI_4, width/height, 0.1, 100.0);
 
             world * view * proj
