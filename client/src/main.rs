@@ -54,19 +54,6 @@ fn main() {
 
     let mut camera = camera::Camera::new();
 
-    let uniforms_world = uniform! {
-        matrix: {
-            use math::Matrix;
-
-            let world = Matrix::rotation_x(consts::FRAC_PI_2);
-            let view = camera.matrix();
-            let proj = Matrix::perspective_fov(consts::FRAC_PI_4, width/height, 0.1, 100.0);
-
-            world * view * proj
-        },
-        light: (-1.0, -1.0, -1.0)
-    };
-
     let params_world = glium::DrawParameters {
         depth_write: true,
         depth_test: glium::DepthTest::IfLess,
@@ -120,6 +107,19 @@ fn main() {
     'main: loop {
         use glium::Surface;
 
+        let uniforms_world = uniform! {
+            matrix: {
+                use math::Matrix;
+
+                let world = Matrix::rotation_x(consts::FRAC_PI_2);
+                let view = camera.matrix();
+                let proj = Matrix::perspective_fov(consts::FRAC_PI_4, width/height, 0.1, 100.0);
+
+                world * view * proj
+            },
+            light: (-1.0, -1.0, -1.0)
+        };
+
         let uniforms_ui = uniform! {
             cursor: cursor,
             matrix: matrix_ui.clone()
@@ -137,6 +137,7 @@ fn main() {
 
             match event {
                 MouseMoved((x, y)) => cursor = (x as f32, height - y as f32),
+                MouseWheel(delta) => camera.zoom(delta),
                 Closed => break 'main,
                 _ => ()
             }
