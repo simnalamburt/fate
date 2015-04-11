@@ -195,9 +195,24 @@ impl Matrix {
 }
 
 impl Mul for Matrix {
-    type Output = Self;
+    type Output = Matrix;
+    fn mul(self, rhs: Matrix) -> Matrix { &self * &rhs }
+}
 
-    fn mul(self, rhs: Self) -> Self {
+impl<'a> Mul<Matrix> for &'a Matrix {
+    type Output = Matrix;
+    fn mul(self, rhs: Matrix) -> Matrix { self * &rhs }
+}
+
+impl<'a> Mul<&'a Matrix> for Matrix {
+    type Output = Matrix;
+    fn mul(self, rhs: &'a Matrix) -> Matrix { &self * rhs }
+}
+
+impl<'a, 'b> Mul<&'a Matrix> for &'b Matrix {
+    type Output = Matrix;
+
+    fn mul(self, rhs: &'a Matrix) -> Matrix {
         macro_rules! row {
             ($col:expr) => ({
                 let [x, y, z, w] = self.m[$col];
