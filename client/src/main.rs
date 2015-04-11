@@ -52,10 +52,7 @@ fn main() {
         glium::Program::from_source(&display, &vs, &fs, None).unwrap()
     };
 
-    let mut camera = {
-        use math::vec;
-        camera::Camera::new(vec(20.0, -20.0, 20.0), vec(0.0, 0.0, 4.0), vec(0.0, 0.0, 1.0))
-    };
+    let mut camera = camera::Camera::new();
 
     let uniforms_world = uniform! {
         matrix: {

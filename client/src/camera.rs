@@ -1,21 +1,32 @@
-use math::{Vector, Matrix};
+use math::{vec, Vector, Matrix};
 
 pub struct Camera {
-    eye: Vector, focus: Vector, up: Vector,
-    dirty: bool, matrix: Matrix
+    focus: Vector,
+    dir: Vector,
+    dist: f32,
+
+    dirty: bool,
+    matrix: Matrix
 }
 
 impl Camera {
-    pub fn new(eye: Vector, focus: Vector, up: Vector) -> Self {
+    pub fn new() -> Self {
         Camera {
-            eye: eye, focus: focus, up: up,
-            dirty: true, matrix: Matrix::new()
+            focus: vec(0.0, 0.0, 4.0),
+            dir: vec(-0.5773502691896258, 0.5773502691896258, -0.5773502691896258),
+            dist: 34.64101615137754,
+
+            dirty: true,
+            matrix: Matrix::new()
         }
     }
 
     pub fn matrix(&mut self) -> &Matrix {
         if self.dirty {
-            self.matrix = Matrix::look_at(self.eye, self.focus, self.up);
+            self.matrix = Matrix::look_at(
+                self.focus - self.dir * vec(self.dist, self.dist, self.dist),
+                self.focus,
+                vec(0.0, 0.0, 1.0));
             self.dirty = false;
         }
 
