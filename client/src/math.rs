@@ -229,8 +229,8 @@ impl<'a, 'b> Mul<&'a Matrix> for &'b Matrix {
     }
 }
 
-impl IntoUniformValue<'static> for Matrix {
-    fn into_uniform_value(self) -> UniformValue<'static> {
+impl AsUniformValue for Matrix {
+    fn as_uniform_value(&self) -> UniformValue<'static> {
         UniformValue::Mat4(self.m)
     }
 }
