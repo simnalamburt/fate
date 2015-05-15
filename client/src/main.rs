@@ -137,7 +137,7 @@ fn main() {
 
             match event {
                 MouseMoved((x, y)) => cursor = (x as f32, height - y as f32),
-                MouseWheel(delta) => camera.zoom(delta),
+                MouseWheel(_, delta) => camera.zoom(delta),
                 Closed => break 'main,
                 _ => ()
             }

@@ -33,7 +33,7 @@ impl Camera {
         &self.matrix
     }
 
-    pub fn zoom(&mut self, delta: i32) {
+    pub fn zoom(&mut self, delta: f64) {
         self.dirty = true;
         self.dist += (delta as f32) * 0.01
     }
