@@ -3,8 +3,6 @@ extern crate time;
 #[macro_use] extern crate glium;
 
 pub mod math;
-pub mod resources;
-pub mod shader;
 
 use std::default::Default;
 use time::PreciseTime;
