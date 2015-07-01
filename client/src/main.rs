@@ -3,6 +3,7 @@ extern crate time;
 #[macro_use] extern crate glium;
 
 pub mod math;
+mod nemo;
 
 use std::default::Default;
 use time::PreciseTime;
@@ -26,43 +27,10 @@ fn main() {
 
 
     //
-    // Nemo
+    // Game
     //
-    let vb_nemo = glium::VertexBuffer::new(&display, {
-        #[derive(Clone, Copy)]
-        struct Vertex { position: [f32; 2] }
-
-        implement_vertex!(Vertex, position);
-
-        vec![
-            Vertex { position: [ -10.0, -10.0 ] },
-            Vertex { position: [ -10.0,  10.0 ] },
-            Vertex { position: [  10.0, -10.0 ] },
-            Vertex { position: [  10.0,  10.0 ] },
-        ]
-    });
-    let ib_nemo = glium::index::NoIndices(glium::index::PrimitiveType::TriangleStrip);
-    let program_nemo = glium::Program::from_source(&display,
-        r#"
-            #version 410
-            uniform vec2 pos;
-            uniform mat4 matrix;
-            in vec2 position;
-
-            void main() {
-                gl_Position = matrix * vec4(position + pos, 0.0, 1.0);
-            }
-        "#, r#"
-            #version 410
-            out vec3 color;
-
-            void main() {
-                color = vec3(1.0, 0.82745, 0.14118);
-            }
-        "#, None).unwrap();
-    let mut pos_nemo = (0.0, 0.0);
-
-    let matrix_game = math::Matrix::orthographic(width/10.0, height/10.0, 0.0, 1.0);
+    let mut nemo = nemo::Nemo::new(&display);
+    let world = math::Matrix::orthographic(width/10.0, height/10.0, 0.0, 1.0);
 
 
     //
@@ -111,11 +79,6 @@ fn main() {
     'main: loop {
         use glium::Surface;
 
-        let uniforms_nemo = uniform! {
-            pos: pos_nemo,
-            matrix: matrix_game.clone()
-        };
-
         let uniforms_ui = uniform! {
             cursor: cursor,
             matrix: matrix_ui.clone()
@@ -123,7 +86,7 @@ fn main() {
 
         let mut target = display.draw();
         target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 1.0);
-        target.draw(&vb_nemo, &ib_nemo, &program_nemo, &uniforms_nemo, &Default::default()).unwrap();
+        let mut target = nemo.draw(target, world.clone()); // ㅇㅅㅇ?
         target.draw(&vb_ui, &ib_ui, &program_ui, &uniforms_ui, &Default::default()).unwrap();
         let _ = target.finish();
 
@@ -135,10 +98,10 @@ fn main() {
 
             match event {
                 MouseMoved((x, y)) => cursor = (x as f32, height - y as f32),
-                MouseInput(Pressed, Left) => pos_nemo = {
+                MouseInput(Pressed, Left) => nemo.go({
                     // 마우스 좌표계 ~ 게임 좌표계 변환
                     ((cursor.0 - width/2.0)/10.0, (cursor.1 - height/2.0)/10.0)
-                },
+                }),
                 Closed => break 'main,
                 _ => ()
             }
