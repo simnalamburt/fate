@@ -1,3 +1,0 @@
-[submodule "client/res"]
-	path = client/res
-	url = https://github.com/simnalamburt/fate-res.git
