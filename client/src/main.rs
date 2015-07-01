@@ -64,7 +64,7 @@ fn main() {
         "#, None).unwrap();
     let position = (300.0, 300.0);
 
-    let matrix_game = math::Matrix::orthographic_off_center(0.0, width, 0.0, height, 0.0, 1.0);
+    let matrix_game = math::Matrix::orthographic(width/10.0, height/10.0, 0.0, 1.0);
 
 
     //

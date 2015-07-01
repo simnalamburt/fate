@@ -57,6 +57,22 @@ impl Matrix {
         }
     }
 
+    pub fn orthographic(view_width: f32, view_height: f32, near_z: f32, far_z: f32) -> Self {
+        // assert(!XMScalarNearEqual(ViewWidth, 0.0f, 0.00001f));
+        // assert(!XMScalarNearEqual(ViewHeight, 0.0f, 0.00001f));
+        // assert(!XMScalarNearEqual(FarZ, NearZ, 0.00001f));
+        let f_range = 1.0/(near_z - far_z);
+        Matrix {
+            m: [
+                [2.0/view_width, 0.0, 0.0, 0.0],
+                [0.0, 2.0/view_height, 0.0, 0.0],
+                [0.0, 0.0, f_range, 0.0],
+                [0.0, 0.0, f_range*near_z, 1.0],
+            ]
+        }
+
+    }
+
     pub fn orthographic_off_center(view_left: f32, view_right: f32, view_bottom: f32, view_top: f32, near_z: f32, far_z: f32) -> Self {
         // reciprocal width and height
         let r_width = 1.0/(view_right - view_left);
