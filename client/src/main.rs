@@ -47,12 +47,12 @@ fn main() {
     let program_nemo = glium::Program::from_source(&display,
         r#"
             #version 410
-            uniform vec2 cursor;
+            uniform vec2 pos;
             uniform mat4 matrix;
             in vec2 position;
 
             void main() {
-                gl_Position = matrix * vec4(position + cursor, 0.0, 1.0);
+                gl_Position = matrix * vec4(position + pos, 0.0, 1.0);
             }
         "#, r#"
             #version 410
@@ -62,7 +62,7 @@ fn main() {
                 color = vec3(1.0, 0.82745, 0.14118);
             }
         "#, None).unwrap();
-    let position = (300.0, 300.0);
+    let mut pos_nemo = (0.0, 0.0);
 
     let matrix_game = math::Matrix::orthographic(width/10.0, height/10.0, 0.0, 1.0);
 
@@ -114,7 +114,7 @@ fn main() {
         use glium::Surface;
 
         let uniforms_nemo = uniform! {
-            position: position,
+            pos: pos_nemo,
             matrix: matrix_game.clone()
         };
 
@@ -132,9 +132,15 @@ fn main() {
         // polling and handling the events received by the window
         for event in display.poll_events() {
             use glium::glutin::Event::*;
+            use glium::glutin::ElementState::*;
+            use glium::glutin::MouseButton::*;
 
             match event {
                 MouseMoved((x, y)) => cursor = (x as f32, height - y as f32),
+                MouseInput(Pressed, Left) => pos_nemo = {
+                    // 마우스 좌표계 ~ 게임 좌표계 변환
+                    ((cursor.0 - width/2.0)/10.0, (cursor.1 - height/2.0)/10.0)
+                },
                 Closed => break 'main,
                 _ => ()
             }
