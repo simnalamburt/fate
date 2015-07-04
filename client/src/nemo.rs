@@ -8,6 +8,7 @@ pub struct Nemo {
     ib: NoIndices,
     program: Program,
     pos: (f64, f64),
+    angle: f64,
     state: State,
 }
 
@@ -20,7 +21,7 @@ enum State {
     /// Nemo is stopped
     Stopped,
     /// Nemo is moving
-    Moving { dest: (f64, f64), theta: f64 },
+    Moving { dest: (f64, f64) },
 }
 
 impl Nemo {
@@ -53,6 +54,7 @@ impl Nemo {
                 }
             "#, None).unwrap(),
             pos: (0.0, 0.0),
+            angle: 0.0,
             state: State::Stopped,
         }
     }
@@ -62,7 +64,7 @@ impl Nemo {
 
         match self.state {
             State::Stopped => {}
-            State::Moving { dest, theta } => {
+            State::Moving { dest } => {
                 let dx = dest.0 - self.pos.0;
                 let dy = dest.1 - self.pos.1;
 
@@ -76,8 +78,8 @@ impl Nemo {
                     self.pos = dest;
                     next = Some(State::Stopped);
                 } else {
-                    self.pos.0 += diff*theta.cos();
-                    self.pos.1 += diff*theta.sin();
+                    self.pos.0 += diff*self.angle.cos();
+                    self.pos.1 += diff*self.angle.sin();
                 }
             }
         };
@@ -103,8 +105,7 @@ impl Nemo {
     pub fn go(&mut self, dest: (f64, f64)) {
         let dx = dest.0 - self.pos.0;
         let dy = dest.1 - self.pos.1;
-
-        let theta = dy.atan2(dx);
-        self.state = State::Moving { dest: dest, theta: theta };
+        self.angle = dy.atan2(dx);
+        self.state = State::Moving { dest: dest };
     }
 }
