@@ -89,13 +89,13 @@ impl Nemo {
         });
     }
 
-    pub fn draw(&self, mut target: Frame, world: Matrix) -> Frame {
+    pub fn draw(&self, mut target: Frame, camera: Matrix) -> Frame {
         use glium::Surface;
 
         let uniforms = uniform! {
             // Note: (f64, f64) doesn't implement AsUniformValue
             pos: (self.pos.0 as f32, self.pos.1 as f32),
-            matrix: world,
+            matrix: camera,
         };
 
         target.draw(&self.vb, &self.ib, &self.program, &uniforms, &Default::default()).unwrap();

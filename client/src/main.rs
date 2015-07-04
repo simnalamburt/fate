@@ -30,7 +30,7 @@ fn main() {
     // Game
     //
     let mut nemo = nemo::Nemo::new(&display);
-    let world = math::Matrix::orthographic(width as f32/10.0, height as f32/10.0, 0.0, 1.0);
+    let camera = math::Matrix::orthographic(width as f32/10.0, height as f32/10.0, 0.0, 1.0);
 
 
     //
@@ -120,7 +120,10 @@ fn main() {
 
         let mut target = display.draw();
         target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 1.0);
-        let mut target = nemo.draw(target, world.clone()); // ㅇㅅㅇ?
+
+        // Note: .clone() 안하고싶음
+        let mut target = nemo.draw(target, camera.clone());
+
         target.draw(&vb_ui, &ib_ui, &program_ui, &uniforms_ui, &Default::default()).unwrap();
         let _ = target.finish();
     }
