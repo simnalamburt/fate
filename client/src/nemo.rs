@@ -38,12 +38,11 @@ impl Nemo {
             ib: NoIndices(PrimitiveType::TriangleStrip),
             program: Program::from_source(facade, r#"
                 #version 410
-                uniform vec2 pos;
                 uniform mat4 matrix;
                 in vec2 position;
 
                 void main() {
-                    gl_Position = matrix * vec4(position + pos, 0.0, 1.0);
+                    gl_Position = matrix * vec4(position, 0.0, 1.0);
                 }
             "#, r#"
                 #version 410
@@ -92,10 +91,12 @@ impl Nemo {
     pub fn draw(&self, mut target: Frame, camera: Matrix) -> Frame {
         use glium::Surface;
 
+        // TODO: Cache
+        let local = Matrix::rotation_z(self.angle as f32);
+        let world = Matrix::translation(self.pos.0 as f32, self.pos.1 as f32, 0.0);
+
         let uniforms = uniform! {
-            // Note: (f64, f64) doesn't implement AsUniformValue
-            pos: (self.pos.0 as f32, self.pos.1 as f32),
-            matrix: camera,
+            matrix: local * world * camera,
         };
 
         target.draw(&self.vb, &self.ib, &self.program, &uniforms, &Default::default()).unwrap();
