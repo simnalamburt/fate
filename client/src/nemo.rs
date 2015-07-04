@@ -104,6 +104,8 @@ impl Nemo {
     }
 
     pub fn go(&mut self, dest: (f64, f64)) {
+        if self.pos == dest { return; }
+
         let dx = dest.0 - self.pos.0;
         let dy = dest.1 - self.pos.1;
         self.angle = dy.atan2(dx);
