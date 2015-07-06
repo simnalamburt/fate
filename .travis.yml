@@ -1,6 +1,9 @@
 language: rust
-install:
-  - sudo apt-get install libXxf86vm-dev
+sudo: false
+addons:
+  apt:
+    packages:
+    - libXxf86vm-dev
 env:
   - SUBDIR=common
   - SUBDIR=server
