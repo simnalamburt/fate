@@ -7,8 +7,8 @@ pub struct Nemo {
     vb: VertexBuffer<Vertex>,
     ib: NoIndices,
     program: Program,
-    pos: (f64, f64),
-    angle: f64,
+    pos: (f32, f32),
+    angle: f32,
     state: State,
 }
 
@@ -21,7 +21,7 @@ enum State {
     /// Nemo is stopped
     Stopped,
     /// Nemo is moving
-    Moving { dest: (f64, f64) },
+    Moving { dest: (f32, f32) },
 }
 
 impl Nemo {
@@ -57,7 +57,7 @@ impl Nemo {
         }
     }
 
-    pub fn update(&mut self, elapsed: f64) {
+    pub fn update(&mut self, elapsed: f32) {
         let mut next = None;
 
         match self.state {
@@ -91,8 +91,8 @@ impl Nemo {
         use glium::Surface;
 
         // TODO: Cache
-        let local = Matrix::rotation_z(self.angle as f32);
-        let world = Matrix::translation(self.pos.0 as f32, self.pos.1 as f32, 0.0);
+        let local = Matrix::rotation_z(self.angle);
+        let world = Matrix::translation(self.pos.0, self.pos.1, 0.0);
 
         let uniforms = uniform! {
             matrix: local * world * camera,
@@ -102,7 +102,7 @@ impl Nemo {
         target
     }
 
-    pub fn go(&mut self, dest: (f64, f64)) {
+    pub fn go(&mut self, dest: (f32, f32)) {
         if self.pos == dest { return; }
 
         let dx = dest.0 - self.pos.0;

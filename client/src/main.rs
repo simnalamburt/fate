@@ -22,7 +22,7 @@ fn main() {
     //
     let (width, height) = {
         let dim = display.get_framebuffer_dimensions();
-        (dim.0 as f64, dim.1 as f64)
+        (dim.0 as f32, dim.1 as f32)
     };
 
 
@@ -30,7 +30,7 @@ fn main() {
     // Game
     //
     let mut nemo = nemo::Nemo::new(&display);
-    let camera = math::Matrix::orthographic(width as f32/10.0, height as f32/10.0, 0.0, 1.0);
+    let camera = math::Matrix::orthographic(width/10.0, height/10.0, 0.0, 1.0);
 
 
     //
@@ -69,7 +69,7 @@ fn main() {
             }
         "#, None).unwrap();
     let mut cursor = (300.0, 300.0);
-    let matrix_ui = math::Matrix::orthographic_off_center(0.0, width as f32, 0.0, height as f32, 0.0, 1.0);
+    let matrix_ui = math::Matrix::orthographic_off_center(0.0, width, 0.0, height, 0.0, 1.0);
 
 
     let mut last = PreciseTime::now();
@@ -88,7 +88,7 @@ fn main() {
             use glium::glutin::MouseButton::*;
 
             match event {
-                MouseMoved((x, y)) => cursor = (x as f64, height - y as f64),
+                MouseMoved((x, y)) => cursor = (x as f32, height - y as f32),
                 MouseInput(Pressed, Left) => nemo.go({
                     // 마우스 좌표계 ~ 게임 좌표계 변환
                     ((cursor.0 - width/2.0)/10.0, (cursor.1 - height/2.0)/10.0)
@@ -103,7 +103,7 @@ fn main() {
         // Update
         //
         let now = PreciseTime::now();
-        let delta = last.to(now).num_nanoseconds().unwrap() as f64 / 1.0E+9;
+        let delta = last.to(now).num_nanoseconds().unwrap() as f32 / 1.0E+9;
         print!("FPS: {}\n\x1b[1A", 1.0/delta);
         last = now;
 
@@ -114,7 +114,7 @@ fn main() {
         // Render
         //
         let uniforms_ui = uniform! {
-            cursor: (cursor.0 as f32, cursor.1 as f32), // <- (f64, f64) doesn't implement AsUniformValue
+            cursor: cursor,
             matrix: matrix_ui.clone()
         };
 
