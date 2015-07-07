@@ -1,7 +1,7 @@
 use glium::{VertexBuffer, Program, Frame};
 use glium::index::*;
 use glium::backend::Facade;
-use math::Matrix;
+use xmath::Matrix;
 
 pub struct Nemo {
     vb: VertexBuffer<Vertex>,

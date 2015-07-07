@@ -1,8 +1,8 @@
 extern crate common;
 extern crate time;
+extern crate xmath;
 #[macro_use] extern crate glium;
 
-pub mod math;
 mod nemo;
 
 use std::default::Default;
@@ -30,7 +30,7 @@ fn main() {
     // Game
     //
     let mut nemo = nemo::Nemo::new(&display);
-    let camera = math::Matrix::orthographic(width/10.0, height/10.0, 0.0, 1.0);
+    let camera = xmath::Matrix::orthographic(width/10.0, height/10.0, 0.0, 1.0);
 
 
     //
@@ -69,7 +69,7 @@ fn main() {
             }
         "#, None).unwrap();
     let mut cursor = (300.0, 300.0);
-    let matrix_ui = math::Matrix::orthographic_off_center(0.0, width, 0.0, height, 0.0, 1.0);
+    let matrix_ui = xmath::Matrix::orthographic_off_center(0.0, width, 0.0, height, 0.0, 1.0);
 
 
     let mut last = PreciseTime::now();

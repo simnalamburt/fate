@@ -7,8 +7,5 @@ authors = ["Hyeon Kim <simnalamburt@gmail.com>"]
 [dependencies]
 common = { path = "../common" }
 time = "*"
-
-[dependencies.glium]
-version = "*"
-default-features = false
-features = ["glutin"]
+xmath = "0.1"
+glium = { version = "*", default-features = false, features = ["glutin"] }
