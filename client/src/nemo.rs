@@ -29,10 +29,9 @@ impl Nemo {
         Nemo {
             vb: VertexBuffer::new(facade, {
                 vec![
-                    Vertex { position: [ -10.0, -10.0 ] },
-                    Vertex { position: [ -10.0,  10.0 ] },
-                    Vertex { position: [  10.0, -10.0 ] },
-                    Vertex { position: [  10.0,  10.0 ] },
+                    Vertex { position: [   4.0,   0.0 ] },
+                    Vertex { position: [  -4.0,   1.5 ] },
+                    Vertex { position: [  -4.0,  -1.5 ] },
                 ]
             }),
             ib: NoIndices(PrimitiveType::TriangleStrip),
