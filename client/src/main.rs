@@ -86,14 +86,16 @@ fn main() {
         for event in display.poll_events() {
             use glium::glutin::Event::*;
             use glium::glutin::ElementState::*;
-            use glium::glutin::MouseButton::*;
+            use glium::glutin::MouseButton;
+            use glium::glutin::VirtualKeyCode::*;
 
             match event {
                 MouseMoved((x, y)) => cursor = (x as f32, height - y as f32),
-                MouseInput(Pressed, Left) => nemo.go({
+                MouseInput(Pressed, MouseButton::Left) => nemo.go({
                     // 마우스 좌표계 ~ 게임 좌표계 변환
                     ((cursor.0 - width/2.0)/10.0, (cursor.1 - height/2.0)/10.0)
                 }),
+                KeyboardInput(Pressed, _, Some(Q)) => nemo.q(),
                 Closed => break 'main,
                 _ => ()
             }

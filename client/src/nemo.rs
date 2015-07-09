@@ -22,6 +22,8 @@ enum State {
     Stopped,
     /// Nemo is moving
     Moving { dest: (f32, f32) },
+    /// Nemo is using Q (0 <= t < 1)
+    QSkill { t: f32 }
 }
 
 impl Nemo {
@@ -45,10 +47,15 @@ impl Nemo {
                 }
             "#, r#"
                 #version 410
+                uniform int q;
                 out vec3 color;
 
                 void main() {
-                    color = vec3(1.0, 0.82745, 0.14118);
+                    if (q == 1) {
+                        color = vec3(0.533333, 0.4, 1.0);
+                    } else {
+                        color = vec3(1.0, 0.82745, 0.14118);
+                    }
                 }
             "#, None).unwrap(),
             pos: (0.0, 0.0),
@@ -80,6 +87,13 @@ impl Nemo {
                     self.pos.1 += diff*self.angle.sin();
                 }
             }
+            State::QSkill { ref mut t } => {
+                *t += elapsed;
+
+                if 1.0 <= *t {
+                    next = Some(State::Stopped);
+                }
+            }
         };
 
         next.map(|next| {
@@ -96,6 +110,7 @@ impl Nemo {
 
         let uniforms = uniform! {
             matrix: local * world * camera,
+            q: match self.state { State::QSkill { .. } => 1, _ => 0 }
         };
 
         target.draw(&self.vb, &self.ib, &self.program, &uniforms, &Default::default()).unwrap();
@@ -103,11 +118,20 @@ impl Nemo {
     }
 
     pub fn go(&mut self, dest: (f32, f32)) {
+        match self.state {
+            State::QSkill { .. } => return,
+            _ => ()
+        }
+
         if self.pos == dest { return; }
 
         let dx = dest.0 - self.pos.0;
         let dy = dest.1 - self.pos.1;
         self.angle = dy.atan2(dx);
         self.state = State::Moving { dest: dest };
+    }
+
+    pub fn q(&mut self) {
+        self.state = State::QSkill { t: 0.0 };
     }
 }
