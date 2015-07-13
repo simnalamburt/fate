@@ -8,6 +8,7 @@ mod nemo;
 use std::default::Default;
 use time::PreciseTime;
 
+#[allow(dead_code)]
 fn main() {
     use glium::DisplayBuild;
     let display = glium::glutin::WindowBuilder::new()

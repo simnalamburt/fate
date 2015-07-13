@@ -5,6 +5,7 @@ extern crate log;
 use common::simple_logger;
 use std::net::UdpSocket;
 
+#[allow(dead_code)]
 fn main() {
     let _ = simple_logger::init();
 
