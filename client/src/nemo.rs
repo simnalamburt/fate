@@ -2,6 +2,7 @@ use glium::{VertexBuffer, Program, Frame};
 use glium::index::*;
 use glium::backend::Facade;
 use xmath::Matrix;
+use unit::Unit;
 
 pub struct Nemo {
     vb: VertexBuffer<Vertex>,
@@ -63,8 +64,10 @@ impl Nemo {
             state: State::Stopped,
         }
     }
+}
 
-    pub fn update(&mut self, elapsed: f32) {
+impl Unit for Nemo {
+    fn update(&mut self, elapsed: f32) {
         let mut next = None;
 
         match self.state {
@@ -101,7 +104,7 @@ impl Nemo {
         });
     }
 
-    pub fn draw(&self, mut target: Frame, camera: Matrix) -> Frame {
+    fn draw(&self, mut target: Frame, camera: Matrix) -> Frame {
         use glium::Surface;
 
         // TODO: Cache
@@ -116,7 +119,9 @@ impl Nemo {
         target.draw(&self.vb, &self.ib, &self.program, &uniforms, &Default::default()).unwrap();
         target
     }
+}
 
+impl Nemo {
     pub fn go(&mut self, dest: (f32, f32)) {
         match self.state {
             State::QSkill { .. } => return,

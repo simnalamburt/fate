@@ -3,6 +3,7 @@ extern crate time;
 extern crate xmath;
 #[macro_use] extern crate glium;
 
+mod unit;
 mod nemo;
 
 use std::default::Default;
@@ -79,6 +80,7 @@ fn main() {
     // each cycle will draw once
     'main: loop {
         use glium::Surface;
+        use unit::Unit;
 
         //
         // Poll and handle the events received by the window
