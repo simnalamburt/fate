@@ -5,6 +5,7 @@ extern crate xmath;
 
 mod unit;
 mod nemo;
+mod minion;
 
 use std::default::Default;
 use time::PreciseTime;
@@ -32,6 +33,7 @@ fn main() {
     // Game
     //
     let mut nemo = nemo::Nemo::new(&display);
+    let mut minion = minion::Minion::new(&display);
     let camera = xmath::Matrix::orthographic(width/10.0, height/10.0, 0.0, 1.0);
 
 
@@ -113,6 +115,7 @@ fn main() {
         last = now;
 
         nemo.update(delta);
+        minion.update(delta);
 
 
         //
@@ -127,8 +130,10 @@ fn main() {
         target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 1.0);
 
         // Note: .clone() 안하고싶음
-        let mut target = nemo.draw(target, camera.clone());
+        let target = nemo.draw(target, camera.clone());
+        let target = minion.draw(target, camera.clone());
 
+        let mut target = target;
         target.draw(&vb_ui, &ib_ui, &program_ui, &uniforms_ui, &Default::default()).unwrap();
         let _ = target.finish();
     }
