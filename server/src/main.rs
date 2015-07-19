@@ -6,6 +6,11 @@ use common::simple_logger;
 use std::net::UdpSocket;
 
 mod manager;
+mod user;
+mod game;
+
+use user::UserManager;
+use game::GameManager;
 
 #[allow(dead_code)]
 fn main() {
@@ -26,6 +31,9 @@ fn main() {
     info!("");
 
     let mut buf = [0u8; 1024];
+    let mut user_manager = UserManager::new();
+    let mut game_manager = GameManager::new();
+
     loop {
         match socket.recv_from(&mut buf) {
             Ok((amt, src)) => {
