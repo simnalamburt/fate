@@ -18,7 +18,7 @@ struct Vertex { position: [f32; 2] }
 implement_vertex!(Vertex, position);
 
 impl Minion {
-    pub fn new<F: Facade>(facade: &F) -> Self {
+    pub fn new<F: Facade>(facade: &F, pos: (f32, f32)) -> Self {
         Minion {
             vb: VertexBuffer::new(facade, {
                 vec![
@@ -44,7 +44,7 @@ impl Minion {
                     color = vec3(1.0, 0.5, 0.5);
                 }
             "#, None).unwrap(),
-            pos: (0.0, 0.0),
+            pos: pos,
             angle: 0.0,
         }
     }

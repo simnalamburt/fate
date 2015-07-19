@@ -33,7 +33,16 @@ fn main() {
     // Game
     //
     let mut nemo = nemo::Nemo::new(&display);
-    let mut minion = minion::Minion::new(&display);
+    let mut minions = {
+        use minion::Minion;
+        vec![
+            Minion::new(&display, (-17.0, 4.0)),
+            Minion::new(&display, (-19.0, 2.0)),
+            Minion::new(&display, (-20.0, 0.0)),
+            Minion::new(&display, (-19.0,-2.0)),
+            Minion::new(&display, (-17.0,-4.0)),
+        ]
+    };
     let camera = xmath::Matrix::orthographic(width/10.0, height/10.0, 0.0, 1.0);
 
 
@@ -115,7 +124,9 @@ fn main() {
         last = now;
 
         nemo.update(delta);
-        minion.update(delta);
+        for m in &mut minions {
+            m.update(delta);
+        }
 
 
         //
@@ -131,7 +142,9 @@ fn main() {
 
         // Note: .clone() 안하고싶음
         let target = nemo.draw(target, camera.clone());
-        let target = minion.draw(target, camera.clone());
+        let target = minions.iter().fold(target, |target, ref m| {
+            m.draw(target, camera.clone())
+        });
 
         let mut target = target;
         target.draw(&vb_ui, &ib_ui, &program_ui, &uniforms_ui, &Default::default()).unwrap();
