@@ -32,3 +32,33 @@ impl<I, P> Manager<I, P> where I: Item<P> + Clone {
     }
 }
 
+#[cfg(test)]
+#[derive(Clone)]
+pub struct TestItem {
+    pub id: Id,
+    pub a: i32,
+    pub b: bool,
+}
+
+#[cfg(test)]
+impl Item<(i32, bool)> for TestItem {
+    fn new(id: &Id, param: &(i32, bool)) -> Self {
+        TestItem {
+            id: *id,
+            a: param.0,
+            b: param.1,
+        }
+    }
+}
+
+#[test]
+fn manager_create_item_starts_id_with_zero() {
+    type TestManager = Manager<TestItem, (i32, bool)>;
+    let mut manager = TestManager::new();
+
+    let item = manager.create(&(1, true));
+
+    assert_eq!(item.id, 0);
+    assert_eq!(item.a, 1);
+    assert_eq!(item.b, true);
+}
