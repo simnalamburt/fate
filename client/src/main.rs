@@ -3,7 +3,7 @@ extern crate time;
 extern crate xmath;
 #[macro_use] extern crate glium;
 
-mod unit;
+mod traits;
 mod nemo;
 mod minion;
 
@@ -92,7 +92,7 @@ fn main() {
     // each cycle will draw once
     'main: loop {
         use glium::Surface;
-        use unit::Unit;
+        use traits::Unit;
 
         //
         // Poll and handle the events received by the window
