@@ -70,3 +70,37 @@ impl Unit for Minion {
         target
     }
 }
+
+
+/// 미니언을 조종하는 객체
+pub struct MinionController {
+    minions: Vec<Minion>
+}
+
+impl MinionController {
+    pub fn new<F: Facade>(facade: &F) -> Self {
+        MinionController {
+            minions: vec![
+                Minion::new(facade, (17.0, 4.0)),
+                Minion::new(facade, (19.0, 2.0)),
+                Minion::new(facade, (20.0, 0.0)),
+                Minion::new(facade, (19.0,-2.0)),
+                Minion::new(facade, (17.0,-4.0)),
+            ]
+        }
+    }
+}
+
+impl Unit for MinionController {
+    fn update(&mut self, elapsed: f32) {
+        for minion in &mut self.minions {
+            minion.update(elapsed);
+        }
+    }
+
+    fn draw(&self, target: Frame, camera: Matrix) -> Frame {
+        self.minions.iter().fold(target, |target, ref minion| {
+            minion.draw(target, camera.clone())
+        })
+    }
+}

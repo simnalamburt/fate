@@ -43,6 +43,7 @@ fn main() {
             Minion::new(&display, (-17.0,-4.0)),
         ]
     };
+    let mut controller = minion::MinionController::new(&display);
     let camera = xmath::Matrix::orthographic(width/10.0, height/10.0, 0.0, 1.0);
 
 
@@ -127,6 +128,7 @@ fn main() {
         for m in &mut minions {
             m.update(delta);
         }
+        controller.update(delta);
 
 
         //
@@ -145,6 +147,7 @@ fn main() {
         let target = minions.iter().fold(target, |target, ref m| {
             m.draw(target, camera.clone())
         });
+        let target = controller.draw(target, camera.clone());
 
         let mut target = target;
         target.draw(&vb_ui, &ib_ui, &program_ui, &uniforms_ui, &Default::default()).unwrap();
