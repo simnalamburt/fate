@@ -3,6 +3,7 @@ extern crate common;
 extern crate log;
 
 use common::simple_logger;
+use common::message::*;
 use std::net::UdpSocket;
 
 mod manager;
@@ -11,6 +12,8 @@ mod game;
 
 use user::UserManager;
 use game::GameManager;
+
+type CommandResult = Result<String, String>;
 
 #[allow(dead_code)]
 fn main() {
@@ -37,15 +40,31 @@ fn main() {
     loop {
         match socket.recv_from(&mut buf) {
             Ok((amt, src)) => {
-                // Send a reply to the socket we received data from
                 let buf = &buf[..amt];
-                let _ = socket.send_to(buf, &src);
-
                 let msg = String::from_utf8_lossy(buf);
                 let msg = msg[..].trim_right();
                 info!("Received: \x1b[33m\"{}\"\x1b[0m", msg);
+
+                let result = Message::parse(&msg.to_string()).map_err(|err| {
+                    format!("{:?} when parsing \"{}\"", err, msg)
+                }).and_then(|command| {
+                    handle_command(&command)
+                });
+
+                match result {
+                    Ok(response) => {
+                        let _ = socket.send_to(response.as_bytes(), &src);
+                    }
+                    Err(err) => {
+                        error!("{}", err);
+                    }
+                }
             }
             Err(e) => error!("couldn't receive a datagram: {}", e)
         }
     }
+}
+
+fn handle_command(command: &ClientToServer) -> CommandResult {
+    Err("not implemented".to_string())
 }
