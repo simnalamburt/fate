@@ -5,7 +5,7 @@ use rustc_serialize::json::{DecodeResult, EncoderError};
 
 #[derive(RustcDecodable, RustcEncodable, PartialEq, Debug)]
 pub enum ServerToClient {
-    ConnectResponse(u32), // User ID
+    ConnectResponse(usize), // User ID
 }
 
 #[derive(RustcDecodable, RustcEncodable, PartialEq, Debug)]
