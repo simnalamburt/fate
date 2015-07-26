@@ -4,6 +4,7 @@ extern crate log;
 
 use common::simple_logger;
 use common::message::*;
+use std::net::SocketAddr;
 use std::net::UdpSocket;
 
 mod manager;
@@ -13,7 +14,7 @@ mod game;
 use user::UserManager;
 use game::GameManager;
 
-type CommandResult = Result<String, String>;
+type CommandResult = Result<ServerToClient, String>;
 
 #[allow(dead_code)]
 fn main() {
@@ -48,12 +49,12 @@ fn main() {
                 let result = Message::parse(&msg.to_string()).map_err(|err| {
                     format!("{:?} when parsing \"{}\"", err, msg)
                 }).and_then(|command| {
-                    handle_command(&command)
+                    handle_command(&command, &src, &mut user_manager, &mut game_manager)
                 });
 
                 match result {
                     Ok(response) => {
-                        let _ = socket.send_to(response.as_bytes(), &src);
+                        let _ = socket.send_to(response.stringify().unwrap().as_bytes(), &src);
                     }
                     Err(err) => {
                         error!("{}", err);
@@ -65,6 +66,21 @@ fn main() {
     }
 }
 
-fn handle_command(command: &ClientToServer) -> CommandResult {
-    Err("not implemented".to_string())
+fn handle_command(command: &ClientToServer, src: &SocketAddr, user_manager: &mut UserManager, game_manager: &mut GameManager) -> CommandResult {
+    match command {
+        &ClientToServer::ConnectRequest => {
+            let user = user_manager.create(src);
+            info!("{:?} created", user);
+            Ok(ServerToClient::ConnectResponse(user.id))
+        }
+        &ClientToServer::CreateGameRequest(user_id) => {
+            user_manager.get(user_id)
+                .ok_or(format!("user id {} is not exists", user_id))
+                .map(|user| {
+                    let game = game_manager.create(&user);
+                    info!("{:?} created", game);
+                    ServerToClient::CreateGameResponse(game.id)
+                })
+        }
+    }
 }
