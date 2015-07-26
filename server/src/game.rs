@@ -4,7 +4,7 @@ use manager::*;
 
 #[derive(Debug, Clone)]
 pub struct Game {
-    id: Id,
+    pub id: Id,
     host: User,
     guest: Option<User>,
 }
