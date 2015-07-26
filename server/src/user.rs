@@ -4,7 +4,7 @@ use manager::*;
 
 #[derive(Debug, Clone)]
 pub struct User {
-    id: Id,
+    pub id: Id,
     addr: SocketAddr,
 }
 

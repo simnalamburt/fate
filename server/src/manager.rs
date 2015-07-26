@@ -30,6 +30,10 @@ impl<I, P> Manager<I, P> where I: Item<P> + Clone {
         self.items.insert(id, item.clone());
         item
     }
+
+    pub fn get(&self, id: Id) -> Option<&I> {
+        self.items.get(&id)
+    }
 }
 
 #[cfg(test)]
@@ -51,13 +55,57 @@ impl Item<(i32, bool)> for TestItem {
     }
 }
 
+#[cfg(test)]
+type TestManager = Manager<TestItem, (i32, bool)>;
+
 #[test]
 fn manager_create_item_starts_id_with_zero() {
-    type TestManager = Manager<TestItem, (i32, bool)>;
     let mut manager = TestManager::new();
 
     let item = manager.create(&(1, true));
 
+    assert_eq!(item.id, 0);
+    assert_eq!(item.a, 1);
+    assert_eq!(item.b, true);
+}
+
+#[test]
+fn get_method_returns_none_on_empty_manager() {
+    let manager = TestManager::new();
+
+    let item = manager.get(1);
+    assert!(item.is_none());
+}
+
+// This test case depends on that manager generates id sequentially inceasing.
+#[test]
+fn get_method_returns_none_with_uncreated_id() {
+    let mut manager = TestManager::new();
+
+    let item = manager.create(&(1, true));
+    assert_eq!(item.id, 0);
+    assert_eq!(item.a, 1);
+    assert_eq!(item.b, true);
+
+    let item = manager.create(&(3, false));
+    assert_eq!(item.id, 1);
+    assert_eq!(item.a, 3);
+    assert_eq!(item.b, false);
+
+    let item = manager.get(4);
+    assert!(item.is_none());
+}
+
+#[test]
+fn get_method_returns_some() {
+    let mut manager = TestManager::new();
+
+    let item = manager.create(&(1, true));
+    assert_eq!(item.id, 0);
+    assert_eq!(item.a, 1);
+    assert_eq!(item.b, true);
+
+    let item = manager.get(item.id).unwrap();
     assert_eq!(item.id, 0);
     assert_eq!(item.a, 1);
     assert_eq!(item.b, true);
