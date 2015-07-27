@@ -71,15 +71,15 @@ fn handle_command(command: &ClientToServer, src: &SocketAddr, user_manager: &mut
         &ClientToServer::ConnectRequest => {
             let user = user_manager.create(src);
             info!("{:?} created", user);
-            Ok(ServerToClient::ConnectResponse(user.id))
+            Ok(ServerToClient::ConnectResponse { user_id: user.id })
         }
-        &ClientToServer::CreateGameRequest(user_id) => {
+        &ClientToServer::CreateGameRequest { user_id } => {
             user_manager.get(user_id)
                 .ok_or(format!("user id {} is not exists", user_id))
                 .map(|user| {
                     let game = game_manager.create(&user);
                     info!("{:?} created", game);
-                    ServerToClient::CreateGameResponse(game.id)
+                    ServerToClient::CreateGameResponse { game_id: game.id }
                 })
         }
     }
