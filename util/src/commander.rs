@@ -69,12 +69,15 @@ fn command_to_send() -> IoResult<ClientToServer> {
                 return Ok(ClientToServer::ConnectRequest)
             }
             "2" => {
-                print!("Enter user id: ");
+                print!("Enter user id: (or enter to cancel)");
                 let _ = stdout().flush();
                 loop {
                     let mut line = String::new();
                     let _len = try!(stdin().read_line(&mut line));
                     let line = line.trim();
+                    if line == "" {
+                        continue;
+                    }
                     match line.parse::<usize>() {
                         Ok(user_id) => {
                             return Ok(ClientToServer::CreateGameRequest { user_id: user_id })
