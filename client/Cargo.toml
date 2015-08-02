@@ -9,3 +9,4 @@ common = { path = "../common" }
 time = "0.1"
 xmath = "0.1"
 glium = { version = "0.7", default-features = false, features = ["glutin"] }
+rand = "0.3.9"

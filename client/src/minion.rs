@@ -126,6 +126,9 @@ pub struct MinionController {
 
 impl MinionController {
     pub fn new<F: Facade>(facade: &F) -> Self {
+        use rand;
+        use rand::distributions::{IndependentSample, Range};
+
         let mut minions = vec![
             Minion::new(facade, (17.0, 4.0)),
             Minion::new(facade, (19.0, 2.0)),
@@ -134,8 +137,13 @@ impl MinionController {
             Minion::new(facade, (17.0,-4.0)),
         ];
 
+        let range = Range::new(-10.0, 10.0);
+        let mut rng = rand::thread_rng();
+
         for minion in &mut minions {
-            minion.go((0.0, 0.0));
+            let x = range.ind_sample(&mut rng);
+            let y = range.ind_sample(&mut rng);
+            minion.go((x, y));
         }
 
         MinionController { minions: minions }

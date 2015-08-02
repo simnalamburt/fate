@@ -2,6 +2,7 @@ extern crate common;
 extern crate time;
 extern crate xmath;
 #[macro_use] extern crate glium;
+extern crate rand;
 
 mod traits;
 mod nemo;
