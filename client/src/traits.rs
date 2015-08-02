@@ -3,7 +3,7 @@ use xmath::Matrix;
 
 pub trait Object {
     fn update(&mut self, elapsed: f32);
-    fn draw(&self, mut target: Frame, camera: Matrix) -> Frame;
+    fn draw(&self, target: &mut Frame, camera: Matrix);
 }
 
 pub trait Unit: Object {

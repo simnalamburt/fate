@@ -147,13 +147,12 @@ fn main() {
         target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 1.0);
 
         // Note: .clone() 안하고싶음
-        let target = nemo.draw(target, camera.clone());
-        let target = minions.iter().fold(target, |target, ref m| {
-            m.draw(target, camera.clone())
-        });
-        let target = controller.draw(target, camera.clone());
+        nemo.draw(&mut target, camera.clone());
+        for minion in &minions {
+            minion.draw(&mut target, camera.clone());
+        }
+        controller.draw(&mut target, camera.clone());
 
-        let mut target = target;
         target.draw(&vb_ui, &ib_ui, &program_ui, &uniforms_ui, &Default::default()).unwrap();
         let _ = target.finish();
     }

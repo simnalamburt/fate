@@ -93,7 +93,7 @@ impl Object for Minion {
         });
     }
 
-    fn draw(&self, mut target: Frame, camera: Matrix) -> Frame {
+    fn draw(&self, target: &mut Frame, camera: Matrix) {
         use glium::Surface;
 
         // TODO: Cache
@@ -105,7 +105,6 @@ impl Object for Minion {
         };
 
         target.draw(&self.vb, &self.ib, &self.program, &uniforms, &Default::default()).unwrap();
-        target
     }
 }
 
@@ -163,9 +162,9 @@ impl Object for MinionController {
         }
     }
 
-    fn draw(&self, target: Frame, camera: Matrix) -> Frame {
-        self.minions.iter().fold(target, |target, ref minion| {
+    fn draw(&self, target: &mut Frame, camera: Matrix) {
+        for minion in &self.minions {
             minion.draw(target, camera.clone())
-        })
+        }
     }
 }

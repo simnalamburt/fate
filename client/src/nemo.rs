@@ -104,7 +104,7 @@ impl Object for Nemo {
         });
     }
 
-    fn draw(&self, mut target: Frame, camera: Matrix) -> Frame {
+    fn draw(&self, target: &mut Frame, camera: Matrix) {
         use glium::Surface;
 
         // TODO: Cache
@@ -117,7 +117,6 @@ impl Object for Nemo {
         };
 
         target.draw(&self.vb, &self.ib, &self.program, &uniforms, &Default::default()).unwrap();
-        target
     }
 }
 
