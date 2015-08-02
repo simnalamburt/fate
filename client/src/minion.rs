@@ -20,7 +20,7 @@ implement_vertex!(Vertex, position);
 
 enum State {
     /// Nemo is stopped
-    Stopped,
+    Stopped { time: f32 },
     /// Nemo is moving
     Moving { dest: (f32, f32) },
 }
@@ -54,7 +54,7 @@ impl Minion {
             "#, None).unwrap(),
             pos: pos,
             angle: 0.0,
-            state: State::Stopped,
+            state: State::Stopped { time: 0.0 },
         }
     }
 }
@@ -65,7 +65,9 @@ impl Object for Minion {
         let mut next = None;
 
         match self.state {
-            State::Stopped => {}
+            State::Stopped { ref mut time } => {
+                *time += elapsed;
+            }
             State::Moving { dest } => {
                 let dx = dest.0 - self.pos.0;
                 let dy = dest.1 - self.pos.1;
@@ -78,7 +80,7 @@ impl Object for Minion {
                 if left_dist <= diff {
                     // 도착
                     self.pos = dest;
-                    next = Some(State::Stopped);
+                    next = Some(State::Stopped { time: 0.0 });
                 } else {
                     self.pos.0 += diff*self.angle.cos();
                     self.pos.1 += diff*self.angle.sin();
@@ -126,33 +128,37 @@ pub struct MinionController {
 
 impl MinionController {
     pub fn new<F: Facade>(facade: &F) -> Self {
-        use rand;
-        use rand::distributions::{IndependentSample, Range};
-
-        let mut minions = vec![
-            Minion::new(facade, (17.0, 4.0)),
-            Minion::new(facade, (19.0, 2.0)),
-            Minion::new(facade, (20.0, 0.0)),
-            Minion::new(facade, (19.0,-2.0)),
-            Minion::new(facade, (17.0,-4.0)),
-        ];
-
-        let range = Range::new(-10.0, 10.0);
-        let mut rng = rand::thread_rng();
-
-        for minion in &mut minions {
-            let x = range.ind_sample(&mut rng);
-            let y = range.ind_sample(&mut rng);
-            minion.go((x, y));
+        MinionController {
+            minions: vec![
+                Minion::new(facade, (17.0, 4.0)),
+                Minion::new(facade, (19.0, 2.0)),
+                Minion::new(facade, (20.0, 0.0)),
+                Minion::new(facade, (19.0,-2.0)),
+                Minion::new(facade, (17.0,-4.0)),
+            ]
         }
-
-        MinionController { minions: minions }
     }
 }
 
 impl Object for MinionController {
     fn update(&mut self, elapsed: f32) {
         for minion in &mut self.minions {
+            match minion.state {
+                State::Stopped { time } if 1.5 <= time => {
+                    use rand;
+                    use rand::distributions::{IndependentSample, Range};
+
+                    let range = Range::new(-10.0, 10.0);
+                    let mut rng = rand::thread_rng();
+
+                    let x = range.ind_sample(&mut rng);
+                    let y = range.ind_sample(&mut rng);
+
+                    minion.go((x, y));
+                }
+                _ => {}
+            }
+
             minion.update(elapsed);
         }
     }
