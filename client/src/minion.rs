@@ -10,12 +10,20 @@ pub struct Minion {
     program: Program,
     pos: (f32, f32),
     angle: f32,
+    state: State,
 }
 
 #[derive(Clone, Copy)]
 struct Vertex { position: [f32; 2] }
 
 implement_vertex!(Vertex, position);
+
+enum State {
+    /// Nemo is stopped
+    Stopped,
+    /// Nemo is moving
+    Moving { dest: (f32, f32) },
+}
 
 impl Minion {
     pub fn new<F: Facade>(facade: &F, pos: (f32, f32)) -> Self {
@@ -46,13 +54,41 @@ impl Minion {
             "#, None).unwrap(),
             pos: pos,
             angle: 0.0,
+            state: State::Stopped,
         }
     }
 }
 
 impl Object for Minion {
-    fn update(&mut self, _elapsed: f32) {
+    fn update(&mut self, elapsed: f32) {
         // Does nothing
+        let mut next = None;
+
+        match self.state {
+            State::Stopped => {}
+            State::Moving { dest } => {
+                let dx = dest.0 - self.pos.0;
+                let dy = dest.1 - self.pos.1;
+
+                let left_dist = (dx*dx + dy*dy).sqrt();
+
+                let speed = 50.0;
+                let diff = speed*elapsed;
+
+                if left_dist <= diff {
+                    // 도착
+                    self.pos = dest;
+                    next = Some(State::Stopped);
+                } else {
+                    self.pos.0 += diff*self.angle.cos();
+                    self.pos.1 += diff*self.angle.sin();
+                }
+            }
+        };
+
+        next.map(|next| {
+            self.state = next;
+        });
     }
 
     fn draw(&self, mut target: Frame, camera: Matrix) -> Frame {
@@ -72,8 +108,13 @@ impl Object for Minion {
 }
 
 impl Unit for Minion {
-    fn go(&mut self, _dest: (f32, f32)) {
-        // TODO: Implement
+    fn go(&mut self, dest: (f32, f32)) {
+        if self.pos == dest { return; }
+
+        let dx = dest.0 - self.pos.0;
+        let dy = dest.1 - self.pos.1;
+        self.angle = dy.atan2(dx);
+        self.state = State::Moving { dest: dest };
     }
 }
 
@@ -85,15 +126,19 @@ pub struct MinionController {
 
 impl MinionController {
     pub fn new<F: Facade>(facade: &F) -> Self {
-        MinionController {
-            minions: vec![
-                Minion::new(facade, (17.0, 4.0)),
-                Minion::new(facade, (19.0, 2.0)),
-                Minion::new(facade, (20.0, 0.0)),
-                Minion::new(facade, (19.0,-2.0)),
-                Minion::new(facade, (17.0,-4.0)),
-            ]
+        let mut minions = vec![
+            Minion::new(facade, (17.0, 4.0)),
+            Minion::new(facade, (19.0, 2.0)),
+            Minion::new(facade, (20.0, 0.0)),
+            Minion::new(facade, (19.0,-2.0)),
+            Minion::new(facade, (17.0,-4.0)),
+        ];
+
+        for minion in &mut minions {
+            minion.go((0.0, 0.0));
         }
+
+        MinionController { minions: minions }
     }
 }
 
