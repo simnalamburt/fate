@@ -2,7 +2,7 @@ use glium::{VertexBuffer, Program, Frame};
 use glium::index::*;
 use glium::backend::Facade;
 use xmath::Matrix;
-use traits::Unit;
+use traits::*;
 
 pub struct Nemo {
     vb: VertexBuffer<Vertex>,
@@ -66,7 +66,7 @@ impl Nemo {
     }
 }
 
-impl Unit for Nemo {
+impl Object for Nemo {
     fn update(&mut self, elapsed: f32) {
         let mut next = None;
 
@@ -121,8 +121,8 @@ impl Unit for Nemo {
     }
 }
 
-impl Nemo {
-    pub fn go(&mut self, dest: (f32, f32)) {
+impl Unit for Nemo {
+    fn go(&mut self, dest: (f32, f32)) {
         match self.state {
             State::QSkill { .. } => return,
             _ => ()
@@ -135,7 +135,9 @@ impl Nemo {
         self.angle = dy.atan2(dx);
         self.state = State::Moving { dest: dest };
     }
+}
 
+impl Nemo {
     pub fn q(&mut self) {
         self.state = State::QSkill { t: 0.0 };
     }

@@ -2,7 +2,7 @@ use glium::{VertexBuffer, Program, Frame};
 use glium::index::*;
 use glium::backend::Facade;
 use xmath::Matrix;
-use traits::Unit;
+use traits::*;
 
 pub struct Minion {
     vb: VertexBuffer<Vertex>,
@@ -50,7 +50,7 @@ impl Minion {
     }
 }
 
-impl Unit for Minion {
+impl Object for Minion {
     fn update(&mut self, _elapsed: f32) {
         // Does nothing
     }
@@ -68,6 +68,12 @@ impl Unit for Minion {
 
         target.draw(&self.vb, &self.ib, &self.program, &uniforms, &Default::default()).unwrap();
         target
+    }
+}
+
+impl Unit for Minion {
+    fn go(&mut self, _dest: (f32, f32)) {
+        // TODO: Implement
     }
 }
 
@@ -91,7 +97,7 @@ impl MinionController {
     }
 }
 
-impl Unit for MinionController {
+impl Object for MinionController {
     fn update(&mut self, elapsed: f32) {
         for minion in &mut self.minions {
             minion.update(elapsed);
