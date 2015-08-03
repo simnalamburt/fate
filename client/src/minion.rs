@@ -28,13 +28,13 @@ enum State {
 impl Minion {
     pub fn new<F: Facade>(facade: &F, pos: (f32, f32)) -> Self {
         Minion {
-            vb: VertexBuffer::new(facade, {
+            vb: VertexBuffer::new(facade, &{
                 vec![
                     Vertex { position: [  2.0,  0.00 ] },
                     Vertex { position: [ -2.0,  0.75 ] },
                     Vertex { position: [ -2.0, -0.75 ] },
                 ]
-            }),
+            }).unwrap(),
             ib: NoIndices(PrimitiveType::TriangleStrip),
             program: Program::from_source(facade, r#"
                 #version 410
