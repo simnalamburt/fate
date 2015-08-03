@@ -30,13 +30,13 @@ enum State {
 impl Nemo {
     pub fn new<F: Facade>(facade: &F) -> Self {
         Nemo {
-            vb: VertexBuffer::new(facade, {
+            vb: VertexBuffer::new(facade, &{
                 vec![
                     Vertex { position: [   4.0,   0.0 ] },
                     Vertex { position: [  -4.0,   1.5 ] },
                     Vertex { position: [  -4.0,  -1.5 ] },
                 ]
-            }),
+            }).unwrap(),
             ib: NoIndices(PrimitiveType::TriangleStrip),
             program: Program::from_source(facade, r#"
                 #version 410

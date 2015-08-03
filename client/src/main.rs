@@ -51,7 +51,7 @@ fn main() {
     //
     // Parameters for UI
     //
-    let vb_ui = glium::VertexBuffer::new(&display, {
+    let vb_ui = glium::VertexBuffer::new(&display, &{
         #[derive(Clone, Copy)]
         struct Vertex { position: [f32; 2] }
 
@@ -63,7 +63,7 @@ fn main() {
             Vertex { position: [  3.0, -2.0 ] },
             Vertex { position: [  3.0,  3.0 ] },
         ]
-    });
+    }).unwrap();
     let ib_ui = glium::index::NoIndices(glium::index::PrimitiveType::TriangleStrip);
     let program_ui = glium::Program::from_source(&display,
         r#"
