@@ -147,11 +147,11 @@ fn main() {
         target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 1.0);
 
         // Note: .clone() 안하고싶음
-        nemo.draw(&mut target, camera.clone());
+        nemo.draw(&mut target, camera.clone()).unwrap();
         for minion in &minions {
-            minion.draw(&mut target, camera.clone());
+            minion.draw(&mut target, camera.clone()).unwrap();
         }
-        controller.draw(&mut target, camera.clone());
+        controller.draw(&mut target, camera.clone()).unwrap();
 
         target.draw(&vb_ui, &ib_ui, &program_ui, &uniforms_ui, &Default::default()).unwrap();
         let _ = target.finish();

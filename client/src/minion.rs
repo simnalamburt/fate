@@ -1,4 +1,4 @@
-use glium::{VertexBuffer, Program, Frame};
+use glium::{VertexBuffer, Program, Frame, DrawError};
 use glium::index::*;
 use glium::backend::Facade;
 use xmath::Matrix;
@@ -93,7 +93,7 @@ impl Object for Minion {
         });
     }
 
-    fn draw(&self, target: &mut Frame, camera: Matrix) {
+    fn draw(&self, target: &mut Frame, camera: Matrix) -> Result<(), DrawError> {
         use glium::Surface;
 
         // TODO: Cache
@@ -104,7 +104,8 @@ impl Object for Minion {
             matrix: local * world * camera,
         };
 
-        target.draw(&self.vb, &self.ib, &self.program, &uniforms, &Default::default()).unwrap();
+        try!(target.draw(&self.vb, &self.ib, &self.program, &uniforms, &Default::default()));
+        Ok(())
     }
 }
 
@@ -162,9 +163,10 @@ impl Object for MinionController {
         }
     }
 
-    fn draw(&self, target: &mut Frame, camera: Matrix) {
+    fn draw(&self, target: &mut Frame, camera: Matrix) -> Result<(), DrawError> {
         for minion in &self.minions {
-            minion.draw(target, camera.clone())
+            try!(minion.draw(target, camera.clone()))
         }
+        Ok(())
     }
 }

@@ -1,9 +1,9 @@
-use glium::Frame;
+use glium::{Frame, DrawError};
 use xmath::Matrix;
 
 pub trait Object {
     fn update(&mut self, elapsed: f32);
-    fn draw(&self, target: &mut Frame, camera: Matrix);
+    fn draw(&self, target: &mut Frame, camera: Matrix) -> Result<(), DrawError>;
 }
 
 pub trait Unit: Object {
