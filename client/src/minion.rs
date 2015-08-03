@@ -3,6 +3,7 @@ use glium::index::*;
 use glium::backend::Facade;
 use xmath::Matrix;
 use traits::*;
+use error::CreationError;
 
 pub struct Minion {
     vb: VertexBuffer<Vertex>,
@@ -26,17 +27,17 @@ enum State {
 }
 
 impl Minion {
-    pub fn new<F: Facade>(facade: &F, pos: (f32, f32)) -> Self {
-        Minion {
-            vb: VertexBuffer::new(facade, &{
+    pub fn new<F: Facade>(facade: &F, pos: (f32, f32)) -> Result<Self, CreationError> {
+        Ok(Minion {
+            vb: try!(VertexBuffer::new(facade, &{
                 vec![
                     Vertex { position: [  2.0,  0.00 ] },
                     Vertex { position: [ -2.0,  0.75 ] },
                     Vertex { position: [ -2.0, -0.75 ] },
                 ]
-            }).unwrap(),
+            })),
             ib: NoIndices(PrimitiveType::TriangleStrip),
-            program: Program::from_source(facade, r#"
+            program: try!(Program::from_source(facade, r#"
                 #version 410
                 uniform mat4 matrix;
                 in vec2 position;
@@ -51,11 +52,11 @@ impl Minion {
                 void main() {
                     color = vec3(1.0, 0.5, 0.5);
                 }
-            "#, None).unwrap(),
+            "#, None)),
             pos: pos,
             angle: 0.0,
             state: State::Stopped { time: 0.0 },
-        }
+        })
     }
 }
 
@@ -127,16 +128,16 @@ pub struct MinionController {
 }
 
 impl MinionController {
-    pub fn new<F: Facade>(facade: &F) -> Self {
-        MinionController {
+    pub fn new<F: Facade>(facade: &F) -> Result<Self, CreationError> {
+        Ok(MinionController {
             minions: vec![
-                Minion::new(facade, (17.0, 4.0)),
-                Minion::new(facade, (19.0, 2.0)),
-                Minion::new(facade, (20.0, 0.0)),
-                Minion::new(facade, (19.0,-2.0)),
-                Minion::new(facade, (17.0,-4.0)),
+                try!(Minion::new(facade, (17.0, 4.0))),
+                try!(Minion::new(facade, (19.0, 2.0))),
+                try!(Minion::new(facade, (20.0, 0.0))),
+                try!(Minion::new(facade, (19.0,-2.0))),
+                try!(Minion::new(facade, (17.0,-4.0))),
             ]
-        }
+        })
     }
 }
 

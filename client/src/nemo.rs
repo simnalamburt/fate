@@ -3,6 +3,7 @@ use glium::index::*;
 use glium::backend::Facade;
 use xmath::Matrix;
 use traits::*;
+use error::CreationError;
 
 pub struct Nemo {
     vb: VertexBuffer<Vertex>,
@@ -28,17 +29,17 @@ enum State {
 }
 
 impl Nemo {
-    pub fn new<F: Facade>(facade: &F) -> Self {
-        Nemo {
-            vb: VertexBuffer::new(facade, &{
+    pub fn new<F: Facade>(facade: &F) -> Result<Self, CreationError> {
+        Ok(Nemo {
+            vb: try!(VertexBuffer::new(facade, &{
                 vec![
                     Vertex { position: [   4.0,   0.0 ] },
                     Vertex { position: [  -4.0,   1.5 ] },
                     Vertex { position: [  -4.0,  -1.5 ] },
                 ]
-            }).unwrap(),
+            })),
             ib: NoIndices(PrimitiveType::TriangleStrip),
-            program: Program::from_source(facade, r#"
+            program: try!(Program::from_source(facade, r#"
                 #version 410
                 uniform mat4 matrix;
                 in vec2 position;
@@ -58,11 +59,11 @@ impl Nemo {
                         color = vec3(1.0, 0.82745, 0.14118);
                     }
                 }
-            "#, None).unwrap(),
+            "#, None)),
             pos: (0.0, 0.0),
             angle: 0.0,
             state: State::Stopped,
-        }
+        })
     }
 }
 
