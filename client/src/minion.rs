@@ -94,7 +94,7 @@ impl Object for Minion {
         });
     }
 
-    fn draw(&self, target: &mut Frame, camera: Matrix) -> Result<(), DrawError> {
+    fn draw(&self, target: &mut Frame, camera: &Matrix) -> Result<(), DrawError> {
         use glium::Surface;
 
         // TODO: Cache
@@ -164,9 +164,9 @@ impl Object for MinionController {
         }
     }
 
-    fn draw(&self, target: &mut Frame, camera: Matrix) -> Result<(), DrawError> {
+    fn draw(&self, target: &mut Frame, camera: &Matrix) -> Result<(), DrawError> {
         for minion in &self.minions {
-            try!(minion.draw(target, camera.clone()))
+            try!(minion.draw(target, &camera))
         }
         Ok(())
     }

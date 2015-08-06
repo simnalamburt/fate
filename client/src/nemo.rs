@@ -105,7 +105,7 @@ impl Object for Nemo {
         });
     }
 
-    fn draw(&self, target: &mut Frame, camera: Matrix) -> Result<(), DrawError> {
+    fn draw(&self, target: &mut Frame, camera: &Matrix) -> Result<(), DrawError> {
         use glium::Surface;
 
         // TODO: Cache
