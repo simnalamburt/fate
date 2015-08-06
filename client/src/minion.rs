@@ -4,20 +4,12 @@ use glium::backend::Facade;
 use xmath::Matrix;
 use traits::*;
 use error::CreationError;
+use unit::{vec, Unit};
 
 pub struct Minion {
-    vb: VertexBuffer<Vertex>,
-    ib: NoIndices,
-    program: Program,
-    pos: (f32, f32),
-    angle: f32,
+    unit: Unit,
     state: State,
 }
-
-#[derive(Clone, Copy)]
-struct Vertex { position: [f32; 2] }
-
-implement_vertex!(Vertex, position);
 
 enum State {
     /// Nemo is stopped
@@ -28,12 +20,12 @@ enum State {
 
 impl Minion {
     pub fn new<F: Facade>(facade: &F, pos: (f32, f32)) -> Result<Self, CreationError> {
-        Ok(Minion {
+        let unit = Unit {
             vb: try!(VertexBuffer::new(facade, &{
                 vec![
-                    Vertex { position: [  2.0,  0.00 ] },
-                    Vertex { position: [ -2.0,  0.75 ] },
-                    Vertex { position: [ -2.0, -0.75 ] },
+                    vec(  2.0,  0.00 ),
+                    vec( -2.0,  0.75 ),
+                    vec( -2.0, -0.75 ),
                 ]
             })),
             ib: NoIndices(PrimitiveType::TriangleStrip),
@@ -54,15 +46,15 @@ impl Minion {
                 }
             "#, None)),
             pos: pos,
-            angle: 0.0,
-            state: State::Stopped { time: 0.0 },
-        })
+            angle: 0.0
+        };
+
+        Ok(Minion { unit: unit, state: State::Stopped { time: 0.0 } })
     }
 }
 
 impl Object for Minion {
     fn update(&mut self, elapsed: f32) {
-        // Does nothing
         let mut next = None;
 
         match self.state {
@@ -70,8 +62,10 @@ impl Object for Minion {
                 *time += elapsed;
             }
             State::Moving { dest } => {
-                let dx = dest.0 - self.pos.0;
-                let dy = dest.1 - self.pos.1;
+                let unit = &mut self.unit;
+
+                let dx = dest.0 - unit.pos.0;
+                let dy = dest.1 - unit.pos.1;
 
                 let left_dist = (dx*dx + dy*dy).sqrt();
 
@@ -80,11 +74,11 @@ impl Object for Minion {
 
                 if left_dist <= diff {
                     // 도착
-                    self.pos = dest;
+                    unit.pos = dest;
                     next = Some(State::Stopped { time: 0.0 });
                 } else {
-                    self.pos.0 += diff*self.angle.cos();
-                    self.pos.1 += diff*self.angle.sin();
+                    unit.pos.0 += diff*unit.angle.cos();
+                    unit.pos.1 += diff*unit.angle.sin();
                 }
             }
         };
@@ -95,28 +89,18 @@ impl Object for Minion {
     }
 
     fn draw(&self, target: &mut Frame, camera: &Matrix) -> Result<(), DrawError> {
-        use glium::Surface;
-
-        // TODO: Cache
-        let local = Matrix::rotation_z(self.angle);
-        let world = Matrix::translation(self.pos.0, self.pos.1, 0.0);
-
-        let uniforms = uniform! {
-            matrix: local * world * camera,
-        };
-
-        try!(target.draw(&self.vb, &self.ib, &self.program, &uniforms, &Default::default()));
-        Ok(())
+        self.unit.draw_without_uniforms(target, camera)
     }
 }
 
 impl Move for Minion {
     fn go(&mut self, dest: (f32, f32)) {
-        if self.pos == dest { return; }
+        let unit = &mut self.unit;
+        if unit.pos == dest { return; }
 
-        let dx = dest.0 - self.pos.0;
-        let dy = dest.1 - self.pos.1;
-        self.angle = dy.atan2(dx);
+        let dx = dest.0 - unit.pos.0;
+        let dy = dest.1 - unit.pos.1;
+        unit.angle = dy.atan2(dx);
         self.state = State::Moving { dest: dest };
     }
 }

@@ -4,20 +4,12 @@ use glium::backend::Facade;
 use xmath::Matrix;
 use traits::*;
 use error::CreationError;
+use unit::{vec, Unit};
 
 pub struct Nemo {
-    vb: VertexBuffer<Vertex>,
-    ib: NoIndices,
-    program: Program,
-    pos: (f32, f32),
-    angle: f32,
+    unit: Unit,
     state: State,
 }
-
-#[derive(Clone, Copy)]
-struct Vertex { position: [f32; 2] }
-
-implement_vertex!(Vertex, position);
 
 enum State {
     /// Nemo is stopped
@@ -30,12 +22,12 @@ enum State {
 
 impl Nemo {
     pub fn new<F: Facade>(facade: &F) -> Result<Self, CreationError> {
-        Ok(Nemo {
+        let unit = Unit {
             vb: try!(VertexBuffer::new(facade, &{
                 vec![
-                    Vertex { position: [   4.0,   0.0 ] },
-                    Vertex { position: [  -4.0,   1.5 ] },
-                    Vertex { position: [  -4.0,  -1.5 ] },
+                    vec(  4.0,  0.0 ),
+                    vec( -4.0,  1.5 ),
+                    vec( -4.0, -1.5 ),
                 ]
             })),
             ib: NoIndices(PrimitiveType::TriangleStrip),
@@ -62,8 +54,9 @@ impl Nemo {
             "#, None)),
             pos: (0.0, 0.0),
             angle: 0.0,
-            state: State::Stopped,
-        })
+        };
+
+        Ok(Nemo { unit: unit, state: State::Stopped })
     }
 }
 
@@ -74,8 +67,10 @@ impl Object for Nemo {
         match self.state {
             State::Stopped => {}
             State::Moving { dest } => {
-                let dx = dest.0 - self.pos.0;
-                let dy = dest.1 - self.pos.1;
+                let unit = &mut self.unit;
+
+                let dx = dest.0 - unit.pos.0;
+                let dy = dest.1 - unit.pos.1;
 
                 let left_dist = (dx*dx + dy*dy).sqrt();
 
@@ -84,11 +79,11 @@ impl Object for Nemo {
 
                 if left_dist <= diff {
                     // 도착
-                    self.pos = dest;
+                    unit.pos = dest;
                     next = Some(State::Stopped);
                 } else {
-                    self.pos.0 += diff*self.angle.cos();
-                    self.pos.1 += diff*self.angle.sin();
+                    unit.pos.0 += diff*unit.angle.cos();
+                    unit.pos.1 += diff*unit.angle.sin();
                 }
             }
             State::QSkill { ref mut t } => {
@@ -106,19 +101,10 @@ impl Object for Nemo {
     }
 
     fn draw(&self, target: &mut Frame, camera: &Matrix) -> Result<(), DrawError> {
-        use glium::Surface;
-
-        // TODO: Cache
-        let local = Matrix::rotation_z(self.angle);
-        let world = Matrix::translation(self.pos.0, self.pos.1, 0.0);
-
         let uniforms = uniform! {
-            matrix: local * world * camera,
             q: match self.state { State::QSkill { .. } => 1, _ => 0 }
         };
-
-        try!(target.draw(&self.vb, &self.ib, &self.program, &uniforms, &Default::default()));
-        Ok(())
+        self.unit.draw(target, camera, uniforms)
     }
 }
 
@@ -129,11 +115,12 @@ impl Move for Nemo {
             _ => ()
         }
 
-        if self.pos == dest { return; }
+        let unit = &mut self.unit;
+        if unit.pos == dest { return; }
 
-        let dx = dest.0 - self.pos.0;
-        let dy = dest.1 - self.pos.1;
-        self.angle = dy.atan2(dx);
+        let dx = dest.0 - unit.pos.0;
+        let dy = dest.1 - unit.pos.1;
+        unit.angle = dy.atan2(dx);
         self.state = State::Moving { dest: dest };
     }
 }
