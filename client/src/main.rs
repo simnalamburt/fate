@@ -8,6 +8,7 @@ mod traits;
 mod nemo;
 mod minion;
 mod error;
+mod position;
 
 use std::default::Default;
 use time::PreciseTime;
