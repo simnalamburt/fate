@@ -4,20 +4,12 @@ use glium::backend::Facade;
 use xmath::Matrix;
 use traits::*;
 use error::CreationError;
+use position::*;
 
 pub struct Nemo {
-    vb: VertexBuffer<Vertex>,
-    ib: NoIndices,
-    program: Program,
-    pos: (f32, f32),
-    angle: f32,
+    position: Position2D,
     state: State,
 }
-
-#[derive(Clone, Copy)]
-struct Vertex { position: [f32; 2] }
-
-implement_vertex!(Vertex, position);
 
 enum State {
     /// Nemo is stopped
@@ -30,38 +22,41 @@ enum State {
 
 impl Nemo {
     pub fn new<F: Facade>(facade: &F) -> Result<Self, CreationError> {
+        //use position::Vertex2D;
         Ok(Nemo {
-            vb: try!(VertexBuffer::new(facade, &{
-                vec![
-                    Vertex { position: [   4.0,   0.0 ] },
-                    Vertex { position: [  -4.0,   1.5 ] },
-                    Vertex { position: [  -4.0,  -1.5 ] },
-                ]
-            })),
-            ib: NoIndices(PrimitiveType::TriangleStrip),
-            program: try!(Program::from_source(facade, r#"
-                #version 410
-                uniform mat4 matrix;
-                in vec2 position;
+            position: Position2D {
+                vb: try!(VertexBuffer::new(facade, &{
+                    vec![
+                        Vertex2D { position: [   4.0,   0.0 ] },
+                        Vertex2D { position: [  -4.0,   1.5 ] },
+                        Vertex2D { position: [  -4.0,  -1.5 ] },
+                    ]
+                })),
+                ib: NoIndices(PrimitiveType::TriangleStrip),
+                program: try!(Program::from_source(facade, r#"
+                    #version 410
+                    uniform mat4 matrix;
+                    in vec2 position;
 
-                void main() {
-                    gl_Position = matrix * vec4(position, 0.0, 1.0);
-                }
-            "#, r#"
-                #version 410
-                uniform int q;
-                out vec3 color;
-
-                void main() {
-                    if (q == 1) {
-                        color = vec3(0.533333, 0.4, 1.0);
-                    } else {
-                        color = vec3(1.0, 0.82745, 0.14118);
+                    void main() {
+                        gl_Position = matrix * vec4(position, 0.0, 1.0);
                     }
-                }
-            "#, None)),
-            pos: (0.0, 0.0),
-            angle: 0.0,
+                "#, r#"
+                    #version 410
+                    uniform int q;
+                    out vec3 color;
+
+                    void main() {
+                        if (q == 1) {
+                            color = vec3(0.533333, 0.4, 1.0);
+                        } else {
+                            color = vec3(1.0, 0.82745, 0.14118);
+                        }
+                    }
+                "#, None)),
+                pos: (0.0, 0.0),
+                angle: 0.0,
+            },
             state: State::Stopped,
         })
     }
@@ -74,8 +69,8 @@ impl Object for Nemo {
         match self.state {
             State::Stopped => {}
             State::Moving { dest } => {
-                let dx = dest.0 - self.pos.0;
-                let dy = dest.1 - self.pos.1;
+                let dx = dest.0 - self.position.pos.0;
+                let dy = dest.1 - self.position.pos.1;
 
                 let left_dist = (dx*dx + dy*dy).sqrt();
 
@@ -84,11 +79,11 @@ impl Object for Nemo {
 
                 if left_dist <= diff {
                     // 도착
-                    self.pos = dest;
+                    self.position.pos = dest;
                     next = Some(State::Stopped);
                 } else {
-                    self.pos.0 += diff*self.angle.cos();
-                    self.pos.1 += diff*self.angle.sin();
+                    self.position.pos.0 += diff*self.position.angle.cos();
+                    self.position.pos.1 += diff*self.position.angle.sin();
                 }
             }
             State::QSkill { ref mut t } => {
@@ -105,20 +100,11 @@ impl Object for Nemo {
         });
     }
 
-    fn draw(&self, target: &mut Frame, camera: Matrix) -> Result<(), DrawError> {
-        use glium::Surface;
-
-        // TODO: Cache
-        let local = Matrix::rotation_z(self.angle);
-        let world = Matrix::translation(self.pos.0, self.pos.1, 0.0);
-
+    fn draw(&self, target: &mut Frame, camera: &Matrix) -> Result<(), DrawError> {
         let uniforms = uniform! {
-            matrix: local * world * camera,
             q: match self.state { State::QSkill { .. } => 1, _ => 0 }
         };
-
-        try!(target.draw(&self.vb, &self.ib, &self.program, &uniforms, &Default::default()));
-        Ok(())
+        self.position.draw(target, camera, Some(uniforms))
     }
 }
 
@@ -129,11 +115,11 @@ impl Unit for Nemo {
             _ => ()
         }
 
-        if self.pos == dest { return; }
+        if self.position.pos == dest { return; }
 
-        let dx = dest.0 - self.pos.0;
-        let dy = dest.1 - self.pos.1;
-        self.angle = dy.atan2(dx);
+        let dx = dest.0 - self.position.pos.0;
+        let dy = dest.1 - self.position.pos.1;
+        self.position.angle = dy.atan2(dx);
         self.state = State::Moving { dest: dest };
     }
 }

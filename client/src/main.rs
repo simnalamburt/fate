@@ -8,6 +8,7 @@ mod traits;
 mod nemo;
 mod minion;
 mod error;
+mod position;
 
 use std::default::Default;
 use time::PreciseTime;
@@ -124,6 +125,7 @@ fn main() {
         //
         // Update
         //
+        // Frame Fix
         let now = PreciseTime::now();
         let delta = last.to(now).num_nanoseconds().unwrap() as f32 / 1.0E+9;
         print!("FPS: {}\n\x1b[1A", 1.0/delta);
@@ -148,11 +150,11 @@ fn main() {
         target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 1.0);
 
         // Note: .clone() 안하고싶음
-        nemo.draw(&mut target, camera.clone()).unwrap();
+        nemo.draw(&mut target, &camera).unwrap();
         for minion in &minions {
-            minion.draw(&mut target, camera.clone()).unwrap();
+            minion.draw(&mut target, &camera).unwrap();
         }
-        controller.draw(&mut target, camera.clone()).unwrap();
+        controller.draw(&mut target, &camera).unwrap();
 
         target.draw(&vb_ui, &ib_ui, &program_ui, &uniforms_ui, &Default::default()).unwrap();
         let _ = target.finish();
