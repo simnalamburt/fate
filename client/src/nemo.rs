@@ -6,6 +6,7 @@ use traits::*;
 use error::CreationError;
 
 pub struct Nemo {
+    //position: Position2D,
     vb: VertexBuffer<Vertex>,
     ib: NoIndices,
     program: Program,
@@ -105,7 +106,7 @@ impl Object for Nemo {
         });
     }
 
-    fn draw(&self, target: &mut Frame, camera: Matrix) -> Result<(), DrawError> {
+    fn draw(&self, target: &mut Frame, camera: &Matrix) -> Result<(), DrawError> {
         use glium::Surface;
 
         // TODO: Cache
