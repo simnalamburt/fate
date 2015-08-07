@@ -5,13 +5,12 @@ extern crate xmath;
 extern crate rand;
 
 mod traits;
-mod nemo;
-mod minion;
 mod error;
-mod unit;
+mod units;
 
 use std::default::Default;
 use time::PreciseTime;
+use units::{Nemo, Minion, MinionController};
 
 #[allow(dead_code)]
 fn main() {
@@ -35,18 +34,15 @@ fn main() {
     //
     // Game
     //
-    let mut nemo = nemo::Nemo::new(&display).unwrap();
-    let mut minions = {
-        use minion::Minion;
-        vec![
-            Minion::new(&display, (-17.0, 4.0)).unwrap(),
-            Minion::new(&display, (-19.0, 2.0)).unwrap(),
-            Minion::new(&display, (-20.0, 0.0)).unwrap(),
-            Minion::new(&display, (-19.0,-2.0)).unwrap(),
-            Minion::new(&display, (-17.0,-4.0)).unwrap(),
-        ]
-    };
-    let mut controller = minion::MinionController::new(&display).unwrap();
+    let mut nemo = Nemo::new(&display).unwrap();
+    let mut minions = vec![
+        Minion::new(&display, (-17.0, 4.0)).unwrap(),
+        Minion::new(&display, (-19.0, 2.0)).unwrap(),
+        Minion::new(&display, (-20.0, 0.0)).unwrap(),
+        Minion::new(&display, (-19.0,-2.0)).unwrap(),
+        Minion::new(&display, (-17.0,-4.0)).unwrap(),
+    ];
+    let mut controller = MinionController::new(&display).unwrap();
     let camera = xmath::Matrix::orthographic(width/10.0, height/10.0, 0.0, 1.0);
 
 

@@ -4,7 +4,7 @@ use glium::backend::Facade;
 use xmath::Matrix;
 use traits::{Object, Move};
 use error::CreationError;
-use unit::{vec, Unit};
+use super::{vec, Unit};
 
 pub struct Nemo {
     unit: Unit,
