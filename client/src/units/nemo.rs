@@ -54,6 +54,7 @@ impl Nemo {
             "#, None)),
             pos: (0.0, 0.0),
             angle: 0.0,
+            cooldown: 0.0,
         };
 
         Ok(Nemo { unit: unit, state: State::Stopped })

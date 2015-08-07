@@ -13,7 +13,8 @@ struct Unit {
     ib: NoIndices,
     program: Program,
     pos: (f32, f32),
-    angle: f32
+    angle: f32,
+    cooldown: f32,
 }
 
 #[derive(Clone, Copy)]

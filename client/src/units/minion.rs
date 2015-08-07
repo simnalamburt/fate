@@ -46,7 +46,8 @@ impl Minion {
                 }
             "#, None)),
             pos: pos,
-            angle: 0.0
+            angle: 0.0,
+            cooldown: 0.0,
         };
 
         Ok(Minion { unit: unit, state: State::Stopped { time: 0.0 } })
