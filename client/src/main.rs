@@ -101,22 +101,20 @@ fn main() {
         // Poll and handle the events received by the window
         //
         for event in display.poll_events() {
-            use glium::glutin::Event::*;
-            use glium::glutin::ElementState::*;
-            use glium::glutin::MouseButton;
-            use glium::glutin::VirtualKeyCode::*;
+            use glium::glutin::{Event, ElementState, MouseButton};
+            use glium::glutin::VirtualKeyCode as vkey;
 
             match event {
-                MouseMoved((x, y)) => cursor = (x as f32, height - y as f32),
-                MouseInput(Pressed, MouseButton::Left) => {
+                Event::MouseMoved((x, y)) => cursor = (x as f32, height - y as f32),
+                Event::MouseInput(ElementState::Pressed, MouseButton::Left) => {
                     use traits::Move;
 
                     // 마우스 좌표계 ~ 게임 좌표계 변환
                     let dest = ((cursor.0 - width/2.0)/10.0, (cursor.1 - height/2.0)/10.0);
                     nemo.go(dest)
                 }
-                KeyboardInput(Pressed, _, Some(Q)) => nemo.q(),
-                Closed => break 'main,
+                Event::KeyboardInput(ElementState::Pressed, _, Some(vkey::Q)) => nemo.q(),
+                Event::Closed => break 'main,
                 _ => ()
             }
         }

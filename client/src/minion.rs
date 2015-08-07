@@ -1,8 +1,8 @@
 use glium::{VertexBuffer, Program, Frame, DrawError};
-use glium::index::*;
+use glium::index::{NoIndices, PrimitiveType};
 use glium::backend::Facade;
 use xmath::Matrix;
-use traits::*;
+use traits::{Object, Move};
 use error::CreationError;
 use unit::{vec, Unit};
 
