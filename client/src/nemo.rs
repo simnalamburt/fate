@@ -122,7 +122,7 @@ impl Object for Nemo {
     }
 }
 
-impl Unit for Nemo {
+impl Move for Nemo {
     fn go(&mut self, dest: (f32, f32)) {
         match self.state {
             State::QSkill { .. } => return,

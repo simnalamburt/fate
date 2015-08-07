@@ -110,7 +110,7 @@ impl Object for Minion {
     }
 }
 
-impl Unit for Minion {
+impl Move for Minion {
     fn go(&mut self, dest: (f32, f32)) {
         if self.pos == dest { return; }
 

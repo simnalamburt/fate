@@ -108,7 +108,7 @@ fn main() {
             match event {
                 MouseMoved((x, y)) => cursor = (x as f32, height - y as f32),
                 MouseInput(Pressed, MouseButton::Left) => {
-                    use traits::Unit;
+                    use traits::Move;
 
                     // 마우스 좌표계 ~ 게임 좌표계 변환
                     let dest = ((cursor.0 - width/2.0)/10.0, (cursor.1 - height/2.0)/10.0);

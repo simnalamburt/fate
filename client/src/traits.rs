@@ -6,6 +6,6 @@ pub trait Object {
     fn draw(&self, target: &mut Frame, camera: &Matrix) -> Result<(), DrawError>;
 }
 
-pub trait Unit: Object {
+pub trait Move: Object {
     fn go(&mut self, dest: (f32, f32));
 }
