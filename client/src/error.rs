@@ -1,12 +1,15 @@
 use std::io;
-use glium::vertex::BufferCreationError;
+use glium::{vertex, index};
 use glium::program::ProgramCreationError;
+use obj::ObjError;
 
 #[derive(Debug)]
 pub enum CreationError {
     IoError(io::Error),
-    BufferCreationError(BufferCreationError),
+    VertexBufferCreationError(vertex::BufferCreationError),
+    IndexBufferCreationError(index::BufferCreationError),
     ProgramCreationError(ProgramCreationError),
+    ObjError(ObjError),
 }
 
 macro_rules! implmnt {
@@ -22,5 +25,7 @@ macro_rules! implmnt {
 }
 
 implmnt!(IoError, io::Error);
-implmnt!(BufferCreationError);
+implmnt!(VertexBufferCreationError, vertex::BufferCreationError);
+implmnt!(IndexBufferCreationError, index::BufferCreationError);
 implmnt!(ProgramCreationError);
+implmnt!(ObjError);
