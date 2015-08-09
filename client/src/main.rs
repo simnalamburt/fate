@@ -12,7 +12,7 @@ use std::default::Default;
 use time::PreciseTime;
 use units::{Nemo, Minion, MinionController};
 
-#[allow(dead_code)]
+#[cfg_attr(test, allow(dead_code))]
 fn main() {
     // Make a window
     let display = (|| {

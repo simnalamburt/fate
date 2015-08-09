@@ -16,7 +16,7 @@ use game::GameManager;
 
 type CommandResult = Result<ServerToClient, String>;
 
-#[allow(dead_code)]
+#[cfg_attr(test, allow(dead_code))]
 fn main() {
     let _ = simple_logger::init();
 
