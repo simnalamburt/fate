@@ -4,6 +4,7 @@ version = "0.0.1"
 dependencies = [
  "common 0.0.1",
  "glium 0.8.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "obj-rs 0.4.12 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "time 0.1.32 (registry+https://github.com/rust-lang/crates.io-index)",
  "xmath 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -245,6 +246,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "obj-rs"
+version = "0.4.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "glium 0.8.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "vec_map 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "objc"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -326,6 +336,11 @@ dependencies = [
  "winapi 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "winapi-build 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "vec_map"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "wayland-client"

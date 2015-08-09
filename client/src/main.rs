@@ -3,6 +3,7 @@ extern crate time;
 extern crate xmath;
 #[macro_use] extern crate glium;
 extern crate rand;
+extern crate obj;
 
 mod traits;
 mod error;
