@@ -15,12 +15,24 @@ use units::{Nemo, Minion, MinionController};
 #[allow(dead_code)]
 fn main() {
     use glium::DisplayBuild;
-    let display = glium::glutin::WindowBuilder::new()
-        .with_dimensions(1024, 768)
-        .with_depth_buffer(32)
-        .with_title(common::PROJECT_NAME.to_string())
-        .build_glium().unwrap();
 
+    let depth_bits_candidates: [u8; 3] = [ 32, 24, 16 ];
+    fn build_display(depth_size: u8) -> Option<glium::backend::glutin_backend::GlutinFacade> {
+        glium::glutin::WindowBuilder::new()
+            .with_dimensions(1024, 768)
+            .with_depth_buffer(depth_size)
+            .with_title(common::PROJECT_NAME.to_string())
+            .build_glium().ok()
+    }
+    let display = (|| -> Option<glium::backend::glutin_backend::GlutinFacade> {
+        for depth_bits in depth_bits_candidates.iter() {
+            match build_display(*depth_bits) {
+                Some(display) => return Some(display),
+                None => continue
+            }
+        }
+        None
+    })().unwrap();
 
     //
     // Basics
