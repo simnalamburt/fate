@@ -8,6 +8,7 @@ extern crate obj;
 mod traits;
 mod error;
 mod units;
+mod resource;
 
 use std::default::Default;
 use time::PreciseTime;
