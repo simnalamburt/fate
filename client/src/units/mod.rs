@@ -8,11 +8,13 @@ use xmath::Matrix;
 pub use self::nemo::Nemo;
 pub use self::minion::{Minion, MinionController};
 
+type Position = (f32, f32);
+
 struct Unit {
     vb: VertexBuffer<Vertex>,
     ib: NoIndices,
     program: Program,
-    pos: (f32, f32),
+    pos: Position,
     angle: f32,
     cooldown: f32,
 }
