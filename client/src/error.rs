@@ -9,20 +9,18 @@ pub enum CreationError {
     ProgramCreationError(ProgramCreationError),
 }
 
-impl From<io::Error> for CreationError {
-    fn from(err: io::Error) -> CreationError {
-        CreationError::IoError(err)
-    }
+macro_rules! implmnt {
+    ($name:ident, $error:ty) => {
+        impl From<$error> for CreationError {
+            fn from(err: $error) -> Self {
+                CreationError::$name(err)
+            }
+        }
+    };
+
+    ($name:ident) => ( implmnt!($name, $name); )
 }
 
-impl From<BufferCreationError> for CreationError {
-    fn from(err: BufferCreationError) -> CreationError {
-        CreationError::BufferCreationError(err)
-    }
-}
-
-impl From<ProgramCreationError> for CreationError {
-    fn from(err: ProgramCreationError) -> CreationError {
-        CreationError::ProgramCreationError(err)
-    }
-}
+implmnt!(IoError, io::Error);
+implmnt!(BufferCreationError);
+implmnt!(ProgramCreationError);
