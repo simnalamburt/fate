@@ -6,13 +6,18 @@ use glium::{VertexBuffer, Program, Frame, DrawError};
 use glium::backend::Facade;
 use glium::index::NoIndices;
 use glium::uniforms::{AsUniformValue, Uniforms, UniformsStorage};
+use std::sync::atomic::ATOMIC_USIZE_INIT;
+use std::sync::atomic::AtomicUsize;
+use std::sync::atomic::Ordering;
 use xmath::Matrix;
 pub use self::nemo::Nemo;
 pub use self::minion::{Minion, MinionController};
 
 type Position = (f32, f32);
+type Id = usize;
 
 struct Unit {
+    id: Id,
     vb: VertexBuffer<Vertex>,
     ib: NoIndices,
     program: Program,
@@ -34,7 +39,10 @@ implement_vertex!(Vertex, position);
 
 impl Unit {
     fn new<'a, F: Facade>(facade: &F, vertices: &[Vertex], indices: NoIndices, vertex_shader: &'a str, fragment_shader: &'a str, position: Position) -> Result<Self, CreationError> {
+        static NEXT_ID: AtomicUsize = ATOMIC_USIZE_INIT;
+        let id = NEXT_ID.fetch_add(1, Ordering::Relaxed);;
         Ok(Unit {
+            id: id,
             vb: try!(VertexBuffer::new(facade, vertices)),
             ib: indices,
             program: try!(Program::from_source(facade, vertex_shader, fragment_shader, None)),
