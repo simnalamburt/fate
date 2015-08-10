@@ -1,7 +1,9 @@
 mod nemo;
 mod minion;
 
+use error::CreationError;
 use glium::{VertexBuffer, Program, Frame, DrawError};
+use glium::backend::Facade;
 use glium::index::NoIndices;
 use glium::uniforms::{AsUniformValue, Uniforms, UniformsStorage};
 use xmath::Matrix;
@@ -31,6 +33,17 @@ fn vec(x: f32, y: f32) -> Vertex {
 implement_vertex!(Vertex, position);
 
 impl Unit {
+    fn new<'a, F: Facade>(facade: &F, vertices: &[Vertex], indices: NoIndices, vertex_shader: &'a str, fragment_shader: &'a str, position: Position) -> Result<Self, CreationError> {
+        Ok(Unit {
+            vb: try!(VertexBuffer::new(facade, vertices)),
+            ib: indices,
+            program: try!(Program::from_source(facade, vertex_shader, fragment_shader, None)),
+            pos: position,
+            angle: 0.0,
+            cooldown: 0.0,
+        })
+    }
+
     fn draw<'n, T, R>(&self,
                           target: &mut Frame,
                           camera: &Matrix,
