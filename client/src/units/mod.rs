@@ -2,10 +2,9 @@ mod nemo;
 mod minion;
 
 use error::CreationError;
-use glium::{VertexBuffer, Program, Frame, DrawError};
+use glium::{VertexBuffer, IndexBuffer, Program, Frame, DrawError};
 use glium::backend::Facade;
 use glium::draw_parameters::{DrawParameters, StencilOperation, StencilTest};
-use glium::index::NoIndices;
 use glium::uniforms::{AsUniformValue, Uniforms, UniformsStorage};
 use std::sync::atomic::{ATOMIC_USIZE_INIT, AtomicUsize, Ordering};
 use xmath::Matrix;
@@ -19,7 +18,7 @@ type Id = usize;
 struct Unit {
     id: Id,
     vb: VertexBuffer<Vertex>,
-    ib: NoIndices,
+    ib: IndexBuffer<u16>,
     program: Program,
     pos: Position,
     angle: f32,
@@ -34,13 +33,20 @@ fn vec(x: f32, y: f32) -> Vertex {
 }
 
 impl Unit {
-    fn new<'a, F: Facade>(facade: &F, vertices: &[Vertex], indices: NoIndices, vertex_shader: &'a str, fragment_shader: &'a str, position: Position) -> Result<Self, CreationError> {
+    fn new<'a, F: Facade>(facade: &F,
+                          vertex_buffer: VertexBuffer<Vertex>,
+                          index_buffer: IndexBuffer<u16>,
+                          vertex_shader: &'a str,
+                          fragment_shader: &'a str,
+                          position: Position)
+        -> Result<Self, CreationError>
+    {
         static NEXT_ID: AtomicUsize = ATOMIC_USIZE_INIT;
         let id = NEXT_ID.fetch_add(1, Ordering::Relaxed);;
         Ok(Unit {
             id: id,
-            vb: try!(VertexBuffer::new(facade, vertices)),
-            ib: indices,
+            vb: vertex_buffer,
+            ib: index_buffer,
             program: try!(Program::from_source(facade, vertex_shader, fragment_shader, None)),
             pos: position,
             angle: 0.0,
