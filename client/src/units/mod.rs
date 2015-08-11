@@ -9,6 +9,7 @@ use glium::index::NoIndices;
 use glium::uniforms::{AsUniformValue, Uniforms, UniformsStorage};
 use std::sync::atomic::{ATOMIC_USIZE_INIT, AtomicUsize, Ordering};
 use xmath::Matrix;
+use obj::Vertex;
 pub use self::nemo::Nemo;
 pub use self::minion::{Minion, MinionController};
 
@@ -25,16 +26,12 @@ struct Unit {
     cooldown: f32,
 }
 
-#[derive(Clone, Copy)]
-struct Vertex {
-    position: [f32; 2]
-}
-
 fn vec(x: f32, y: f32) -> Vertex {
-    Vertex { position: [x, y] }
+    Vertex {
+        position: [x, y, 0.0],
+        normal: [0.0, 0.0, 0.0],
+    }
 }
-
-implement_vertex!(Vertex, position);
 
 impl Unit {
     fn new<'a, F: Facade>(facade: &F, vertices: &[Vertex], indices: NoIndices, vertex_shader: &'a str, fragment_shader: &'a str, position: Position) -> Result<Self, CreationError> {

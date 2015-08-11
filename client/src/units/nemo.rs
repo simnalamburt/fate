@@ -35,10 +35,10 @@ impl Nemo {
             r#"
                 #version 410
                 uniform mat4 matrix;
-                in vec2 position;
+                in vec3 position;
 
                 void main() {
-                    gl_Position = matrix * vec4(position, 0.0, 1.0);
+                    gl_Position = matrix * vec4(position, 1.0);
                 }
             "#,
             r#"
