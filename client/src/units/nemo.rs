@@ -1,4 +1,4 @@
-use glium::{VertexBuffer, Program, Frame, DrawError};
+use glium::{Frame, DrawError};
 use glium::index::{NoIndices, PrimitiveType};
 use glium::backend::Facade;
 use xmath::Matrix;
@@ -22,16 +22,17 @@ enum State {
 
 impl Nemo {
     pub fn new<F: Facade>(facade: &F) -> Result<Self, CreationError> {
-        let unit = Unit {
-            vb: try!(VertexBuffer::new(facade, &{
+        let unit = try!(Unit::new(
+            facade,
+            &{
                 vec![
                     vec(  4.0,  0.0 ),
                     vec( -4.0,  1.5 ),
                     vec( -4.0, -1.5 ),
                 ]
-            })),
-            ib: NoIndices(PrimitiveType::TriangleStrip),
-            program: try!(Program::from_source(facade, r#"
+            },
+            NoIndices(PrimitiveType::TriangleStrip),
+            r#"
                 #version 410
                 uniform mat4 matrix;
                 in vec2 position;
@@ -39,7 +40,8 @@ impl Nemo {
                 void main() {
                     gl_Position = matrix * vec4(position, 0.0, 1.0);
                 }
-            "#, r#"
+            "#,
+            r#"
                 #version 410
                 uniform int q;
                 out vec3 color;
@@ -51,11 +53,9 @@ impl Nemo {
                         color = vec3(1.0, 0.82745, 0.14118);
                     }
                 }
-            "#, None)),
-            pos: (0.0, 0.0),
-            angle: 0.0,
-            cooldown: 0.0,
-        };
+            "#,
+            (0.0, 0.0),
+        ));
 
         Ok(Nemo { unit: unit, state: State::Stopped })
     }

@@ -1,4 +1,4 @@
-use glium::{VertexBuffer, Program, Frame, DrawError};
+use glium::{Frame, DrawError};
 use glium::index::{NoIndices, PrimitiveType};
 use glium::backend::Facade;
 use xmath::Matrix;
@@ -20,16 +20,17 @@ enum State {
 
 impl Minion {
     pub fn new<F: Facade>(facade: &F, pos: (f32, f32)) -> Result<Self, CreationError> {
-        let unit = Unit {
-            vb: try!(VertexBuffer::new(facade, &{
+        let unit = try!(Unit::new(
+            facade,
+            &{
                 vec![
                     vec(  2.0,  0.00 ),
                     vec( -2.0,  0.75 ),
                     vec( -2.0, -0.75 ),
                 ]
-            })),
-            ib: NoIndices(PrimitiveType::TriangleStrip),
-            program: try!(Program::from_source(facade, r#"
+            },
+            NoIndices(PrimitiveType::TriangleStrip),
+            r#"
                 #version 410
                 uniform mat4 matrix;
                 in vec2 position;
@@ -37,18 +38,17 @@ impl Minion {
                 void main() {
                     gl_Position = matrix * vec4(position, 0.0, 1.0);
                 }
-            "#, r#"
+            "#,
+            r#"
                 #version 410
                 out vec3 color;
 
                 void main() {
                     color = vec3(1.0, 0.5, 0.5);
                 }
-            "#, None)),
-            pos: pos,
-            angle: 0.0,
-            cooldown: 0.0,
-        };
+            "#,
+            pos,
+        ));
 
         Ok(Minion { unit: unit, state: State::Stopped { time: 0.0 } })
     }
