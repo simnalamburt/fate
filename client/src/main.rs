@@ -10,19 +10,24 @@ mod error;
 mod units;
 mod resource;
 
+use glium::texture::Texture2d;
+use glium::texture::MipmapsOption::NoMipmap;
+use glium::texture::UncompressedFloatFormat::U8U8U8U8;
 use std::default::Default;
 use time::PreciseTime;
 use units::{Nemo, Minion, MinionController};
 
 #[cfg_attr(test, allow(dead_code))]
 fn main() {
-    // Make a window
+    // Make a render targets
+    let (width, height) = (1024, 768);
+
     let display = (|| {
         for &depth in &[32u8, 24, 16] {
             use glium::DisplayBuild;
 
             let result = glium::glutin::WindowBuilder::new()
-                .with_dimensions(1024, 768)
+                .with_dimensions(width, height)
                 .with_depth_buffer(depth)
                 .with_title(common::PROJECT_NAME.to_string())
                 .build_glium();
@@ -35,14 +40,14 @@ fn main() {
         panic!("Failed to initialize glutin window");
     })();
 
+    let texture = Texture2d::empty_with_format(&display, U8U8U8U8, NoMipmap, width, height).unwrap();
+
 
     //
     // Basics
     //
-    let (width, height) = {
-        let dim = display.get_framebuffer_dimensions();
-        (dim.0 as f32, dim.1 as f32)
-    };
+    let (width, height) = (width as f32, height as f32);
+
 
 
     //
