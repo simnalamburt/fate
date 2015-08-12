@@ -4,7 +4,7 @@ mod minion;
 use error::CreationError;
 use glium::{VertexBuffer, IndexBuffer, Program, Frame, DrawError};
 use glium::backend::Facade;
-use glium::draw_parameters::{DrawParameters, StencilOperation, StencilTest};
+use glium::draw_parameters::DrawParameters;
 use glium::uniforms::{AsUniformValue, Uniforms, UniformsStorage};
 use std::sync::atomic::{ATOMIC_USIZE_INIT, AtomicUsize, Ordering};
 use xmath::Matrix;
@@ -69,14 +69,6 @@ impl Unit {
         let uniforms = uniforms.add("matrix", local * world * camera);
 
         let draw_parameters = DrawParameters {
-            stencil_test_clockwise: StencilTest::AlwaysPass,
-            stencil_test_counter_clockwise: StencilTest::AlwaysPass,
-            stencil_reference_value_clockwise: self.id as i32,
-            stencil_reference_value_counter_clockwise: self.id as i32,
-            stencil_pass_depth_fail_operation_clockwise: StencilOperation::Keep,
-            stencil_pass_depth_fail_operation_counter_clockwise: StencilOperation::Keep,
-            stencil_depth_pass_operation_clockwise: StencilOperation::Replace,
-            stencil_depth_pass_operation_counter_clockwise: StencilOperation::Replace,
             .. Default::default()
         };
 
@@ -97,14 +89,6 @@ impl Unit {
         let uniforms = uniform! { matrix: local * world * camera };
 
         let draw_parameters = DrawParameters {
-            stencil_test_clockwise: StencilTest::AlwaysPass,
-            stencil_test_counter_clockwise: StencilTest::AlwaysPass,
-            stencil_reference_value_clockwise: self.id as i32,
-            stencil_reference_value_counter_clockwise: self.id as i32,
-            stencil_pass_depth_fail_operation_clockwise: StencilOperation::Keep,
-            stencil_pass_depth_fail_operation_counter_clockwise: StencilOperation::Keep,
-            stencil_depth_pass_operation_clockwise: StencilOperation::Replace,
-            stencil_depth_pass_operation_counter_clockwise: StencilOperation::Replace,
             .. Default::default()
         };
 
