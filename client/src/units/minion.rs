@@ -1,5 +1,5 @@
-use glium::{Frame, DrawError};
-use glium::index::{NoIndices, PrimitiveType};
+use glium::{VertexBuffer, IndexBuffer, Frame, DrawError};
+use glium::index::PrimitiveType;
 use glium::backend::Facade;
 use xmath::Matrix;
 use traits::{Object, Move};
@@ -22,21 +22,19 @@ impl Minion {
     pub fn new<F: Facade>(facade: &F, pos: (f32, f32)) -> Result<Self, CreationError> {
         let unit = try!(Unit::new(
             facade,
-            &{
-                vec![
-                    vec(  2.0,  0.00 ),
-                    vec( -2.0,  0.75 ),
-                    vec( -2.0, -0.75 ),
-                ]
-            },
-            NoIndices(PrimitiveType::TriangleStrip),
+            try!(VertexBuffer::new(facade, &vec![
+                vec(  2.0,  0.00 ),
+                vec( -2.0,  0.75 ),
+                vec( -2.0, -0.75 ),
+            ])),
+            try!(IndexBuffer::new(facade, PrimitiveType::TrianglesList, &[0, 1, 2])),
             r#"
                 #version 410
                 uniform mat4 matrix;
-                in vec2 position;
+                in vec3 position;
 
                 void main() {
-                    gl_Position = matrix * vec4(position, 0.0, 1.0);
+                    gl_Position = matrix * vec4(position, 1.0);
                 }
             "#,
             r#"

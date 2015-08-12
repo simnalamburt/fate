@@ -1,10 +1,12 @@
+use std::io::BufReader;
 use glium::{Frame, DrawError};
-use glium::index::{NoIndices, PrimitiveType};
 use glium::backend::Facade;
 use xmath::Matrix;
+use obj::load_obj;
 use traits::{Object, Move};
 use error::CreationError;
-use super::{vec, Unit};
+use resource::load;
+use super::Unit;
 
 pub struct Nemo {
     unit: Unit,
@@ -22,23 +24,21 @@ enum State {
 
 impl Nemo {
     pub fn new<F: Facade>(facade: &F) -> Result<Self, CreationError> {
+        let bear = try!(load("rilakkuma.obj"));
+        let bear = BufReader::new(bear);
+        let bear = try!(load_obj(bear));
+
         let unit = try!(Unit::new(
             facade,
-            &{
-                vec![
-                    vec(  4.0,  0.0 ),
-                    vec( -4.0,  1.5 ),
-                    vec( -4.0, -1.5 ),
-                ]
-            },
-            NoIndices(PrimitiveType::TriangleStrip),
+            try!(bear.vertex_buffer(facade)),
+            try!(bear.index_buffer(facade)),
             r#"
                 #version 410
                 uniform mat4 matrix;
-                in vec2 position;
+                in vec3 position;
 
                 void main() {
-                    gl_Position = matrix * vec4(position, 0.0, 1.0);
+                    gl_Position = matrix * vec4(position, 1.0);
                 }
             "#,
             r#"
