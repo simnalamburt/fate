@@ -22,7 +22,6 @@ struct Unit {
     program: Program,
     pos: Position,
     angle: f32,
-    cooldown: f32,
 }
 
 fn vec(x: f32, y: f32) -> Vertex {
@@ -50,7 +49,6 @@ impl Unit {
             program: try!(Program::from_source(facade, vertex_shader, fragment_shader, None)),
             pos: position,
             angle: 0.0,
-            cooldown: 0.0,
         })
     }
 
