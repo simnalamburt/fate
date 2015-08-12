@@ -19,20 +19,17 @@ fn main() {
     // Make a window
     let display = (|| {
         for &depth in &[32u8, 24, 16] {
-            for &stencil in &[32u8, 24, 16, 8] {
-                use glium::DisplayBuild;
+            use glium::DisplayBuild;
 
-                let result = glium::glutin::WindowBuilder::new()
-                    .with_dimensions(1024, 768)
-                    .with_depth_buffer(depth)
-                    .with_stencil_buffer(stencil)
-                    .with_title(common::PROJECT_NAME.to_string())
-                    .build_glium();
+            let result = glium::glutin::WindowBuilder::new()
+                .with_dimensions(1024, 768)
+                .with_depth_buffer(depth)
+                .with_title(common::PROJECT_NAME.to_string())
+                .build_glium();
 
-                match result {
-                    Ok(dp) => return dp,
-                    Err(_) => continue
-                }
+            match result {
+                Ok(dp) => return dp,
+                Err(_) => continue
             }
         }
         panic!("Failed to initialize glutin window");
@@ -158,7 +155,7 @@ fn main() {
         };
 
         let mut target = display.draw();
-        target.clear_all((0.0, 0.0, 0.0, 0.0), 1.0, 0);
+        target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 1.0);
 
         nemo.draw(&mut target, &camera).unwrap();
         for minion in &minions {
