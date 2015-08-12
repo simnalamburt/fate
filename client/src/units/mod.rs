@@ -68,9 +68,9 @@ impl Unit {
     }
 
     fn draw<'n, T, R>(&self,
-                          target: &mut Frame,
-                          camera: &Matrix,
-                          uniforms: UniformsStorage<'n, T, R>)
+                      target: &mut Frame,
+                      camera: &Matrix,
+                      uniforms: UniformsStorage<'n, T, R>)
         -> Result<(), DrawError> where T: AsUniformValue, R: Uniforms
     {
         // TODO: Cache
@@ -79,8 +79,8 @@ impl Unit {
     }
 
     fn draw_without_uniforms(&self,
-                                 target: &mut Frame,
-                                 camera: &Matrix)
+                             target: &mut Frame,
+                             camera: &Matrix)
         -> Result<(), DrawError>
     {
         // TODO: Cache
