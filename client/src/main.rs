@@ -156,7 +156,6 @@ fn main() {
         // TODO: Limit framerate
         let now = PreciseTime::now();
         let delta = last.to(now).num_nanoseconds().unwrap() as f32 / 1.0E+9;
-        print!("FPS: {}\n\x1b[1A", 1.0/delta);
         last = now;
 
         nemo.update(delta);
