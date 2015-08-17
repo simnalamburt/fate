@@ -61,10 +61,7 @@ impl Unit {
         use glium::Surface;
 
         // TODO: Cache
-        let local = Matrix::rotation_z(self.angle);
-        let world = Matrix::translation(self.pos.0, self.pos.1, 0.0);
-
-        let uniforms = uniforms.add("matrix", local * world * camera);
+        let uniforms = uniforms.add("matrix", matrix(self, camera));
 
         let draw_parameters = DrawParameters {
             .. Default::default()
@@ -81,10 +78,7 @@ impl Unit {
         use glium::Surface;
 
         // TODO: Cache
-        let local = Matrix::rotation_z(self.angle);
-        let world = Matrix::translation(self.pos.0, self.pos.1, 0.0);
-
-        let uniforms = uniform! { matrix: local * world * camera };
+        let uniforms = uniform! { matrix: matrix(self, camera) };
 
         let draw_parameters = DrawParameters {
             .. Default::default()
@@ -92,4 +86,11 @@ impl Unit {
 
         target.draw(&self.vb, &self.ib, &self.program, &uniforms, &draw_parameters)
     }
+}
+
+fn matrix(unit: &Unit, camera:&Matrix) -> Matrix {
+    let local = Matrix::rotation_z(unit.angle);
+    let world = Matrix::translation(unit.pos.0, unit.pos.1, 0.0);
+
+    local * world * camera
 }
