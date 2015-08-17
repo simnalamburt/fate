@@ -1,6 +1,7 @@
 use glium::{VertexBuffer, IndexBuffer, Frame, DrawError};
 use glium::index::PrimitiveType;
 use glium::backend::Facade;
+use glium::framebuffer::SimpleFrameBuffer;
 use xmath::Matrix;
 use traits::{Object, Move};
 use error::CreationError;
@@ -90,6 +91,10 @@ impl Object for Minion {
     fn draw(&self, target: &mut Frame, camera: &Matrix) -> Result<(), DrawError> {
         self.unit.draw_without_uniforms(target, camera)
     }
+
+    fn fill(&self, target: &mut SimpleFrameBuffer, camera: &Matrix) -> Result<(), DrawError> {
+        self.unit.fill(target, camera)
+    }
 }
 
 impl Move for Minion {
@@ -150,6 +155,13 @@ impl Object for MinionController {
     fn draw(&self, target: &mut Frame, camera: &Matrix) -> Result<(), DrawError> {
         for minion in &self.minions {
             try!(minion.draw(target, &camera))
+        }
+        Ok(())
+    }
+
+    fn fill(&self, target: &mut SimpleFrameBuffer, camera: &Matrix) -> Result<(), DrawError> {
+        for minion in &self.minions {
+            try!(minion.fill(target, &camera))
         }
         Ok(())
     }

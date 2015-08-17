@@ -10,19 +10,24 @@ mod error;
 mod units;
 mod resource;
 
+use glium::texture::Texture2d;
+use glium::texture::MipmapsOption::NoMipmap;
+use glium::texture::UncompressedFloatFormat::U8U8U8U8;
 use std::default::Default;
 use time::PreciseTime;
 use units::{Nemo, Minion, MinionController};
 
 #[cfg_attr(test, allow(dead_code))]
 fn main() {
-    // Make a window
+    // Make a render targets
+    let (width, height) = (1024, 768);
+
     let display = (|| {
         for &depth in &[32u8, 24, 16] {
             use glium::DisplayBuild;
 
             let result = glium::glutin::WindowBuilder::new()
-                .with_dimensions(1024, 768)
+                .with_dimensions(width, height)
                 .with_depth_buffer(depth)
                 .with_title(common::PROJECT_NAME.to_string())
                 .build_glium();
@@ -35,14 +40,14 @@ fn main() {
         panic!("Failed to initialize glutin window");
     })();
 
+    let texture = Texture2d::empty_with_format(&display, U8U8U8U8, NoMipmap, width, height).unwrap();
+
 
     //
     // Basics
     //
-    let (width, height) = {
-        let dim = display.get_framebuffer_dimensions();
-        (dim.0 as f32, dim.1 as f32)
-    };
+    let (width, height) = (width as f32, height as f32);
+
 
 
     //
@@ -123,6 +128,21 @@ fn main() {
                     let dest = ((cursor.0 - width/2.0)/10.0, (cursor.1 - height/2.0)/10.0);
                     nemo.go(dest)
                 }
+                Event::MouseInput(ElementState::Pressed, MouseButton::Right) => {
+                    let mut object_picking_buffer = texture.as_surface();
+                    object_picking_buffer.clear_color(1.0, 1.0, 1.0, 1.0);
+                    // TODO: 예외처리
+                    nemo.fill(&mut object_picking_buffer, &camera).unwrap();
+                    for minion in &minions {
+                        minion.fill(&mut object_picking_buffer, &camera).unwrap();
+                    }
+                    controller.fill(&mut object_picking_buffer, &camera).unwrap();
+                    let buffer = texture.read_to_pixel_buffer();
+                    let pixel_index = (width * cursor.1 + cursor.0) as usize;
+                    let pixel_color = buffer.slice(pixel_index..(pixel_index + 1)).unwrap().read().unwrap()[0];
+
+                    println!("{:?} {:?}", cursor, color_to_id(&pixel_color));
+                }
                 Event::KeyboardInput(ElementState::Pressed, _, Some(vkey::Q)) => nemo.q(),
                 Event::Closed => break 'main,
                 _ => ()
@@ -136,7 +156,6 @@ fn main() {
         // TODO: Limit framerate
         let now = PreciseTime::now();
         let delta = last.to(now).num_nanoseconds().unwrap() as f32 / 1.0E+9;
-        print!("FPS: {}\n\x1b[1A", 1.0/delta);
         last = now;
 
         nemo.update(delta);
@@ -165,5 +184,18 @@ fn main() {
 
         target.draw(&vb_ui, &ib_ui, &program_ui, &uniforms_ui, &Default::default()).unwrap();
         let _ = target.finish();
+    }
+}
+
+fn color_to_id(color: &(u8, u8, u8, u8)) -> Option<u32> {
+    match *color {
+        (255, 255, 255, 255) => None,
+        (red, green, blue, alpha) => {
+            let red = (red as u32) << 24;
+            let green = (green as u32) << 16;
+            let blue = (blue as u32) << 8;
+            let alpha = alpha as u32;
+            Some(red | green | blue | alpha)
+        }
     }
 }

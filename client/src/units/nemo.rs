@@ -1,6 +1,7 @@
 use std::io::BufReader;
 use glium::{Frame, DrawError};
 use glium::backend::Facade;
+use glium::framebuffer::SimpleFrameBuffer;
 use xmath::Matrix;
 use obj::load_obj;
 use traits::{Object, Move};
@@ -106,6 +107,10 @@ impl Object for Nemo {
             q: match self.state { State::QSkill { .. } => 1, _ => 0 }
         };
         self.unit.draw(target, camera, uniforms)
+    }
+
+    fn fill(&self, target: &mut SimpleFrameBuffer, camera: &Matrix) -> Result<(), DrawError> {
+        self.unit.fill(target, camera)
     }
 }
 
