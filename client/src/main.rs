@@ -39,7 +39,8 @@ fn main() {
         panic!("Failed to initialize glutin window");
     })();
 
-    let draw_context = DrawContext::new(&display, width, height);
+    // TODO: Error 처리
+    let draw_context = DrawContext::new(&display, width, height).unwrap();
 
     //
     // Basics
