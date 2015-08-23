@@ -9,7 +9,7 @@ cd client; cargo run
 cd server; cargo run
 
 # server tester
-cd util; cargo run localhost 4567
+cd util; cargo run
 ```
 
 ### Requirements
