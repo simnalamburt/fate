@@ -32,9 +32,15 @@ implmnt!(ObjError);
 
 #[derive(Debug)]
 pub enum DrawContextCreationError {
+    ProgramCreationError(ProgramCreationError),
     TextureCreationError(texture::TextureCreationError),
 }
 
+impl From<ProgramCreationError> for DrawContextCreationError {
+    fn from(err: ProgramCreationError) -> Self {
+        DrawContextCreationError::ProgramCreationError(err)
+    }
+}
 impl From<texture::TextureCreationError> for DrawContextCreationError {
     fn from(err: texture::TextureCreationError) -> Self {
         DrawContextCreationError::TextureCreationError(err)
