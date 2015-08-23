@@ -22,7 +22,6 @@ struct Unit {
     vb: VertexBuffer<Vertex>,
     ib: IndexBuffer<u16>,
     program: Program,
-    fill_id_program: Program,
     pos: Position,
     angle: f32,
 }
@@ -50,19 +49,6 @@ impl Unit {
             vb: vertex_buffer,
             ib: index_buffer,
             program: try!(Program::from_source(facade, vertex_shader, fragment_shader, None)),
-            fill_id_program: try!(Program::from_source(facade, r#"
-            #version 410
-            uniform mat4 matrix;
-            in vec3 position;
-            void main() {
-                gl_Position = matrix * vec4(position, 1.0);
-            }"#, r#"
-            #version 410
-            uniform vec4 id;
-            out vec4 color;
-            void main() {
-                color = id;
-            }"#, None)),
             pos: position,
             angle: 0.0,
         })
@@ -95,7 +81,7 @@ impl Unit {
         let blue = ((self.id >> 8) & 0xFF) as f32 / 255.0;
         let alpha = (self.id & 0xFF) as f32 / 255.0;
         let uniforms = uniform! { matrix: matrix(self, &draw_context.camera), id: [red, green, blue, alpha] };
-        draw_internal(target, &self, &self.fill_id_program, &uniforms)
+        draw_internal(target, &self, &draw_context.fill_id_program, &uniforms)
     }
 }
 
