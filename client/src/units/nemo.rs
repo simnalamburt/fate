@@ -1,8 +1,8 @@
+use draw_context::DrawContext;
 use std::io::BufReader;
 use glium::{Frame, DrawError};
 use glium::backend::Facade;
 use glium::framebuffer::SimpleFrameBuffer;
-use xmath::Matrix;
 use obj::load_obj;
 use traits::{Object, Move};
 use error::CreationError;
@@ -102,15 +102,15 @@ impl Object for Nemo {
         });
     }
 
-    fn draw(&self, target: &mut Frame, camera: &Matrix) -> Result<(), DrawError> {
+    fn draw(&self, target: &mut Frame, draw_context: &DrawContext) -> Result<(), DrawError> {
         let uniforms = uniform! {
             q: match self.state { State::QSkill { .. } => 1, _ => 0 }
         };
-        self.unit.draw(target, camera, uniforms)
+        self.unit.draw(target, uniforms, draw_context)
     }
 
-    fn fill(&self, target: &mut SimpleFrameBuffer, camera: &Matrix) -> Result<(), DrawError> {
-        self.unit.fill(target, camera)
+    fn fill(&self, target: &mut SimpleFrameBuffer, draw_context: &DrawContext) -> Result<(), DrawError> {
+        self.unit.fill(target, draw_context)
     }
 }
 
