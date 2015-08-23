@@ -8,13 +8,14 @@ extern crate obj;
 mod draw_context;
 mod traits;
 mod error;
+mod ui;
 mod units;
 mod resource;
 
 use draw_context::DrawContext;
-use std::default::Default;
 use time::PreciseTime;
 use units::{Nemo, Minion, MinionController};
+use ui::UI;
 
 #[cfg_attr(test, allow(dead_code))]
 fn main() {
@@ -66,40 +67,7 @@ fn main() {
     //
     // Parameters for UI
     //
-    let vb_ui = glium::VertexBuffer::new(&display, &{
-        #[derive(Clone, Copy)]
-        struct Vertex { position: [f32; 2] }
-
-        implement_vertex!(Vertex, position);
-
-        vec![
-            Vertex { position: [ -2.0, -2.0 ] },
-            Vertex { position: [ -2.0,  3.0 ] },
-            Vertex { position: [  3.0, -2.0 ] },
-            Vertex { position: [  3.0,  3.0 ] },
-        ]
-    }).unwrap();
-    let ib_ui = glium::index::NoIndices(glium::index::PrimitiveType::TriangleStrip);
-    let program_ui = glium::Program::from_source(&display,
-        r#"
-            #version 410
-            uniform vec2 cursor;
-            uniform mat4 matrix;
-            in vec2 position;
-
-            void main() {
-                gl_Position = matrix * vec4(position + cursor, 0.0, 1.0);
-            }
-        "#, r#"
-            #version 410
-            out vec3 color;
-
-            void main() {
-                color = vec3(1.0, 1.0, 1.0);
-            }
-        "#, None).unwrap();
-    let mut cursor = (300.0, 300.0);
-    let matrix_ui = xmath::Matrix::orthographic_off_center(0.0, width, 0.0, height, 0.0, 1.0);
+    let mut ui = UI::new(&display, width, height);
 
 
     let mut last = PreciseTime::now();
@@ -118,12 +86,12 @@ fn main() {
             use glium::glutin::VirtualKeyCode as vkey;
 
             match event {
-                Event::MouseMoved((x, y)) => cursor = (x as f32, height - y as f32),
+                Event::MouseMoved((x, y)) => ui.cursor = (x as f32, height - y as f32),
                 Event::MouseInput(ElementState::Pressed, MouseButton::Left) => {
                     use traits::Move;
 
                     // 마우스 좌표계 ~ 게임 좌표계 변환
-                    let dest = ((cursor.0 - width/2.0)/10.0, (cursor.1 - height/2.0)/10.0);
+                    let dest = ((ui.cursor.0 - width/2.0)/10.0, (ui.cursor.1 - height/2.0)/10.0);
                     nemo.go(dest)
                 }
                 Event::MouseInput(ElementState::Pressed, MouseButton::Right) => {
@@ -137,10 +105,10 @@ fn main() {
                     }
                     controller.fill(&mut object_picking_buffer, &draw_context).unwrap();
                     let buffer = texture.read_to_pixel_buffer();
-                    let pixel_index = (width * cursor.1 + cursor.0) as usize;
+                    let pixel_index = (width * ui.cursor.1 + ui.cursor.0) as usize;
                     let pixel_color = buffer.slice(pixel_index..(pixel_index + 1)).unwrap().read().unwrap()[0];
 
-                    println!("{:?} {:?}", cursor, color_to_id(&pixel_color));
+                    println!("{:?} {:?}", ui.cursor, color_to_id(&pixel_color));
                 }
                 Event::KeyboardInput(ElementState::Pressed, _, Some(vkey::Q)) => nemo.q(),
                 Event::Closed => break 'main,
@@ -167,11 +135,6 @@ fn main() {
         //
         // Render
         //
-        let uniforms_ui = uniform! {
-            cursor: cursor,
-            matrix: matrix_ui.clone()
-        };
-
         let mut target = display.draw();
         target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 1.0);
 
@@ -181,7 +144,7 @@ fn main() {
         }
         controller.draw(&mut target, &draw_context).unwrap();
 
-        target.draw(&vb_ui, &ib_ui, &program_ui, &uniforms_ui, &Default::default()).unwrap();
+        ui.draw(&mut target).unwrap();
         let _ = target.finish();
     }
 }
