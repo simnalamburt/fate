@@ -127,9 +127,9 @@ fn main() {
                     nemo.go(dest)
                 }
                 Event::MouseInput(ElementState::Pressed, MouseButton::Right) => {
+                    draw_context.clear_object_picking_buffer();
                     let texture = &draw_context.texture_for_object_picking;
                     let mut object_picking_buffer = texture.as_surface();
-                    object_picking_buffer.clear_color(1.0, 1.0, 1.0, 1.0);
                     // TODO: 예외처리
                     nemo.fill(&mut object_picking_buffer, &draw_context).unwrap();
                     for minion in &minions {

@@ -18,4 +18,10 @@ impl DrawContext {
             texture_for_object_picking: texture,
         })
     }
+
+    pub fn clear_object_picking_buffer(&self) {
+        use glium::Surface;
+        let mut object_picking_buffer = self.texture_for_object_picking.as_surface();
+        object_picking_buffer.clear_color(1.0, 1.0, 1.0, 1.0);
+    }
 }
