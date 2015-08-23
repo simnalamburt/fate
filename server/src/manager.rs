@@ -39,76 +39,78 @@ impl<I, P> Manager<I, P> where I: Item<P> {
 }
 
 #[cfg(test)]
-#[derive(Clone)]
-pub struct TestItem {
-    pub id: Id,
-    pub a: i32,
-    pub b: bool,
-}
+mod test {
+    use super::{Id, Item, Manager};
 
-#[cfg(test)]
-impl Item<(i32, bool)> for TestItem {
-    fn new(id: &Id, param: &(i32, bool)) -> Self {
-        TestItem {
-            id: *id,
-            a: param.0,
-            b: param.1,
+    #[derive(Clone)]
+    struct TestItem {
+        pub id: Id,
+        pub a: i32,
+        pub b: bool,
+    }
+
+    impl Item<(i32, bool)> for TestItem {
+        fn new(id: &Id, param: &(i32, bool)) -> Self {
+            TestItem {
+                id: *id,
+                a: param.0,
+                b: param.1,
+            }
         }
     }
-}
 
-#[cfg(test)]
-type TestManager = Manager<TestItem, (i32, bool)>;
+    type TestManager = Manager<TestItem, (i32, bool)>;
 
-#[test]
-fn manager_create_item_starts_id_with_zero() {
-    let mut manager = TestManager::new();
+    #[test]
+    fn manager_create_item_starts_id_with_zero() {
+        let mut manager = TestManager::new();
 
-    let item = manager.create(&(1, true));
+        let item = manager.create(&(1, true));
 
-    assert_eq!(item.id, 0);
-    assert_eq!(item.a, 1);
-    assert_eq!(item.b, true);
-}
+        assert_eq!(item.id, 0);
+        assert_eq!(item.a, 1);
+        assert_eq!(item.b, true);
+    }
 
-#[test]
-fn get_method_returns_none_on_empty_manager() {
-    let manager = TestManager::new();
+    #[test]
+    fn get_method_returns_none_on_empty_manager() {
+        let manager = TestManager::new();
 
-    let item = manager.get(1);
-    assert!(item.is_none());
-}
+        let item = manager.get(1);
+        assert!(item.is_none());
+    }
 
-// This test case depends on that manager generates id sequentially inceasing.
-#[test]
-fn get_method_returns_none_with_uncreated_id() {
-    let mut manager = TestManager::new();
+    /// This test case depends on that manager generates id sequentially inceasing.
+    #[test]
+    fn get_method_returns_none_with_uncreated_id() {
+        let mut manager = TestManager::new();
 
-    let item = manager.create(&(1, true));
-    assert_eq!(item.id, 0);
-    assert_eq!(item.a, 1);
-    assert_eq!(item.b, true);
+        let item = manager.create(&(1, true));
+        assert_eq!(item.id, 0);
+        assert_eq!(item.a, 1);
+        assert_eq!(item.b, true);
 
-    let item = manager.create(&(3, false));
-    assert_eq!(item.id, 1);
-    assert_eq!(item.a, 3);
-    assert_eq!(item.b, false);
+        let item = manager.create(&(3, false));
+        assert_eq!(item.id, 1);
+        assert_eq!(item.a, 3);
+        assert_eq!(item.b, false);
 
-    let item = manager.get(4);
-    assert!(item.is_none());
-}
+        let item = manager.get(4);
+        assert!(item.is_none());
+    }
 
-#[test]
-fn get_method_returns_some() {
-    let mut manager = TestManager::new();
+    #[test]
+    fn get_method_returns_some() {
+        let mut manager = TestManager::new();
 
-    let item = manager.create(&(1, true));
-    assert_eq!(item.id, 0);
-    assert_eq!(item.a, 1);
-    assert_eq!(item.b, true);
+        let item = manager.create(&(1, true));
+        assert_eq!(item.id, 0);
+        assert_eq!(item.a, 1);
+        assert_eq!(item.b, true);
 
-    let item = manager.get(item.id).unwrap();
-    assert_eq!(item.id, 0);
-    assert_eq!(item.a, 1);
-    assert_eq!(item.b, true);
+        let item = manager.get(item.id).unwrap();
+        assert_eq!(item.id, 0);
+        assert_eq!(item.a, 1);
+        assert_eq!(item.b, true);
+    }
 }
