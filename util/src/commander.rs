@@ -11,9 +11,8 @@ use std::net::UdpSocket;
 fn main() {
     let mut args = env::args();
     let _program_name = args.next();
-    let ip = args.next().unwrap();
-    let port = args.next().unwrap()
-        .parse::<u16>().unwrap();
+    let ip = args.next().unwrap_or("127.0.0.1".to_string());
+    let port: u16 = args.next().unwrap_or("4567".to_string()).parse().unwrap();
 
     let addr = ("0.0.0.0", 7654);
     let target = (&ip[..], port);

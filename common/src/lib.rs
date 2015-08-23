@@ -10,3 +10,4 @@ pub const PROJECT_NAME: &'static str = "Project Fate";
 
 pub mod message;
 pub mod simple_logger;
+pub mod manager;

@@ -7,7 +7,6 @@ use common::message::*;
 use std::net::SocketAddr;
 use std::net::UdpSocket;
 
-mod manager;
 mod user;
 mod game;
 
