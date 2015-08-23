@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::marker::PhantomData;
 use std::sync::atomic::{ AtomicUsize, Ordering };
+use std::rc::Rc;
 
 pub type Id = usize;
 
@@ -8,13 +9,13 @@ pub trait Item<Param> {
     fn new(id: &Id, param: &Param) -> Self;
 }
 
-pub struct Manager<I, P> where I: Item<P> + Clone {
+pub struct Manager<I, P> where I: Item<P> {
     next_id: AtomicUsize,
-    items: HashMap<Id, I>,
+    items: HashMap<Id, Rc<I>>,
     _param_type: PhantomData<P>,
 }
 
-impl<I, P> Manager<I, P> where I: Item<P> + Clone {
+impl<I, P> Manager<I, P> where I: Item<P> {
     pub fn new() -> Self {
         Manager {
             next_id: AtomicUsize::new(0),
@@ -23,15 +24,16 @@ impl<I, P> Manager<I, P> where I: Item<P> + Clone {
         }
     }
 
-    pub fn create(&mut self, param: &P) -> I {
+    pub fn create(&mut self, param: &P) -> Rc<I> {
         let id = self.next_id.fetch_add(1, Ordering::Relaxed);
-        let item = I::new(&id, param);
         debug_assert!(!self.items.contains_key(&id));
+
+        let item = Rc::new(I::new(&id, param));
         self.items.insert(id, item.clone());
         item
     }
 
-    pub fn get(&self, id: Id) -> Option<&I> {
+    pub fn get(&self, id: Id) -> Option<&Rc<I>> {
         self.items.get(&id)
     }
 }
