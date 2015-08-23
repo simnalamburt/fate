@@ -43,11 +43,6 @@ fn main() {
     // TODO: Error 처리
     let draw_context = DrawContext::new(&display, width, height).unwrap();
 
-    //
-    // Basics
-    //
-    let (width, height) = (width as f32, height as f32);
-
 
 
     //
@@ -86,12 +81,12 @@ fn main() {
             use glium::glutin::VirtualKeyCode as vkey;
 
             match event {
-                Event::MouseMoved((x, y)) => ui.cursor = (x as f32, height - y as f32),
+                Event::MouseMoved((x, y)) => ui.move_cursor(x, y),
                 Event::MouseInput(ElementState::Pressed, MouseButton::Left) => {
                     use traits::Move;
 
                     // 마우스 좌표계 ~ 게임 좌표계 변환
-                    let dest = ((ui.cursor.0 - width/2.0)/10.0, (ui.cursor.1 - height/2.0)/10.0);
+                    let dest = ui.cursor_on_game_coordinate();
                     nemo.go(dest)
                 }
                 Event::MouseInput(ElementState::Pressed, MouseButton::Right) => {
@@ -105,7 +100,7 @@ fn main() {
                     }
                     controller.fill(&mut object_picking_buffer, &draw_context).unwrap();
                     let buffer = texture.read_to_pixel_buffer();
-                    let pixel_index = (width * ui.cursor.1 + ui.cursor.0) as usize;
+                    let pixel_index = (width as f32 * ui.cursor.1 + ui.cursor.0) as usize;
                     let pixel_color = buffer.slice(pixel_index..(pixel_index + 1)).unwrap().read().unwrap()[0];
 
                     println!("{:?} {:?}", ui.cursor, color_to_id(&pixel_color));

@@ -10,6 +10,8 @@ implement_vertex!(Vertex, position);
 
 pub struct UI {
     pub cursor: (f32, f32),
+    pub width: u32,
+    pub height: u32,
     vb: VertexBuffer<Vertex>,
     ib: index::NoIndices,
     program: Program,
@@ -17,7 +19,7 @@ pub struct UI {
 }
 
 impl UI {
-    pub fn new<F>(display: &F, width: f32, height: f32) -> UI where F: Facade {
+    pub fn new<F>(display: &F, width: u32, height: u32) -> UI where F: Facade {
         let vb: VertexBuffer<Vertex> = VertexBuffer::new(display, &{
 
             vec![
@@ -46,9 +48,11 @@ impl UI {
                 color = vec3(1.0, 1.0, 1.0);
             }
         "#, None).unwrap();
-        let matrix = Matrix::orthographic_off_center(0.0, width, 0.0, height, 0.0, 1.0);
+        let matrix = Matrix::orthographic_off_center(0.0, width as f32, 0.0, height as f32, 0.0, 1.0);
         UI {
             cursor: (300.0, 300.0),
+            width: width,
+            height: height,
             vb: vb,
             ib: ib,
             program: program,
@@ -63,5 +67,13 @@ impl UI {
         };
 
         target.draw(&self.vb, &self.ib, &self.program, &uniforms, &Default::default())
+    }
+
+    pub fn move_cursor(&mut self, x: i32, y: i32) {
+        self.cursor = (x as f32, (self.height as i32 - y) as f32)
+    }
+
+    pub fn cursor_on_game_coordinate(&self) -> (f32, f32) {
+        ((self.cursor.0 - self.width as f32/2.0)/10.0, (self.cursor.1 - self.height as f32/2.0)/10.0)
     }
 }
