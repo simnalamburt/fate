@@ -5,6 +5,7 @@ extern crate xmath;
 extern crate rand;
 extern crate obj;
 
+mod draw_context;
 mod traits;
 mod error;
 mod units;
