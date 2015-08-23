@@ -1,5 +1,5 @@
 use std::io;
-use glium::{vertex, index};
+use glium::{vertex, index, texture};
 use glium::program::ProgramCreationError;
 use obj::ObjError;
 
@@ -29,3 +29,20 @@ implmnt!(VertexBufferCreationError, vertex::BufferCreationError);
 implmnt!(IndexBufferCreationError, index::BufferCreationError);
 implmnt!(ProgramCreationError);
 implmnt!(ObjError);
+
+#[derive(Debug)]
+pub enum DrawContextCreationError {
+    ProgramCreationError(ProgramCreationError),
+    TextureCreationError(texture::TextureCreationError),
+}
+
+impl From<ProgramCreationError> for DrawContextCreationError {
+    fn from(err: ProgramCreationError) -> Self {
+        DrawContextCreationError::ProgramCreationError(err)
+    }
+}
+impl From<texture::TextureCreationError> for DrawContextCreationError {
+    fn from(err: texture::TextureCreationError) -> Self {
+        DrawContextCreationError::TextureCreationError(err)
+    }
+}

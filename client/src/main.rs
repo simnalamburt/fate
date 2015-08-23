@@ -5,17 +5,17 @@ extern crate xmath;
 extern crate rand;
 extern crate obj;
 
+mod draw_context;
 mod traits;
 mod error;
+mod ui;
 mod units;
 mod resource;
 
-use glium::texture::Texture2d;
-use glium::texture::MipmapsOption::NoMipmap;
-use glium::texture::UncompressedFloatFormat::U8U8U8U8;
-use std::default::Default;
+use draw_context::DrawContext;
 use time::PreciseTime;
 use units::{Nemo, Minion, MinionController};
+use ui::UI;
 
 #[cfg_attr(test, allow(dead_code))]
 fn main() {
@@ -40,13 +40,8 @@ fn main() {
         panic!("Failed to initialize glutin window");
     })();
 
-    let texture = Texture2d::empty_with_format(&display, U8U8U8U8, NoMipmap, width, height).unwrap();
-
-
-    //
-    // Basics
-    //
-    let (width, height) = (width as f32, height as f32);
+    // TODO: Error 처리
+    let draw_context = DrawContext::new(&display, width, height).unwrap();
 
 
 
@@ -62,46 +57,12 @@ fn main() {
         Minion::new(&display, (-17.0,-4.0)).unwrap(),
     ];
     let mut controller = MinionController::new(&display).unwrap();
-    let camera = xmath::Matrix::orthographic(width/10.0, height/10.0, 0.0, 1.0);
 
 
     //
     // Parameters for UI
     //
-    let vb_ui = glium::VertexBuffer::new(&display, &{
-        #[derive(Clone, Copy)]
-        struct Vertex { position: [f32; 2] }
-
-        implement_vertex!(Vertex, position);
-
-        vec![
-            Vertex { position: [ -2.0, -2.0 ] },
-            Vertex { position: [ -2.0,  3.0 ] },
-            Vertex { position: [  3.0, -2.0 ] },
-            Vertex { position: [  3.0,  3.0 ] },
-        ]
-    }).unwrap();
-    let ib_ui = glium::index::NoIndices(glium::index::PrimitiveType::TriangleStrip);
-    let program_ui = glium::Program::from_source(&display,
-        r#"
-            #version 410
-            uniform vec2 cursor;
-            uniform mat4 matrix;
-            in vec2 position;
-
-            void main() {
-                gl_Position = matrix * vec4(position + cursor, 0.0, 1.0);
-            }
-        "#, r#"
-            #version 410
-            out vec3 color;
-
-            void main() {
-                color = vec3(1.0, 1.0, 1.0);
-            }
-        "#, None).unwrap();
-    let mut cursor = (300.0, 300.0);
-    let matrix_ui = xmath::Matrix::orthographic_off_center(0.0, width, 0.0, height, 0.0, 1.0);
+    let mut ui = UI::new(&display, width, height);
 
 
     let mut last = PreciseTime::now();
@@ -120,28 +81,29 @@ fn main() {
             use glium::glutin::VirtualKeyCode as vkey;
 
             match event {
-                Event::MouseMoved((x, y)) => cursor = (x as f32, height - y as f32),
+                Event::MouseMoved((x, y)) => ui.move_cursor(x, y),
                 Event::MouseInput(ElementState::Pressed, MouseButton::Left) => {
                     use traits::Move;
 
                     // 마우스 좌표계 ~ 게임 좌표계 변환
-                    let dest = ((cursor.0 - width/2.0)/10.0, (cursor.1 - height/2.0)/10.0);
+                    let dest = ui.cursor_on_game_coordinate();
                     nemo.go(dest)
                 }
                 Event::MouseInput(ElementState::Pressed, MouseButton::Right) => {
+                    draw_context.clear_object_picking_buffer();
+                    let texture = &draw_context.texture_for_object_picking;
                     let mut object_picking_buffer = texture.as_surface();
-                    object_picking_buffer.clear_color(1.0, 1.0, 1.0, 1.0);
                     // TODO: 예외처리
-                    nemo.fill(&mut object_picking_buffer, &camera).unwrap();
+                    nemo.fill(&mut object_picking_buffer, &draw_context).unwrap();
                     for minion in &minions {
-                        minion.fill(&mut object_picking_buffer, &camera).unwrap();
+                        minion.fill(&mut object_picking_buffer, &draw_context).unwrap();
                     }
-                    controller.fill(&mut object_picking_buffer, &camera).unwrap();
+                    controller.fill(&mut object_picking_buffer, &draw_context).unwrap();
                     let buffer = texture.read_to_pixel_buffer();
-                    let pixel_index = (width * cursor.1 + cursor.0) as usize;
+                    let pixel_index = (width as f32 * ui.cursor.1 + ui.cursor.0) as usize;
                     let pixel_color = buffer.slice(pixel_index..(pixel_index + 1)).unwrap().read().unwrap()[0];
 
-                    println!("{:?} {:?}", cursor, color_to_id(&pixel_color));
+                    println!("{:?} {:?}", ui.cursor, color_to_id(&pixel_color));
                 }
                 Event::KeyboardInput(ElementState::Pressed, _, Some(vkey::Q)) => nemo.q(),
                 Event::Closed => break 'main,
@@ -168,21 +130,16 @@ fn main() {
         //
         // Render
         //
-        let uniforms_ui = uniform! {
-            cursor: cursor,
-            matrix: matrix_ui.clone()
-        };
-
         let mut target = display.draw();
         target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 1.0);
 
-        nemo.draw(&mut target, &camera).unwrap();
+        nemo.draw(&mut target, &draw_context).unwrap();
         for minion in &minions {
-            minion.draw(&mut target, &camera).unwrap();
+            minion.draw(&mut target, &draw_context).unwrap();
         }
-        controller.draw(&mut target, &camera).unwrap();
+        controller.draw(&mut target, &draw_context).unwrap();
 
-        target.draw(&vb_ui, &ib_ui, &program_ui, &uniforms_ui, &Default::default()).unwrap();
+        ui.draw(&mut target).unwrap();
         let _ = target.finish();
     }
 }
