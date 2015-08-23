@@ -11,6 +11,7 @@ mod error;
 mod units;
 mod resource;
 
+use draw_context::DrawContext;
 use glium::texture::Texture2d;
 use glium::texture::MipmapsOption::NoMipmap;
 use glium::texture::UncompressedFloatFormat::U8U8U8U8;
@@ -63,7 +64,7 @@ fn main() {
         Minion::new(&display, (-17.0,-4.0)).unwrap(),
     ];
     let mut controller = MinionController::new(&display).unwrap();
-    let camera = xmath::Matrix::orthographic(width/10.0, height/10.0, 0.0, 1.0);
+    let draw_context = DrawContext::new(width, height);
 
 
     //
@@ -133,11 +134,11 @@ fn main() {
                     let mut object_picking_buffer = texture.as_surface();
                     object_picking_buffer.clear_color(1.0, 1.0, 1.0, 1.0);
                     // TODO: 예외처리
-                    nemo.fill(&mut object_picking_buffer, &camera).unwrap();
+                    nemo.fill(&mut object_picking_buffer, &draw_context).unwrap();
                     for minion in &minions {
-                        minion.fill(&mut object_picking_buffer, &camera).unwrap();
+                        minion.fill(&mut object_picking_buffer, &draw_context).unwrap();
                     }
-                    controller.fill(&mut object_picking_buffer, &camera).unwrap();
+                    controller.fill(&mut object_picking_buffer, &draw_context).unwrap();
                     let buffer = texture.read_to_pixel_buffer();
                     let pixel_index = (width * cursor.1 + cursor.0) as usize;
                     let pixel_color = buffer.slice(pixel_index..(pixel_index + 1)).unwrap().read().unwrap()[0];
@@ -177,11 +178,11 @@ fn main() {
         let mut target = display.draw();
         target.clear_color_and_depth((0.0, 0.0, 0.0, 0.0), 1.0);
 
-        nemo.draw(&mut target, &camera).unwrap();
+        nemo.draw(&mut target, &draw_context).unwrap();
         for minion in &minions {
-            minion.draw(&mut target, &camera).unwrap();
+            minion.draw(&mut target, &draw_context).unwrap();
         }
-        controller.draw(&mut target, &camera).unwrap();
+        controller.draw(&mut target, &draw_context).unwrap();
 
         target.draw(&vb_ui, &ib_ui, &program_ui, &uniforms_ui, &Default::default()).unwrap();
         let _ = target.finish();

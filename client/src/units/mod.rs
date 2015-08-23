@@ -1,6 +1,7 @@
 mod nemo;
 mod minion;
 
+use draw_context::DrawContext;
 use error::CreationError;
 use glium::{VertexBuffer, IndexBuffer, Program, Frame, DrawError, Surface};
 use glium::backend::Facade;
@@ -69,31 +70,31 @@ impl Unit {
 
     fn draw<'n, T, R>(&self,
                       target: &mut Frame,
-                      camera: &Matrix,
-                      uniforms: UniformsStorage<'n, T, R>)
+                      uniforms: UniformsStorage<'n, T, R>,
+                      draw_context: &DrawContext)
         -> Result<(), DrawError> where T: AsUniformValue, R: Uniforms
     {
         // TODO: Cache
-        let uniforms = uniforms.add("matrix", matrix(self, camera));
+        let uniforms = uniforms.add("matrix", matrix(self, &draw_context.camera));
         draw_internal(target, &self, &self.program, &uniforms)
     }
 
     fn draw_without_uniforms(&self,
                              target: &mut Frame,
-                             camera: &Matrix)
+                             draw_context: &DrawContext)
         -> Result<(), DrawError>
     {
         // TODO: Cache
-        let uniforms = uniform! { matrix: matrix(self, camera) };
+        let uniforms = uniform! { matrix: matrix(self, &draw_context.camera) };
         draw_internal(target, &self, &self.program, &uniforms)
     }
 
-    fn fill(&self, target: &mut SimpleFrameBuffer, camera: &Matrix) -> Result<(), DrawError> {
+    fn fill(&self, target: &mut SimpleFrameBuffer, draw_context: &DrawContext) -> Result<(), DrawError> {
         let red = ((self.id >> 24) & 0xFF) as f32 / 255.0;
         let green = ((self.id >> 16) & 0xFF) as f32 / 255.0;
         let blue = ((self.id >> 8) & 0xFF) as f32 / 255.0;
         let alpha = (self.id & 0xFF) as f32 / 255.0;
-        let uniforms = uniform! { matrix: matrix(self, camera), id: [red, green, blue, alpha] };
+        let uniforms = uniform! { matrix: matrix(self, &draw_context.camera), id: [red, green, blue, alpha] };
         draw_internal(target, &self, &self.fill_id_program, &uniforms)
     }
 }
