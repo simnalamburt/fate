@@ -12,9 +12,6 @@ mod units;
 mod resource;
 
 use draw_context::DrawContext;
-use glium::texture::Texture2d;
-use glium::texture::MipmapsOption::NoMipmap;
-use glium::texture::UncompressedFloatFormat::U8U8U8U8;
 use std::default::Default;
 use time::PreciseTime;
 use units::{Nemo, Minion, MinionController};
@@ -42,8 +39,7 @@ fn main() {
         panic!("Failed to initialize glutin window");
     })();
 
-    let texture = Texture2d::empty_with_format(&display, U8U8U8U8, NoMipmap, width, height).unwrap();
-
+    let draw_context = DrawContext::new(&display, width, height);
 
     //
     // Basics
@@ -64,7 +60,6 @@ fn main() {
         Minion::new(&display, (-17.0,-4.0)).unwrap(),
     ];
     let mut controller = MinionController::new(&display).unwrap();
-    let draw_context = DrawContext::new(width, height);
 
 
     //
@@ -131,6 +126,7 @@ fn main() {
                     nemo.go(dest)
                 }
                 Event::MouseInput(ElementState::Pressed, MouseButton::Right) => {
+                    let texture = &draw_context.texture_for_object_picking;
                     let mut object_picking_buffer = texture.as_surface();
                     object_picking_buffer.clear_color(1.0, 1.0, 1.0, 1.0);
                     // TODO: 예외처리
