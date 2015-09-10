@@ -16,6 +16,7 @@ use draw_context::DrawContext;
 use time::PreciseTime;
 use units::{Nemo, Minion, MinionController};
 use ui::UI;
+use resource::ResourceManager;
 
 #[cfg_attr(test, allow(dead_code))]
 fn main() {
@@ -48,7 +49,9 @@ fn main() {
     //
     // Game
     //
-    let mut nemo = Nemo::new(&display).unwrap();
+    let mut resource_manager = ResourceManager::new();
+
+    let mut nemo = Nemo::new(&display, &mut resource_manager).unwrap();
     let mut minions = vec![
         Minion::new(&display, (-17.0, 4.0)).unwrap(),
         Minion::new(&display, (-19.0, 2.0)).unwrap(),
