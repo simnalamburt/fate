@@ -1,9 +1,7 @@
 use draw_context::DrawContext;
-use std::io::BufReader;
 use glium::{Frame, DrawError};
 use glium::backend::Facade;
 use glium::framebuffer::SimpleFrameBuffer;
-use obj::load_obj;
 use traits::{Object, Move};
 use error::CreationError;
 use resource::ResourceManager;
@@ -25,9 +23,7 @@ enum State {
 
 impl Nemo {
     pub fn new<F: Facade>(facade: &F, rm: &mut ResourceManager) -> Result<Self, CreationError> {
-        let bear = try!(rm.load("rilakkuma.obj"));
-        let bear = BufReader::new(bear);
-        let bear = try!(load_obj(bear));
+        let bear = try!(rm.load_obj("rilakkuma"));
 
         let unit = try!(Unit::new(
             facade,

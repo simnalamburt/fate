@@ -12,3 +12,9 @@ xmath = { version = "0.2.2", features = ["glium-support"] }
 glium = { version = "0.8.2", default-features = false, features = ["glutin"] }
 rand = "0.3.9"
 obj-rs = { version = "0.4.12", features = ["glium-support"] }
+bincode = "0.4"
+
+[build-dependencies]
+obj-rs = { version = "0.4.12", features = ["glium-support"] }
+rustc-serialize = "0.3"
+bincode = "0.4"

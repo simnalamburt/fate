@@ -1,7 +1,7 @@
 use std::io;
 use glium::{vertex, index, texture};
 use glium::program::ProgramCreationError;
-use obj::ObjError;
+use bincode::rustc_serialize::DecodingError;
 
 #[derive(Debug)]
 pub enum CreationError {
@@ -9,7 +9,7 @@ pub enum CreationError {
     VertexBufferCreationError(vertex::BufferCreationError),
     IndexBufferCreationError(index::BufferCreationError),
     ProgramCreationError(ProgramCreationError),
-    ObjError(ObjError),
+    DecodingError(DecodingError),
 }
 
 macro_rules! implmnt {
@@ -28,7 +28,7 @@ implmnt!(IoError, io::Error);
 implmnt!(VertexBufferCreationError, vertex::BufferCreationError);
 implmnt!(IndexBufferCreationError, index::BufferCreationError);
 implmnt!(ProgramCreationError);
-implmnt!(ObjError);
+implmnt!(DecodingError);
 
 #[derive(Debug)]
 pub enum DrawContextCreationError {
