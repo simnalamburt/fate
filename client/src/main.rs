@@ -4,6 +4,7 @@ extern crate xmath;
 #[macro_use] extern crate glium;
 extern crate rand;
 extern crate obj;
+extern crate bincode;
 
 mod draw_context;
 mod traits;
