@@ -3,6 +3,7 @@
 Standalone Fate/Another Project
 ```sh
 # client
+git submodule init && git submodule update --depth=1
 cd client; cargo run
 
 # server
