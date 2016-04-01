@@ -1,19 +1,31 @@
-language: rust
 sudo: false
 addons:
   apt:
-    packages:
-    - libXxf86vm-dev
+    packages: libXxf86vm-dev
+
+language: rust
 env:
   - SUBDIR=common
   - SUBDIR=server
   - SUBDIR=client
-script: cd $SUBDIR && cargo build && cargo test
+  - SUBDIR=util
+script:
+  - cd $SUBDIR
+  - cargo build --verbose
+  - cargo test --verbose
+
+cache:
+  directories:
+    - ~/.cargo
+    - client/target
+    - common/target
+    - server/target
+    - util/target
+
+# IRC Notification
 notifications:
   irc:
     nick: fate
-    channels:
-      - irc.uriirc.org:16667#hyeon
-    template:
-      - "#%{build_number} %{result}, %{build_url}"
+    channels: 'ircs://irc.uriirc.org:16664#hyeon'
+    template: '#%{build_number} %{result}, %{build_url}'
     skip_join: true
