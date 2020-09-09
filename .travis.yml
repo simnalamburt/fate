@@ -1,12 +1,1 @@
-sudo: false
-addons:
-  apt:
-    packages: libXxf86vm-dev
-
 language: rust
-
-cache:
-  apt: true
-  directories:
-    - ~/.cargo
-    - target
