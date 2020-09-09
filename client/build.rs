@@ -1,15 +1,15 @@
+extern crate bincode;
 extern crate obj;
 extern crate rustc_serialize;
-extern crate bincode;
 
+use bincode::rustc_serialize as bcode;
+use bincode::SizeLimit;
+use obj::{load_obj, Obj};
 use std::env;
+use std::env::current_exe;
 use std::fs::{metadata, File};
 use std::io::BufReader;
 use std::path::Path;
-use std::env::current_exe;
-use obj::{Obj, load_obj};
-use bincode::rustc_serialize as bcode;
-use bincode::SizeLimit;
 
 fn main() {
     // Check if the rilakkuma has already packed
@@ -24,7 +24,9 @@ fn main() {
     };
 
     // Perform resource packing only when rilakkuma.obj.bin doesn't exist
-    if exists { return; }
+    if exists {
+        return;
+    }
 
     // As of rust 1.2, `current_exe()` of build script looks like below:
     //

@@ -1,11 +1,11 @@
+use super::{vec, Unit};
 use draw_context::DrawContext;
-use glium::{VertexBuffer, IndexBuffer, Frame, DrawError};
-use glium::index::PrimitiveType;
+use error::CreationError;
 use glium::backend::Facade;
 use glium::framebuffer::SimpleFrameBuffer;
-use traits::{Object, Move};
-use error::CreationError;
-use super::{vec, Unit};
+use glium::index::PrimitiveType;
+use glium::{DrawError, Frame, IndexBuffer, VertexBuffer};
+use traits::{Move, Object};
 
 pub struct Minion {
     unit: Unit,
@@ -23,12 +23,15 @@ impl Minion {
     pub fn new<F: Facade>(facade: &F, pos: (f32, f32)) -> Result<Self, CreationError> {
         let unit = try!(Unit::new(
             facade,
-            try!(VertexBuffer::new(facade, &vec![
-                vec(  2.0,  0.00 ),
-                vec( -2.0,  0.75 ),
-                vec( -2.0, -0.75 ),
-            ])),
-            try!(IndexBuffer::new(facade, PrimitiveType::TrianglesList, &[0, 1, 2])),
+            try!(VertexBuffer::new(
+                facade,
+                &vec![vec(2.0, 0.00), vec(-2.0, 0.75), vec(-2.0, -0.75),]
+            )),
+            try!(IndexBuffer::new(
+                facade,
+                PrimitiveType::TrianglesList,
+                &[0, 1, 2]
+            )),
             r#"
                 #version 410
                 uniform mat4 matrix;
@@ -49,7 +52,10 @@ impl Minion {
             pos,
         ));
 
-        Ok(Minion { unit: unit, state: State::Stopped { time: 0.0 } })
+        Ok(Minion {
+            unit: unit,
+            state: State::Stopped { time: 0.0 },
+        })
     }
 }
 
@@ -67,18 +73,18 @@ impl Object for Minion {
                 let dx = dest.0 - unit.pos.0;
                 let dy = dest.1 - unit.pos.1;
 
-                let left_dist = (dx*dx + dy*dy).sqrt();
+                let left_dist = (dx * dx + dy * dy).sqrt();
 
                 let speed = 50.0;
-                let diff = speed*elapsed;
+                let diff = speed * elapsed;
 
                 if left_dist <= diff {
                     // 도착
                     unit.pos = dest;
                     next = Some(State::Stopped { time: 0.0 });
                 } else {
-                    unit.pos.0 += diff*unit.angle.cos();
-                    unit.pos.1 += diff*unit.angle.sin();
+                    unit.pos.0 += diff * unit.angle.cos();
+                    unit.pos.1 += diff * unit.angle.sin();
                 }
             }
         };
@@ -92,7 +98,11 @@ impl Object for Minion {
         self.unit.draw_without_uniforms(target, draw_context)
     }
 
-    fn fill(&self, target: &mut SimpleFrameBuffer, draw_context: &DrawContext) -> Result<(), DrawError> {
+    fn fill(
+        &self,
+        target: &mut SimpleFrameBuffer,
+        draw_context: &DrawContext,
+    ) -> Result<(), DrawError> {
         self.unit.fill(target, draw_context)
     }
 }
@@ -100,7 +110,9 @@ impl Object for Minion {
 impl Move for Minion {
     fn go(&mut self, dest: (f32, f32)) {
         let unit = &mut self.unit;
-        if unit.pos == dest { return; }
+        if unit.pos == dest {
+            return;
+        }
 
         let dx = dest.0 - unit.pos.0;
         let dy = dest.1 - unit.pos.1;
@@ -109,10 +121,9 @@ impl Move for Minion {
     }
 }
 
-
 /// 미니언을 조종하는 객체
 pub struct MinionController {
-    minions: Vec<Minion>
+    minions: Vec<Minion>,
 }
 
 impl MinionController {
@@ -122,9 +133,9 @@ impl MinionController {
                 try!(Minion::new(facade, (17.0, 4.0))),
                 try!(Minion::new(facade, (19.0, 2.0))),
                 try!(Minion::new(facade, (20.0, 0.0))),
-                try!(Minion::new(facade, (19.0,-2.0))),
-                try!(Minion::new(facade, (17.0,-4.0))),
-            ]
+                try!(Minion::new(facade, (19.0, -2.0))),
+                try!(Minion::new(facade, (17.0, -4.0))),
+            ],
         })
     }
 }
@@ -159,7 +170,11 @@ impl Object for MinionController {
         Ok(())
     }
 
-    fn fill(&self, target: &mut SimpleFrameBuffer, draw_context: &DrawContext) -> Result<(), DrawError> {
+    fn fill(
+        &self,
+        target: &mut SimpleFrameBuffer,
+        draw_context: &DrawContext,
+    ) -> Result<(), DrawError> {
         for minion in &self.minions {
             try!(minion.fill(target, &draw_context))
         }

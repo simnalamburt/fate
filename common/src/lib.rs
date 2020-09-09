@@ -2,12 +2,12 @@
 
 #![deny(warnings)]
 
-extern crate rustc_serialize;
 extern crate log;
+extern crate rustc_serialize;
 
 /// Codename of the project.
 pub const PROJECT_NAME: &'static str = "Project Fate";
 
+pub mod manager;
 pub mod message;
 pub mod simple_logger;
-pub mod manager;

@@ -1,7 +1,7 @@
-use std::io;
-use glium::{vertex, index, texture};
-use glium::program::ProgramCreationError;
 use bincode::rustc_serialize::DecodingError;
+use glium::program::ProgramCreationError;
+use glium::{index, texture, vertex};
+use std::io;
 
 #[derive(Debug)]
 pub enum CreationError {
@@ -21,7 +21,9 @@ macro_rules! implmnt {
         }
     };
 
-    ($name:ident) => ( implmnt!($name, $name); )
+    ($name:ident) => {
+        implmnt!($name, $name);
+    };
 }
 
 implmnt!(IoError, io::Error);

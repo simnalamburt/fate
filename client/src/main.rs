@@ -1,22 +1,23 @@
 extern crate common;
 extern crate time;
 extern crate xmath;
-#[macro_use] extern crate glium;
-extern crate rand;
-extern crate obj;
+#[macro_use]
+extern crate glium;
 extern crate bincode;
+extern crate obj;
+extern crate rand;
 
 mod draw_context;
-mod traits;
 mod error;
+mod resource;
+mod traits;
 mod ui;
 mod units;
-mod resource;
 
 use draw_context::DrawContext;
 use time::PreciseTime;
-use units::{Nemo, Minion, MinionController};
 use ui::UI;
+use units::{Minion, MinionController, Nemo};
 
 #[cfg_attr(test, allow(dead_code))]
 fn main() {
@@ -35,7 +36,7 @@ fn main() {
 
             match result {
                 Ok(dp) => return dp,
-                Err(_) => continue
+                Err(_) => continue,
             }
         }
         panic!("Failed to initialize glutin window");
@@ -43,8 +44,6 @@ fn main() {
 
     // TODO: Error 처리
     let draw_context = DrawContext::new(&display, width, height).unwrap();
-
-
 
     //
     // Game
@@ -54,17 +53,15 @@ fn main() {
         Minion::new(&display, (-17.0, 4.0)).unwrap(),
         Minion::new(&display, (-19.0, 2.0)).unwrap(),
         Minion::new(&display, (-20.0, 0.0)).unwrap(),
-        Minion::new(&display, (-19.0,-2.0)).unwrap(),
-        Minion::new(&display, (-17.0,-4.0)).unwrap(),
+        Minion::new(&display, (-19.0, -2.0)).unwrap(),
+        Minion::new(&display, (-17.0, -4.0)).unwrap(),
     ];
     let mut controller = MinionController::new(&display).unwrap();
-
 
     //
     // Parameters for UI
     //
     let mut ui = UI::new(&display, width, height);
-
 
     let mut last = PreciseTime::now();
 
@@ -78,8 +75,8 @@ fn main() {
         // Poll and handle the events received by the window
         //
         for event in display.poll_events() {
-            use glium::glutin::{Event, ElementState, MouseButton};
             use glium::glutin::VirtualKeyCode as vkey;
+            use glium::glutin::{ElementState, Event, MouseButton};
 
             match event {
                 Event::MouseMoved((x, y)) => ui.move_cursor(x, y),
@@ -95,23 +92,31 @@ fn main() {
                     let texture = &draw_context.texture_for_object_picking;
                     let mut object_picking_buffer = texture.as_surface();
                     // TODO: 예외처리
-                    nemo.fill(&mut object_picking_buffer, &draw_context).unwrap();
+                    nemo.fill(&mut object_picking_buffer, &draw_context)
+                        .unwrap();
                     for minion in &minions {
-                        minion.fill(&mut object_picking_buffer, &draw_context).unwrap();
+                        minion
+                            .fill(&mut object_picking_buffer, &draw_context)
+                            .unwrap();
                     }
-                    controller.fill(&mut object_picking_buffer, &draw_context).unwrap();
+                    controller
+                        .fill(&mut object_picking_buffer, &draw_context)
+                        .unwrap();
                     let buffer = texture.read_to_pixel_buffer();
                     let pixel_index = (width as f32 * ui.cursor.1 + ui.cursor.0) as usize;
-                    let pixel_color = buffer.slice(pixel_index..(pixel_index + 1)).unwrap().read().unwrap()[0];
+                    let pixel_color = buffer
+                        .slice(pixel_index..(pixel_index + 1))
+                        .unwrap()
+                        .read()
+                        .unwrap()[0];
 
                     println!("{:?} {:?}", ui.cursor, color_to_id(&pixel_color));
                 }
                 Event::KeyboardInput(ElementState::Pressed, _, Some(vkey::Q)) => nemo.q(),
                 Event::Closed => break 'main,
-                _ => ()
+                _ => (),
             }
         }
-
 
         //
         // Update
@@ -126,7 +131,6 @@ fn main() {
             m.update(delta);
         }
         controller.update(delta);
-
 
         //
         // Render

@@ -1,11 +1,11 @@
+use super::Unit;
 use draw_context::DrawContext;
-use glium::{Frame, DrawError};
+use error::CreationError;
 use glium::backend::Facade;
 use glium::framebuffer::SimpleFrameBuffer;
-use traits::{Object, Move};
-use error::CreationError;
+use glium::{DrawError, Frame};
 use resource::load_obj;
-use super::Unit;
+use traits::{Move, Object};
 
 pub struct Nemo {
     unit: Unit,
@@ -18,7 +18,7 @@ enum State {
     /// Nemo is moving
     Moving { dest: (f32, f32) },
     /// Nemo is using Q (0 <= t < 1)
-    QSkill { t: f32 }
+    QSkill { t: f32 },
 }
 
 impl Nemo {
@@ -54,7 +54,10 @@ impl Nemo {
             (0.0, 0.0),
         ));
 
-        Ok(Nemo { unit: unit, state: State::Stopped })
+        Ok(Nemo {
+            unit: unit,
+            state: State::Stopped,
+        })
     }
 }
 
@@ -70,18 +73,18 @@ impl Object for Nemo {
                 let dx = dest.0 - unit.pos.0;
                 let dy = dest.1 - unit.pos.1;
 
-                let left_dist = (dx*dx + dy*dy).sqrt();
+                let left_dist = (dx * dx + dy * dy).sqrt();
 
                 let speed = 50.0;
-                let diff = speed*elapsed;
+                let diff = speed * elapsed;
 
                 if left_dist <= diff {
                     // 도착
                     unit.pos = dest;
                     next = Some(State::Stopped);
                 } else {
-                    unit.pos.0 += diff*unit.angle.cos();
-                    unit.pos.1 += diff*unit.angle.sin();
+                    unit.pos.0 += diff * unit.angle.cos();
+                    unit.pos.1 += diff * unit.angle.sin();
                 }
             }
             State::QSkill { ref mut t } => {
@@ -105,7 +108,11 @@ impl Object for Nemo {
         self.unit.draw(target, uniforms, draw_context)
     }
 
-    fn fill(&self, target: &mut SimpleFrameBuffer, draw_context: &DrawContext) -> Result<(), DrawError> {
+    fn fill(
+        &self,
+        target: &mut SimpleFrameBuffer,
+        draw_context: &DrawContext,
+    ) -> Result<(), DrawError> {
         self.unit.fill(target, draw_context)
     }
 }
@@ -114,11 +121,13 @@ impl Move for Nemo {
     fn go(&mut self, dest: (f32, f32)) {
         match self.state {
             State::QSkill { .. } => return,
-            _ => ()
+            _ => (),
         }
 
         let unit = &mut self.unit;
-        if unit.pos == dest { return; }
+        if unit.pos == dest {
+            return;
+        }
 
         let dx = dest.0 - unit.pos.0;
         let dy = dest.1 - unit.pos.1;

@@ -1,5 +1,5 @@
-use user::User;
 use common::manager::{Id, Item, Manager};
+use user::User;
 
 #[derive(Debug, Clone)]
 pub struct Game {

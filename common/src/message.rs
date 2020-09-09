@@ -15,7 +15,7 @@ pub enum ClientToServer {
     CreateGameRequest { user_id: usize },
 }
 
-pub trait Message : Sized {
+pub trait Message: Sized {
     fn stringify(&self) -> Result<String, EncoderError>;
     fn parse(&String) -> DecodeResult<Self>;
 }

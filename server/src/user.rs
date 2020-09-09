@@ -1,5 +1,5 @@
-use std::net::SocketAddr;
 use common::manager::{Id, Item, Manager};
+use std::net::SocketAddr;
 
 #[derive(Debug, Clone)]
 pub struct User {

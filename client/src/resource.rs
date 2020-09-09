@@ -1,8 +1,8 @@
-use std::path::{Path, PathBuf};
-use std::fs::File;
-use obj::Obj;
-use bincode::SizeLimit;
 use bincode::rustc_serialize::{decode_from, DecodingResult};
+use bincode::SizeLimit;
+use obj::Obj;
+use std::fs::File;
+use std::path::{Path, PathBuf};
 
 pub fn load_obj<T: AsRef<Path>>(name: T) -> DecodingResult<Obj> {
     let mut path = PathBuf::new();
