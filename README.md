@@ -3,14 +3,13 @@
 Standalone Fate/Another Project
 ```sh
 # client
-git submodule init && git submodule update --depth=1
-cd client; cargo run
+cargo run -p client
 
 # server
-cd server; cargo run
+cargo run -p server
 
 # server tester
-cd util; cargo run
+cargo run -p util
 ```
 
 ![diagram]
