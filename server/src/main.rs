@@ -42,7 +42,7 @@ fn main() {
             Ok((amt, src)) => {
                 let buf = &buf[..amt];
                 let msg = String::from_utf8_lossy(buf);
-                let msg = msg[..].trim_right();
+                let msg = msg[..].trim_end();
                 info!("Received: \x1b[33m\"{}\"\x1b[0m", msg);
 
                 let result = Message::parse(&msg.to_string()).map_err(|err| {

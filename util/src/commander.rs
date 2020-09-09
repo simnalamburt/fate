@@ -30,7 +30,7 @@ fn main() {
             Ok((amt, _)) => {
                 let buf = &buf[..amt];
                 let msg = String::from_utf8_lossy(buf);
-                let msg = msg[..].trim_right();
+                let msg = msg[..].trim_end();
                 println!("Received: \x1b[33m\"{}\"\x1b[0m", msg);
 
                 let result = Message::parse(&msg.to_string()).map_err(|err| {
@@ -61,7 +61,7 @@ fn command_to_send() -> IoResult<ClientToServer> {
     println!("2: CreateGameRequest");
     loop {
         let mut line = String::new();
-        let _len = try!(stdin().read_line(&mut line));
+        let _len = stdin().read_line(&mut line)?;
         let line = line.trim();
         match line {
             "1" => {
@@ -72,7 +72,7 @@ fn command_to_send() -> IoResult<ClientToServer> {
                 let _ = stdout().flush();
                 loop {
                     let mut line = String::new();
-                    let _len = try!(stdin().read_line(&mut line));
+                    let _len = stdin().read_line(&mut line)?;
                     let line = line.trim();
                     if line == "" {
                         continue;
