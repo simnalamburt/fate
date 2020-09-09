@@ -1,4 +1,4 @@
-[![fate-i][]][fate-a] [![travis-i][]][travis-a]
+[![fate-i]][fate-a] [![travis-i]][travis-a]
 ========
 Standalone Fate/Another Project
 ```sh
@@ -13,13 +13,16 @@ cd server; cargo run
 cd util; cargo run
 ```
 
+![diagram]
+
 ### Requirements
-* **[Rust][]**
-* Developement headers for XFree86 video mode extension<br>
+* **[Rust]**
+* Developement headers for XFree86 video mode extension \
   (`libXxf86vm-dev` on apt, `libXxf86vm-devel` on rpm, `libxxf86vm` on pacman)
 
-[fate-i]: http://cafefiles.naver.net/20120221_101/potechoi_1329792450679I3P6X_PNG/%B7%CE%B0%ED_20120221.png
-[fate-a]: http://cafe.naver.com/ufw
+[fate-i]: https://raw.githubusercontent.com/simnalamburt/i/master/fate/logo.png
+[fate-a]: https://cafe.naver.com/ufw
 [travis-i]: https://travis-ci.org/simnalamburt/fate.svg?branch=master
 [travis-a]: https://travis-ci.org/simnalamburt/fate
-[Rust]: http://rust-lang.org
+[diagram]: https://raw.githubusercontent.com/simnalamburt/i/master/fate/diagram.png
+[Rust]: https://rust-lang.org
