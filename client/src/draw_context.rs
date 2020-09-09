@@ -21,10 +21,8 @@ impl DrawContext {
     where
         F: Facade,
     {
-        let texture = try!(Texture2d::empty_with_format(
-            display, U8U8U8U8, NoMipmap, width, height
-        ));
-        let fill_id_program = try!(Program::from_source(
+        let texture = Texture2d::empty_with_format(display, U8U8U8U8, NoMipmap, width, height)?;
+        let fill_id_program = Program::from_source(
             display,
             r#"
             #version 410
@@ -40,8 +38,8 @@ impl DrawContext {
             void main() {
                 color = id;
             }"#,
-            None
-        ));
+            None,
+        )?;
         Ok(DrawContext {
             camera: Matrix::orthographic(width as f32 / 10.0, height as f32 / 10.0, 0.0, 1.0),
             texture_for_object_picking: texture,

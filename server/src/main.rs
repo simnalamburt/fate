@@ -74,13 +74,13 @@ fn handle_command(
     user_manager: &mut UserManager,
     game_manager: &mut GameManager,
 ) -> CommandResult {
-    match command {
-        &ClientToServer::ConnectRequest => {
+    match *command {
+        ClientToServer::ConnectRequest => {
             let user = user_manager.create(src);
             info!("{:?} created", user);
             Ok(ServerToClient::ConnectResponse { user_id: user.id })
         }
-        &ClientToServer::CreateGameRequest { user_id } => user_manager
+        ClientToServer::CreateGameRequest { user_id } => user_manager
             .get(user_id)
             .ok_or(format!("user id {} is not exists", user_id))
             .map(|user| {

@@ -44,6 +44,15 @@ where
     }
 }
 
+impl<I, P> Default for Manager<I, P>
+where
+    I: Item<P>,
+{
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::{Id, Item, Manager};

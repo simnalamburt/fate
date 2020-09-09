@@ -23,12 +23,12 @@ enum State {
 
 impl Nemo {
     pub fn new<F: Facade>(facade: &F) -> Result<Self, CreationError> {
-        let bear = try!(load_obj("rilakkuma"));
+        let bear = load_obj("rilakkuma")?;
 
-        let unit = try!(Unit::new(
+        let unit = Unit::new(
             facade,
-            try!(bear.vertex_buffer(facade)),
-            try!(bear.index_buffer(facade)),
+            bear.vertex_buffer(facade)?,
+            bear.index_buffer(facade)?,
             r#"
                 #version 410
                 uniform mat4 matrix;
@@ -52,7 +52,7 @@ impl Nemo {
                 }
             "#,
             (0.0, 0.0),
-        ));
+        )?;
 
         Ok(Nemo {
             unit,
@@ -119,9 +119,8 @@ impl Object for Nemo {
 
 impl Move for Nemo {
     fn go(&mut self, dest: (f32, f32)) {
-        match self.state {
-            State::QSkill { .. } => return,
-            _ => (),
+        if let State::QSkill { .. } = self.state {
+            return;
         }
 
         let unit = &mut self.unit;

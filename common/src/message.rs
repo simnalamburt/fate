@@ -17,14 +17,14 @@ pub enum ClientToServer {
 
 pub trait Message: Sized {
     fn stringify(&self) -> Result<String, EncoderError>;
-    fn parse(&String) -> DecodeResult<Self>;
+    fn parse(&str) -> DecodeResult<Self>;
 }
 
 impl Message for ServerToClient {
     fn stringify(&self) -> Result<String, EncoderError> {
         json::encode(self)
     }
-    fn parse(message: &String) -> DecodeResult<Self> {
+    fn parse(message: &str) -> DecodeResult<Self> {
         json::decode(message)
     }
 }
@@ -33,7 +33,7 @@ impl Message for ClientToServer {
     fn stringify(&self) -> Result<String, EncoderError> {
         json::encode(self)
     }
-    fn parse(message: &String) -> DecodeResult<Self> {
+    fn parse(message: &str) -> DecodeResult<Self> {
         json::decode(message)
     }
 }

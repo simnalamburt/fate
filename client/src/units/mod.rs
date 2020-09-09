@@ -48,12 +48,7 @@ impl Unit {
             id,
             vb: vertex_buffer,
             ib: index_buffer,
-            program: try!(Program::from_source(
-                facade,
-                vertex_shader,
-                fragment_shader,
-                None
-            )),
+            program: Program::from_source(facade, vertex_shader, fragment_shader, None)?,
             pos: position,
             angle: 0.0,
         })

@@ -10,7 +10,7 @@ pub fn load_obj<T: AsRef<Path>>(name: T) -> DecodingResult<Obj> {
     path.push(name);
     path.set_extension("obj.bin");
 
-    let mut input = try!(File::open(path));
-    let decoded: Obj = try!(decode_from(&mut input, SizeLimit::Infinite));
+    let mut input = File::open(path)?;
+    let decoded: Obj = decode_from(&mut input, SizeLimit::Infinite)?;
     Ok(decoded)
 }

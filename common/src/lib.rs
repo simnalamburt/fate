@@ -1,7 +1,5 @@
 //! Common modules shared by both client and server.
 
-#![deny(warnings)]
-
 extern crate log;
 extern crate rustc_serialize;
 

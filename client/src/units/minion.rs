@@ -21,17 +21,10 @@ enum State {
 
 impl Minion {
     pub fn new<F: Facade>(facade: &F, pos: (f32, f32)) -> Result<Self, CreationError> {
-        let unit = try!(Unit::new(
+        let unit = Unit::new(
             facade,
-            try!(VertexBuffer::new(
-                facade,
-                &[vec(2.0, 0.00), vec(-2.0, 0.75), vec(-2.0, -0.75)]
-            )),
-            try!(IndexBuffer::new(
-                facade,
-                PrimitiveType::TrianglesList,
-                &[0, 1, 2]
-            )),
+            VertexBuffer::new(facade, &[vec(2.0, 0.00), vec(-2.0, 0.75), vec(-2.0, -0.75)])?,
+            IndexBuffer::new(facade, PrimitiveType::TrianglesList, &[0, 1, 2])?,
             r#"
                 #version 410
                 uniform mat4 matrix;
@@ -50,7 +43,7 @@ impl Minion {
                 }
             "#,
             pos,
-        ));
+        )?;
 
         Ok(Minion {
             unit,
@@ -130,11 +123,11 @@ impl MinionController {
     pub fn new<F: Facade>(facade: &F) -> Result<Self, CreationError> {
         Ok(MinionController {
             minions: vec![
-                try!(Minion::new(facade, (17.0, 4.0))),
-                try!(Minion::new(facade, (19.0, 2.0))),
-                try!(Minion::new(facade, (20.0, 0.0))),
-                try!(Minion::new(facade, (19.0, -2.0))),
-                try!(Minion::new(facade, (17.0, -4.0))),
+                Minion::new(facade, (17.0, 4.0))?,
+                Minion::new(facade, (19.0, 2.0))?,
+                Minion::new(facade, (20.0, 0.0))?,
+                Minion::new(facade, (19.0, -2.0))?,
+                Minion::new(facade, (17.0, -4.0))?,
             ],
         })
     }
@@ -145,7 +138,6 @@ impl Object for MinionController {
         for minion in &mut self.minions {
             match minion.state {
                 State::Stopped { time } if 1.5 <= time => {
-                    use rand;
                     use rand::distributions::{IndependentSample, Range};
 
                     let range = Range::new(-10.0, 10.0);
@@ -165,7 +157,7 @@ impl Object for MinionController {
 
     fn draw(&self, target: &mut Frame, draw_context: &DrawContext) -> Result<(), DrawError> {
         for minion in &self.minions {
-            try!(minion.draw(target, &draw_context))
+            minion.draw(target, &draw_context)?
         }
         Ok(())
     }
@@ -176,7 +168,7 @@ impl Object for MinionController {
         draw_context: &DrawContext,
     ) -> Result<(), DrawError> {
         for minion in &self.minions {
-            try!(minion.fill(target, &draw_context))
+            minion.fill(target, &draw_context)?
         }
         Ok(())
     }
