@@ -96,7 +96,9 @@ impl Object for Nemo {
             }
         };
 
-        if let Some(next) = next { self.state = next; }
+        if let Some(next) = next {
+            self.state = next;
+        }
     }
 
     fn draw(&self, target: &mut Frame, draw_context: &DrawContext) -> Result<(), DrawError> {

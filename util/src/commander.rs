@@ -73,9 +73,7 @@ fn command_to_send() -> IoResult<ClientToServer> {
                         continue;
                     }
                     match line.parse::<usize>() {
-                        Ok(user_id) => {
-                            return Ok(ClientToServer::CreateGameRequest { user_id })
-                        }
+                        Ok(user_id) => return Ok(ClientToServer::CreateGameRequest { user_id }),
                         Err(_) => {
                             println!("Invalid user id.");
                         }
