@@ -45,7 +45,7 @@ impl Unit {
         static NEXT_ID: AtomicUsize = AtomicUsize::new(0);
         let id = NEXT_ID.fetch_add(1, Ordering::Relaxed);
         Ok(Unit {
-            id: id,
+            id,
             vb: vertex_buffer,
             ib: index_buffer,
             program: try!(Program::from_source(

@@ -11,7 +11,7 @@ impl Item<SocketAddr> for User {
     fn new(id: &Id, addr: &SocketAddr) -> Self {
         User {
             id: *id,
-            addr: addr.clone(),
+            addr: *addr,
         }
     }
 }

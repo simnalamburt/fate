@@ -25,7 +25,7 @@ impl Minion {
             facade,
             try!(VertexBuffer::new(
                 facade,
-                &vec![vec(2.0, 0.00), vec(-2.0, 0.75), vec(-2.0, -0.75),]
+                &[vec(2.0, 0.00), vec(-2.0, 0.75), vec(-2.0, -0.75)]
             )),
             try!(IndexBuffer::new(
                 facade,
@@ -53,7 +53,7 @@ impl Minion {
         ));
 
         Ok(Minion {
-            unit: unit,
+            unit,
             state: State::Stopped { time: 0.0 },
         })
     }
@@ -89,9 +89,7 @@ impl Object for Minion {
             }
         };
 
-        next.map(|next| {
-            self.state = next;
-        });
+        if let Some(next) = next { self.state = next; }
     }
 
     fn draw(&self, target: &mut Frame, draw_context: &DrawContext) -> Result<(), DrawError> {
@@ -117,7 +115,7 @@ impl Move for Minion {
         let dx = dest.0 - unit.pos.0;
         let dy = dest.1 - unit.pos.1;
         unit.angle = dy.atan2(dx);
-        self.state = State::Moving { dest: dest };
+        self.state = State::Moving { dest };
     }
 }
 

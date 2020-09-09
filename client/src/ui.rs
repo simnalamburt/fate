@@ -70,12 +70,12 @@ impl UI {
             Matrix::orthographic_off_center(0.0, width as f32, 0.0, height as f32, 0.0, 1.0);
         UI {
             cursor: (300.0, 300.0),
-            width: width,
-            height: height,
-            vb: vb,
-            ib: ib,
-            program: program,
-            matrix: matrix,
+            width,
+            height,
+            vb,
+            ib,
+            program,
+            matrix,
         }
     }
 

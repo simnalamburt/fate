@@ -45,7 +45,7 @@ impl DrawContext {
         Ok(DrawContext {
             camera: Matrix::orthographic(width as f32 / 10.0, height as f32 / 10.0, 0.0, 1.0),
             texture_for_object_picking: texture,
-            fill_id_program: fill_id_program,
+            fill_id_program,
         })
     }
 

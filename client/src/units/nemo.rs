@@ -55,7 +55,7 @@ impl Nemo {
         ));
 
         Ok(Nemo {
-            unit: unit,
+            unit,
             state: State::Stopped,
         })
     }
@@ -96,9 +96,7 @@ impl Object for Nemo {
             }
         };
 
-        next.map(|next| {
-            self.state = next;
-        });
+        if let Some(next) = next { self.state = next; }
     }
 
     fn draw(&self, target: &mut Frame, draw_context: &DrawContext) -> Result<(), DrawError> {
@@ -132,7 +130,7 @@ impl Move for Nemo {
         let dx = dest.0 - unit.pos.0;
         let dy = dest.1 - unit.pos.1;
         unit.angle = dy.atan2(dx);
-        self.state = State::Moving { dest: dest };
+        self.state = State::Moving { dest };
     }
 }
 
