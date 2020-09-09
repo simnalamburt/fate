@@ -163,7 +163,17 @@ version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "25bfd746d203017f7d5cbd31ee5d8e17f94b6521c7af77ece6c9e4b2d4b16c67"
 dependencies = [
- "core-foundation-sys",
+ "core-foundation-sys 0.2.3",
+ "libc",
+]
+
+[[package]]
+name = "core-foundation"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3b5ed8e7e76c45974e15e41bfa8d5b0483cd90191639e01d8f5f1e606299d3fb"
+dependencies = [
+ "core-foundation-sys 0.8.0",
  "libc",
 ]
 
@@ -177,12 +187,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "core-foundation-sys"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9a21fa21941700a3cd8fcb4091f361a6a712fac632f85d9f487cc892045d55c6"
+
+[[package]]
 name = "core-graphics"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c56c6022ba22aedbaa7d231be545778becbe1c7aceda4c82ba2f2084dd4c723"
 dependencies = [
- "core-foundation",
+ "core-foundation 0.2.3",
  "libc",
  "serde 0.7.15",
 ]
@@ -304,7 +320,7 @@ dependencies = [
  "android_glue",
  "cgl",
  "cocoa",
- "core-foundation",
+ "core-foundation 0.9.0",
  "core-graphics",
  "dwmapi-sys",
  "gdi32-sys",
