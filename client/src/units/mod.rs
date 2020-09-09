@@ -11,7 +11,7 @@ use glium::framebuffer::SimpleFrameBuffer;
 use glium::uniforms::{AsUniformValue, Uniforms, UniformsStorage};
 use glium::{DrawError, Frame, IndexBuffer, Program, Surface, VertexBuffer};
 use obj::Vertex;
-use std::sync::atomic::{AtomicUsize, Ordering, ATOMIC_USIZE_INIT};
+use std::sync::atomic::{AtomicUsize, Ordering};
 use xmath::Matrix;
 
 type Position = (f32, f32);
@@ -42,7 +42,7 @@ impl Unit {
         fragment_shader: &'a str,
         position: Position,
     ) -> Result<Self, CreationError> {
-        static NEXT_ID: AtomicUsize = ATOMIC_USIZE_INIT;
+        static NEXT_ID: AtomicUsize = AtomicUsize::new(0);
         let id = NEXT_ID.fetch_add(1, Ordering::Relaxed);
         Ok(Unit {
             id: id,
