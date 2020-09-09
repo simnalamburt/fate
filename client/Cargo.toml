@@ -18,3 +18,4 @@ bincode = "0.4"
 obj-rs = { version = "=0.4.19", features = ["glium-support"] }
 rustc-serialize = "0.3"
 bincode = "0.4"
+xz2 = "0.1.6"

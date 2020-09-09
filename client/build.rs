@@ -1,6 +1,7 @@
 extern crate bincode;
 extern crate obj;
 extern crate rustc_serialize;
+extern crate xz2;
 
 use bincode::rustc_serialize as bcode;
 use bincode::SizeLimit;
@@ -10,6 +11,7 @@ use std::env::current_exe;
 use std::fs::{metadata, File};
 use std::io::BufReader;
 use std::path::Path;
+use xz2::read::XzDecoder;
 
 fn main() {
     // Check if the rilakkuma has already packed
@@ -41,10 +43,11 @@ fn main() {
     src.pop();
     src.push("client");
     src.push("res");
-    src.push("rilakkuma.obj");
+    src.push("rilakkuma.obj.xz");
 
     // Parse rilakkuma
-    let input = BufReader::new(File::open(src).unwrap());
+    let input = XzDecoder::new(File::open(src).unwrap());
+    let input = BufReader::new(input);
     let rilakkuma: Obj = load_obj(input).unwrap();
 
     // Serialize rilakkuma
