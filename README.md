@@ -1,4 +1,4 @@
-[![fate-i]][fate-a] [![travis-i]][travis-a]
+[![fate-i]][fate-a]
 ========
 Standalone Fate/Another Project
 
@@ -17,7 +17,4 @@ cargo run -p util
 
 [fate-i]: https://raw.githubusercontent.com/simnalamburt/i/master/fate/logo.png
 [fate-a]: https://cafe.naver.com/ufw
-[travis-i]: https://travis-ci.org/simnalamburt/fate.svg?branch=master
-[travis-a]: https://travis-ci.org/simnalamburt/fate
 [diagram]: https://raw.githubusercontent.com/simnalamburt/i/master/fate/diagram.png
-[Rust]: https://rust-lang.org
