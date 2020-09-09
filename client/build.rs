@@ -39,6 +39,7 @@ fn main() {
     src.pop();
     src.pop();
     src.pop();
+    src.push("client");
     src.push("res");
     src.push("rilakkuma.obj");
 

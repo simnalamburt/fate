@@ -1,6 +1,7 @@
 [![fate-i]][fate-a] [![travis-i]][travis-a]
 ========
 Standalone Fate/Another Project
+
 ```sh
 # client
 cargo run -p client
@@ -13,11 +14,6 @@ cargo run -p util
 ```
 
 ![diagram]
-
-### Requirements
-* **[Rust]**
-* Developement headers for XFree86 video mode extension \
-  (`libXxf86vm-dev` on apt, `libXxf86vm-devel` on rpm, `libxxf86vm` on pacman)
 
 [fate-i]: https://raw.githubusercontent.com/simnalamburt/i/master/fate/logo.png
 [fate-a]: https://cafe.naver.com/ufw

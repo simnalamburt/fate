@@ -79,7 +79,7 @@ fn main() {
             use glium::glutin::{ElementState, Event, MouseButton};
 
             match event {
-                Event::MouseMoved((x, y)) => ui.move_cursor(x, y),
+                Event::MouseMoved(x, y) => ui.move_cursor(x, y),
                 Event::MouseInput(ElementState::Pressed, MouseButton::Left) => {
                     use traits::Move;
 

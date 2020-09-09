@@ -9,12 +9,12 @@ build = "build.rs"
 common = { path = "../common" }
 time = "0.1"
 xmath = { version = "0.2.2", features = ["glium-support"] }
-glium = { version = "0.8.2", default-features = false, features = ["glutin"] }
+glium = { version = "0.14.0", default-features = false, features = ["glutin"] }
 rand = "0.3.9"
-obj-rs = { version = "0.4.12", features = ["glium-support"] }
+obj-rs = { version = "=0.4.19", features = ["glium-support"] }
 bincode = "0.4"
 
 [build-dependencies]
-obj-rs = { version = "0.4.12", features = ["glium-support"] }
+obj-rs = { version = "=0.4.19", features = ["glium-support"] }
 rustc-serialize = "0.3"
 bincode = "0.4"
