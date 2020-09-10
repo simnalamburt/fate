@@ -1,4 +1,4 @@
-use draw_context::DrawContext;
+use crate::draw_context::DrawContext;
 use glium::framebuffer::SimpleFrameBuffer;
 use glium::{DrawError, Frame};
 

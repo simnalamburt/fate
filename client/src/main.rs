@@ -14,10 +14,10 @@ mod traits;
 mod ui;
 mod units;
 
-use draw_context::DrawContext;
+use crate::draw_context::DrawContext;
 use time::PreciseTime;
-use ui::UI;
-use units::{Minion, MinionController, Nemo};
+use crate::ui::UI;
+use crate::units::{Minion, MinionController, Nemo};
 
 #[cfg_attr(test, allow(dead_code))]
 fn main() {
@@ -69,7 +69,7 @@ fn main() {
     // each cycle will draw once
     'main: loop {
         use glium::Surface;
-        use traits::Object;
+        use crate::traits::Object;
 
         //
         // Poll and handle the events received by the window
@@ -81,7 +81,7 @@ fn main() {
             match event {
                 Event::MouseMoved(x, y) => ui.move_cursor(x, y),
                 Event::MouseInput(ElementState::Pressed, MouseButton::Left) => {
-                    use traits::Move;
+                    use crate::traits::Move;
 
                     // 마우스 좌표계 ~ 게임 좌표계 변환
                     let dest = ui.cursor_on_game_coordinate();

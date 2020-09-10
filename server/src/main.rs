@@ -10,8 +10,8 @@ use std::net::UdpSocket;
 mod game;
 mod user;
 
-use game::GameManager;
-use user::UserManager;
+use crate::game::GameManager;
+use crate::user::UserManager;
 
 type CommandResult = Result<ServerToClient, String>;
 

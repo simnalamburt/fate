@@ -1,11 +1,11 @@
 use super::{vec, Unit};
-use draw_context::DrawContext;
-use error::CreationError;
+use crate::draw_context::DrawContext;
+use crate::error::CreationError;
 use glium::backend::Facade;
 use glium::framebuffer::SimpleFrameBuffer;
 use glium::index::PrimitiveType;
 use glium::{DrawError, Frame, IndexBuffer, VertexBuffer};
-use traits::{Move, Object};
+use crate::traits::{Move, Object};
 
 pub struct Minion {
     unit: Unit,

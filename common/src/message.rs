@@ -17,7 +17,7 @@ pub enum ClientToServer {
 
 pub trait Message: Sized {
     fn stringify(&self) -> Result<String, EncoderError>;
-    fn parse(&str) -> DecodeResult<Self>;
+    fn parse(_: &str) -> DecodeResult<Self>;
 }
 
 impl Message for ServerToClient {

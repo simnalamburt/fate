@@ -1,4 +1,4 @@
-use error::DrawContextCreationError;
+use crate::error::DrawContextCreationError;
 use glium::backend::Facade;
 use glium::texture::MipmapsOption::NoMipmap;
 use glium::texture::Texture2d;

@@ -3,8 +3,8 @@ mod nemo;
 
 pub use self::minion::{Minion, MinionController};
 pub use self::nemo::Nemo;
-use draw_context::DrawContext;
-use error::CreationError;
+use crate::draw_context::DrawContext;
+use crate::error::CreationError;
 use glium::backend::Facade;
 use glium::draw_parameters::DrawParameters;
 use glium::framebuffer::SimpleFrameBuffer;
