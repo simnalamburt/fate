@@ -1,22 +1,27 @@
-use log::*;
+use log::{set_logger, set_max_level, LevelFilter, Log, Metadata, Record, SetLoggerError};
 
 pub struct SimpleLogger;
 
 impl Log for SimpleLogger {
-    fn enabled(&self, _: &LogMetadata) -> bool {
+    fn enabled(&self, _: &Metadata) -> bool {
         true
     }
 
-    fn log(&self, record: &LogRecord) {
+    fn log(&self, record: &Record) {
         if self.enabled(record.metadata()) {
             println!("{}: {}", record.level(), record.args());
         }
     }
+
+    fn flush(&self) {
+        use std::io::Write;
+
+        std::io::stdout().flush().unwrap();
+    }
 }
 
 pub fn init() -> Result<(), SetLoggerError> {
-    set_logger(|max_log_level| {
-        max_log_level.set(LogLevelFilter::Info);
-        Box::new(SimpleLogger)
-    })
+    set_logger(&SimpleLogger)?;
+    set_max_level(LevelFilter::Info);
+    Ok(())
 }
