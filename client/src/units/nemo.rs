@@ -1,11 +1,11 @@
 use super::Unit;
 use crate::draw_context::DrawContext;
 use crate::error::CreationError;
+use crate::resource::load_obj;
+use crate::traits::{Move, Object};
 use glium::backend::Facade;
 use glium::framebuffer::SimpleFrameBuffer;
 use glium::{DrawError, Frame};
-use crate::resource::load_obj;
-use crate::traits::{Move, Object};
 
 pub struct Nemo {
     unit: Unit,

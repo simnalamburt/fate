@@ -15,9 +15,9 @@ mod ui;
 mod units;
 
 use crate::draw_context::DrawContext;
-use time::PreciseTime;
 use crate::ui::UI;
 use crate::units::{Minion, MinionController, Nemo};
+use time::PreciseTime;
 
 #[cfg_attr(test, allow(dead_code))]
 fn main() {
@@ -68,8 +68,8 @@ fn main() {
     // the main loop
     // each cycle will draw once
     'main: loop {
-        use glium::Surface;
         use crate::traits::Object;
+        use glium::Surface;
 
         //
         // Poll and handle the events received by the window

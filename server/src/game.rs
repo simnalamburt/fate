@@ -1,5 +1,5 @@
-use common::manager::{Id, Item, Manager};
 use crate::user::User;
+use common::manager::{Id, Item, Manager};
 
 #[derive(Debug, Clone)]
 pub struct Game {
