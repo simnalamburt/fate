@@ -1,11 +1,11 @@
 [package]
-
 name = "server"
 version = "0.0.1"
 authors = [
   "Hyeon Kim <simnalamburt@gmail.com>",
   "Seulgi Kim <dev@seulgi.kim>",
 ]
+edition = "2018"
 
 [dependencies]
 log = "*"
