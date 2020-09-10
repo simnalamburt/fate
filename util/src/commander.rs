@@ -1,6 +1,6 @@
 extern crate common;
 
-use common::message::*;
+use common::message::{ClientToServer, Message, ServerToClient};
 use std::env;
 use std::io::stdin;
 use std::io::stdout;
