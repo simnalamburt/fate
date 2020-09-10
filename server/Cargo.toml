@@ -8,5 +8,5 @@ authors = [
 edition = "2018"
 
 [dependencies]
-log = "*"
+log = "0.4"
 common = { path = "../common" }
