@@ -8,5 +8,5 @@ jobs:
       - run: cargo build
       - run: cargo test
         # TODO: Fix all clippy warnings
-      - run: cargo clippy --workspace --no-deps # -- -D warnings
+      - run: cargo clippy --no-deps # -- -D warnings
       - run: cargo fmt -- --check
